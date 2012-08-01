@@ -61,7 +61,7 @@ Modelo de dados:
           "is_trashed": <bool>,
           "languages": [<string>,],
           "logo": <string:uri>,
-          "missions": {"es": <string>, "en": <string>, "pt": <string>},
+          "missions": {<string:iso639-1>: <string>},
           "national_code": <string>,
           "notes": <string>,
           "other_previous_title": <string>,
@@ -90,8 +90,42 @@ Modelo de dados:
     * Issue::
 
         {
-          "journal_ref": {"id": <id>, "title": <string>},
-          "articles": [
-            {}
+          "journal_ref": {"id": <id>, "title": <string>, "issn": <string>},
+          "abreviated_title": <string>,
+          "volume": <int>,
+          "number": <int>,
+          "documents": [
+            {
+              "author": {
+                "analytical": [{"firstname": <string>, "lastname": <string>, "role": <string>, "affiliations": [{"name": <string>, "divisions": [<string>,]}],
+                "corporate": [{"name": <string>, "divisions": [<string>,]}]
+              },
+              "titles": {<string:iso639-1>: <string>},
+              "pages": {"first": <int>, "last": <int>},
+              "illustrative_material_type": [<string>,],
+              "language": <string>,
+              "is_trashed": <bool>,
+              "dates": {"thesis": <date:iso8601>, "conference": <date:iso8601>, "publication": <date:iso8601>, "revision": <date:iso8601>},
+              "publication_city": <string>,
+              "publication_state": <string>,
+              "publication_country": <string>,
+              "doctopic": <string>,
+              "abstract": {<string:iso639-1>: <string>},
+              "keywords": {<string>: [{<string:iso639-1>: <string>}]},
+              "created_at": <date:iso8601>,
+              "bibliographic_standard": <string>,
+              "schema_version": <float>,
+              "sponsor": <string>,
+              "literature_type": <string>,
+              "pid": <string>
+            }
           ]
         }
+
+
+
+Referências:
+-------------
+
+* iso 639-1: http://en.wikipedia.org/wiki/List_of_ISO_639-1_codes
+* iso 8601: http://en.wikipedia.org/wiki/ISO_8601
