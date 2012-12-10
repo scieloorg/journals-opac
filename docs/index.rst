@@ -12,6 +12,16 @@ Contents:
    :maxdepth: 2
 
 
+Development Guides
+==================
+
+Technical guides and artifacts explaining software components
+and design decisions.
+
+.. toctree::
+   :maxdepth: 2
+
+   dev/vision
 
 Indices and tables
 ==================
