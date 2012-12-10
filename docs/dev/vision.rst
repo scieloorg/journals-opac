@@ -32,11 +32,14 @@ De acordo com as motivações citadas e a necessidade urgente de reestruturar a 
 da metodologia SciELO, descidiu-se realizar uma série de desenvolvimentos com a intenção de resgatar
 a arquitetura tecnológica da SciELO para um novo padrão de qualidade.
 
+O Journals OPAC compreende a segunda fase de desenvolvimentos de um pacote de aplicações para 
+a reestruturação da arquitetura de aplicações do projeto SciELO.
+
 Escopo do Projeto
 =================
 
-Esta aplicação pretende dar suporte ao do processo de publicação on-line da metodologia SciELO. Sua
-função se resume em fornecer funcionalidades que permitão aos gestores de coleções criar seus corpus_
+Esta aplicação pretende dar suporte ao processo de publicação on-line da metodologia SciELO. Sua
+função se resume em fornecer funcionalidades que permitam aos gestores de coleções criar seus corpus_
 de publicação padra diversas coleções de países, temáticas e outras.
 
 .. _Corpus: http://en.wikipedia.org/wiki/Text_corpus
@@ -67,18 +70,16 @@ Requisitos Funcionais
 =====================
 
 * Toda a configuração deve ser realizada via interface web.
-* Os dados de revista, fascículo, sessões e artigo devem ser sincronizados
-  com o SciELO Manager (ferramenta de gestão do catálogo), de maneira que
-  sempre que houver atualização nos dados estes sejam replicados para o
-  OPAC.
-* O sistema deve permitir que o administrador controle a visibilidade de
-  revistas, fascículos e artigos.
-* O sistema deve permitir que o administrador habilite/desabilite/configure
-  as funcionalidades da caixa de serviços.
+* Os dados de revista, fascículo, sessões e artigo devem ser sincronizados com o SciELO Manager 
+  (ferramenta de gestão do catálogo), de maneira que sempre que houver atualização nos dados estes 
+  sejam replicados para o OPAC.
+* O sistema deve permitir que o administrador controle a visibilidade de revistas, fascículos e 
+  artigos.
+* O sistema deve permitir que o administrador habilite/desabilite/configure as funcionalidades da 
+  caixa de serviços.
 * O sistema deve suportar internacionalidação.
-* O sistema deve permitir a gestão de alguns dados do periódico, tais como:
-  Sobre a revista, Corpo editorial, Instruções aos autores, Assinaturas e
-  o Rodapé (markdown?).
+* O sistema deve permitir a gestão de alguns dados do periódico, tais como: Sobre a revista, Corpo 
+  editorial, Instruções aos autores, Assinaturas e o Rodapé (markdown?).
 
 Requisitos Não Funcionais
 =========================
