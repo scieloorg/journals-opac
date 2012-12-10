@@ -79,8 +79,17 @@ Requisitos Funcionais
   caixa de serviços.
 * O sistema deve suportar internacionalidação.
 * O sistema deve ser capaz de apresentar gráficos de uso do conteúdo acessado.
+
+Requisitos não definidos
+------------------------
+
+* A criação de coleções fica a cargo apenas de usuários administradores do SciELO, a rede não poderá
+  criar coleções através do OPAC?
+* Editores terão quais permissões no sistema? para edição de corpo editorial e páginas secundárias 
+  apenas, ou para dados do periódico também?
 * O sistema deve permitir a gestão de alguns dados do periódico, tais como: Sobre a revista, Corpo 
-  editorial, Instruções aos autores, Assinaturas e o Rodapé (markdown?).
+  editorial, Instruções aos autores, Assinaturas e o Rodapé (markdown?). Ou essa funcionalidade será
+  uma aplicação no Journal Manager?
 
 .. _SciELOManager: http://manager.scielo.org/
 
