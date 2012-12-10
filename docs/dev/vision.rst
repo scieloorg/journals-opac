@@ -70,7 +70,7 @@ Requisitos Funcionais
 =====================
 
 * Toda a configuração deve ser realizada via interface web.
-* Os dados de revista, fascículo, sessões e artigo devem ser sincronizados com o SciELO Manager 
+* Os dados de revista, fascículo, sessões e artigo devem ser sincronizados com o `SciELO Manager`__
   (ferramenta de gestão do catálogo), de maneira que sempre que houver atualização nos dados estes 
   sejam replicados para o OPAC.
 * O sistema deve permitir que o administrador controle a visibilidade de revistas, fascículos e 
@@ -80,6 +80,10 @@ Requisitos Funcionais
 * O sistema deve suportar internacionalidação.
 * O sistema deve permitir a gestão de alguns dados do periódico, tais como: Sobre a revista, Corpo 
   editorial, Instruções aos autores, Assinaturas e o Rodapé (markdown?).
+
+.. _SciELOManager: http://manager.scielo.org/
+
+__ SciELOManager_
 
 Requisitos Não Funcionais
 =========================
