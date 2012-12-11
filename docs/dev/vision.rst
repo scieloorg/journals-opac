@@ -97,13 +97,17 @@ Requisitos não definidos
 
 * A criação de coleções fica a cargo apenas de usuários administradores do SciELO, a rede não poderá
   criar coleções através do OPAC?
+  
 * Editores terão quais permissões no sistema? para edição de corpo editorial e páginas secundárias 
   apenas, ou para dados do periódico também?
+
 * O sistema deve permitir a gestão de alguns dados do periódico, tais como: Sobre a revista, Corpo 
   editorial, Instruções aos autores, Assinaturas e o Rodapé (markdown?). Ou essa funcionalidade será
   uma aplicação no Journal Manager?
+
 * O mockup home_periodico defini serviços de notícias e notas do editor. Esse produto será
   desenvolvido no contexto deste projeto? 
+
   * Este serviço poderia ser implementado junto com serviços de redes sociais, ou seja, ao indicar
     uma url de twitter, facebook ou outros serviços, uma aba é habilitada montrando os highlights
     postados pelos editores nessas redes sociais.
