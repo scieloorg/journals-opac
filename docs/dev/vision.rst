@@ -58,7 +58,7 @@ Quais problemas esta aplicação deve solucionar?
 
 * Migrar toda rede SciELO para uso das novas aplicações.
 * Mudança de paradigma para o uso de aplicações como serviço. (Application as a Service)
-* Mudança de serviço de uma arquitetura decentralizada para uma arquitetura centralizada.
+* Mudança de paradigma de uso uma arquitetura decentralizada para uma arquitetura centralizada.
 
 Macro Necessidades
 ==================
@@ -67,11 +67,14 @@ Macro Necessidades
 * Capacidade de instalação remota.
 * Interoperação com os dados do SciELO Manager.
 * Serviços de estatísticas de acessos.
-* Serviços de interoperabilidade de metadados. (OAI-PMH)
+* Serviços de interoperabilidade de metadados. (OAI-PMH, SWORD)
 * Exportação de metadados (WoS, DOAJ).
 * Gestão de páginas secundárias, seja por um usuário da equipe SciELO ou um usuário do tipo editor.
 * Gestão de corpo editorial, seja por um usuário da equipe SciELO ou um usuário do tipo editor.
 * API's para acesso a todo dado produzido pelas coleções.
+* Exportação de metadados para formatos legados, json e xml.
+* Interface Web
+* Interface Mobile
 
 Requisitos Funcionais
 =====================
@@ -86,6 +89,8 @@ Requisitos Funcionais
   caixa de serviços.
 * O sistema deve suportar internacionalidação.
 * O sistema deve ser capaz de apresentar gráficos de uso do conteúdo acessado.
+* O sistema deve ser capaz de apresentar de forma diferenciada os artigos que possuem o texto 
+  completo marcado.
 
 Requisitos não definidos
 ------------------------
@@ -104,3 +109,42 @@ __ SciELOManager_
 
 Requisitos Não Funcionais
 =========================
+
+Glossário
+=========
+
+DOAJ
+----
+
+JSON (Java Script Object Notation)
+----------------------------------
+
+OAI-PMH 
+-------
+
+O `OAIPMH`_ é um protocolo para disseminação de metadados contidos em repositórios.
+
+.. _OAIPMH: http://www.openarchives.org/pmh/
+
+OPAC
+----
+
+Software as a service
+---------------------
+
+Essa característica é dada a aplicações que podem ser utilizadas apenas criando um usuário e senha, 
+e a partir desta conta de usuário todos os serviços e aplicações ficam disponíveis para este 
+usuário. Essa característica de arquitetura de software vem sendo largamente utilizada em serviços 
+que requerem alto grau de complexidade na manutenção e operação. Com essa arquitetura a complexidade
+de manutenção e operação passa a ser gerida de forma  centralizada, entretanto, todos os recursos e 
+serviços da aplicação são implementados em um ambiente decentralizado de gestão de conteudo.
+
+SWORD
+-----
+
+Web of Science (WoS)
+--------------------
+
+
+
+

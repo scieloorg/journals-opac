@@ -22,6 +22,8 @@ and design decisions.
    :maxdepth: 2
 
    dev/vision
+   files/index
+   meetings/index
 
 Indices and tables
 ==================
