@@ -104,6 +104,9 @@ Requisitos não definidos
   uma aplicação no Journal Manager?
 * O mockup home_periodico defini serviços de notícias e notas do editor. Esse produto será
   desenvolvido no contexto deste projeto? 
+  * Este serviço poderia ser implementado junto com serviços de redes sociais, ou seja, ao indicar
+    uma url de twitter, facebook ou outros serviços, uma aba é habilitada montrando os highlights
+    postados pelos editores nessas redes sociais.
 
 .. _SciELOManager: http://manager.scielo.org/
 
