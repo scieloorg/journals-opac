@@ -1,0 +1,108 @@
+// Landscape phone to portrait tablet
+@media (max-width: 767px) {
+	BODY {
+		font-size: 90%;
+		p {
+			font-size: 90%;
+			line-height:120%;
+		}
+	}
+	.navbar .container {
+		width: 90%;
+	}
+	.container {
+		width: 90%;
+		.journalHome {
+			background: none;
+		}
+	}
+	#topMenu {
+		clear: both;
+		width: auto !important;
+		margin: 6px 0px;
+		LI {
+			width: auto;
+			margin-right: 12px;
+		}
+		display: none;
+	}
+	.navbar {
+		clear: both;
+		.btn-navbar {
+			display: block;
+		}
+		.navbar-inner {
+			background: none;
+			box-shadow: none;
+			.nav-collapse {
+				height: 0;
+				overflow: hidden;
+				.nav LI {
+					float: none;
+					UL.dropdown-menu {
+						background: none;
+						position: relative;
+						color: #FFF !important;
+						border: none;
+						box-shadow: none;
+						a.hover {
+							background: none !important;
+						}
+					}
+				}
+			}
+			.nav .active {
+				background: none;
+			}
+		}
+		
+	}
+	#journalTitle {
+		margin: 4px 0px;
+		height: auto;
+		#journalTitleInner {
+			margin: 0px;
+		}
+	}
+}
+ 
+// Portrait tablet to landscape and desktop
+@media (min-width: 768px) and (max-width: 979px) {
+	.navbar .container {
+		width: 100%;
+	}
+	.container {
+		width: 100%;
+	}
+	#topMenu {
+		clear: both;
+		width: auto !important;
+		margin: 6px 0px;
+		LI {
+			width: auto;
+			margin-right: 12px;
+		}
+	}
+	#topMenu-mobile {
+		display: none;
+	}
+  .navbar {
+	clear: both;
+  }
+}
+ 
+@media (min-width: 980px) and (max-width: 1199px) {
+	#topMenu-mobile {
+		display: none;
+	}
+} 
+
+// Large desktop
+@media (min-width: 1200px) {
+	.container {
+		width: 1004px;
+	}
+	#topMenu-mobile {
+		display: none;
+	}
+}

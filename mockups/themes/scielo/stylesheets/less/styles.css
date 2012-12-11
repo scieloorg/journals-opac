@@ -1,0 +1,460 @@
+BODY {
+  line-height: 20px;
+}
+.spacer {
+  clear: both;
+}
+/***** HEADER *****/
+.top {
+  background: #f7f7f7 url(../../images/common/top_bg.png) repeat-x;
+}
+.top #logo {
+  background: url(../../images/pt/logoScielo-BR-Flag.png) no-repeat;
+  width: 82px;
+  height: 80px;
+  display: block;
+  float: left;
+  margin-top: 16px;
+}
+.top #logo SPAN {
+  display: none;
+}
+#topMenu LI {
+  float: left;
+}
+#topMenu LI A {
+  color: #666;
+}
+#topMenu LI A:hover {
+  color: #005580;
+  text-decoration: underline;
+}
+#journalTitle {
+  height: 82px;
+  margin-top: 18px;
+}
+#journalTitleInner {
+  font-family: 'Chau Philomene One', 'Helvetica Neue', Helvetica, Arial;
+  color: #346cc9;
+  font-size: 18pt;
+  line-height: 110%;
+}
+#lang {
+  margin-top: 6px;
+  text-align: right;
+}
+#topMenu {
+  margin-top: 8px;
+}
+#topMenu UL {
+  list-style: none;
+}
+#topMenu LI {
+  width: 50%;
+}
+.container,
+.navbar .container {
+  width: 1004px;
+}
+.navbar {
+  background: url(../../images/common/GlobalNavBg.png) repeat-x;
+  height: 73px;
+}
+.navbar #globalNav {
+  width: 75%;
+  margin: 0px auto;
+}
+.navbar #globalNav .globalNavGrp {
+  float: left;
+  margin: 2px 22px 4px 0px;
+}
+.navbar #globalNav .globalNavGrp .navlabel {
+  color: #bfcbd7;
+}
+.navbar #globalNav .globalNavGrp #homeBtn {
+  margin-top: 25px;
+}
+.navbar #globalNav .globalNavGrp #shareLabel {
+  margin-bottom: 9px;
+}
+/***** ALL PAGES - REGULAR STYLES *****/
+.breadcrumb {
+  background: none;
+  border: none;
+  width: auto;
+  padding: 7px 0px;
+}
+.breadcrumb A {
+  color: #C04434;
+}
+.breadcrumb A:hover {
+  color: #333;
+  text-decoration: underline;
+}
+.header LABEL,
+.section LABEL,
+.issueSummary LABEL,
+.allIssues LABEL {
+  font-size: 120%;
+  font-weight: bold;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+}
+.journalHome {
+  min-height: 200px;
+  margin-bottom: 30px;
+}
+/***** ARTICLE PAGE *****/
+.journalIssue {
+  font-family: "Helvetica Neue Light", Helvetica, Arial, sans-serif;
+  color: #800000;
+  font-size: 140%;
+}
+.DOI_URL {
+  margin-bottom: 42px;
+  font-family: "Helvetica Neue Light", Helvetica, Arial, sans-serif;
+  color: #800000;
+  font-size: 110%;
+}
+.article {
+  margin-bottom: 30px;
+}
+.articleBody {
+  width: 80%;
+  margin: 0 10%;
+}
+.articleTitle {
+  line-height: 140%;
+  margin-bottom: 24px;
+  letter-spacing: -0.8px;
+}
+.articleTitle.currentLang {
+  font-weight: bold;
+  font-size: 160%;
+}
+.articleTitle.alternateLang {
+  font-size: 140%;
+  color: #333333;
+}
+.authors {
+  font-size: 120%;
+  font-weight: bold;
+}
+.affiliation {
+  font-size: 90%;
+  color: #333;
+}
+.affiliation UL {
+  margin-top: 8px;
+  margin-left: 0px;
+  list-style: none;
+}
+.article .section {
+  margin: 45px 0px;
+}
+.article .section P {
+  line-height: 160%;
+}
+.article .section .pic {
+  text-align: center;
+  margin: 12px 0px;
+}
+.article .section .pic .caption {
+  width: 80%;
+  margin: 0px auto;
+  font-size: 90%;
+  color: #666;
+}
+.aside .block {
+  margin-bottom: 12px;
+}
+.aside .blockTitle {
+  font-size: 150%;
+  color: #0088CC;
+  margin-bottom: 12px;
+}
+.aside .btn {
+  color: #800000;
+}
+.aside .blockService {
+  border: 0px;
+  margin: 12px 0px;
+}
+.aside .blockService UL {
+  list-style: none;
+}
+.aside .blockServiceTitle SPAN {
+  color: #800000;
+  font-size: 110%;
+  font-weight: bold;
+}
+.section#references LI {
+  margin-bottom: 12px;
+  list-style: none;
+}
+.section.abstract {
+  border-bottom: 1px solid #999;
+  padding-bottom: 30px;
+  margin: 40px 0px 22px 0px;
+}
+.section.historic {
+  padding-top: 12px;
+  border-top: 1px solid #999;
+}
+.section.historic P {
+  margin: 0px;
+}
+.section.figures .modal {
+  width: 800px;
+  left: 42%;
+}
+/***** FULLTEXT *****/
+.fulltxt .top {
+  margin-bottom: 20px;
+}
+.fulltxt .top #logo {
+  width: 120px;
+}
+.fulltxt .top #logo IMG {
+  width: 100%;
+}
+.fulltxt .top #journalTitleInner {
+  font-size: 130%;
+  margin: 12px 0px 0px 0px;
+}
+/***** ISSUE PAGE *****/
+.issueSummary LABEL {
+  margin-bottom: 0px;
+}
+.issueSummary .issueNumber {
+  margin-bottom: 18px;
+}
+.issueSummary .journalIssue {
+  margin-bottom: 12px;
+}
+.issueSummary .section {
+  margin-bottom: 25px;
+}
+.issueSummary .section .sectionTitle {
+  font-size: 130%;
+  margin-bottom: 8px;
+  color: #666;
+}
+.issueSummary .section .sectionTitle I {
+  margin-top: 4px;
+}
+.issueSummary .section .list-article {
+  margin: 0px 0px 20px 20px;
+}
+.issueSummary .section UL.downloadOptions {
+  margin: 4px 0px 12px 0px;
+  list-style: none;
+}
+.issueSummary .section UL.downloadOptions A {
+  font-weight: bold;
+}
+.issueSummary .section UL.downloadOptions LI {
+  display: inline;
+  margin: 0px 20px 4px 0px;
+  color: #666;
+  font-size: 95%;
+}
+.issueSummary .section UL UL.downloadOptions {
+  margin: 8px 0px 0px 0px;
+  padding: 0px;
+}
+.issueSummary .list-articleTitle {
+  font-size: 140%;
+  font-weight: bold;
+  line-height: 120%;
+}
+.issueSummary .list-articleTitle A {
+  color: #000;
+}
+/***** AVAILABLE ISSUES *****/
+.allIssues {
+  margin-bottom: 30px;
+}
+.availableIssues {
+  line-height: 16px;
+  width: 90%;
+  margin: 0px auto 30px auto;
+}
+/***** JOURNAL HOME *****/
+.journalHome .blockTitle {
+  color: #0088CC;
+  font-size: 140%;
+  margin-bottom: 12px;
+}
+.journalHome .jornalHomeInner {
+  margin: 0px auto;
+  width: 80%;
+}
+.journalHome .section {
+  margin-left: 30px;
+}
+.journalHome .section .sectionTitle {
+  display: inline-block;
+  vertical-align: top;
+  font-size: 120%;
+  font-weight: bold;
+  width: 90%;
+}
+.journalHome .section .sectionTitle .publicationDate {
+  font-size: 80%;
+  font-weight: normal;
+}
+.journalHome .publisher {
+  font-size: 130%;
+  font-weight: bold;
+}
+.nav-tabs {
+  list-style: none;
+  margin: 0px;
+  border-bottom: 1px solid #AAA;
+}
+.nav-tabs LI {
+  margin-bottom: -2px;
+}
+.nav-tabs LI A {
+  display: block;
+  text-decoration: none;
+  color: #666;
+}
+.nav-tabs LI A:hover {
+  border-bottom: none;
+}
+.nav-tabs .active {
+  background: none;
+}
+.nav-tabs .active A,
+.nav-tabs .active A:hover {
+  background: #FAFAFA;
+  border-color: #AAA;
+  border-bottom: 0px;
+  font-weight: bold;
+  color: #C04434;
+}
+.tab-content {
+  border-right: 1px solid #AAA;
+  border-bottom: 1px solid #AAA;
+  border-left: 1px solid #AAA;
+  border-radius: 0px 4px 4px 4px;
+  margin-bottom: 12px;
+}
+.tab-content .tab-pane {
+  padding: 12px;
+}
+.tab-content .active {
+  background: #FAFAFA;
+}
+/***** SCIELO ICONS *****/
+[class*="scielo-icon"] {
+  background: url(../../images/common/scielo-icons.png);
+  background-repeat: no-repeat;
+  display: inline-block;
+  height: 14px;
+  line-height: 14px;
+  vertical-align: text-top;
+  width: 14px;
+}
+.scielo-icon-text {
+  background-position: 0px 0px;
+}
+.scielo-icon-pdf {
+  background-position: -24px 0px;
+}
+.scielo-icon-abstract {
+  background-position: -48px 0px;
+}
+.scielo-icon-right {
+  background-position: -72px 0px;
+}
+.scielo-icon-bottom {
+  background-position: -96px 0px;
+}
+.scielo-icon-top {
+  background-position: -120px 0px;
+}
+.scielo-icon-left {
+  background-position: -144px 0px;
+}
+/***** FOOTER *****/
+.footer {
+  clear: both;
+  border-top: 2px solid #666;
+  padding: 20px 0px 40px 0px;
+  background: #E5E5E5;
+}
+.footer .address {
+  font-size: 85%;
+}
+.footer .address .editor {
+  font-size: 140%;
+  font-weight: bold;
+  color: #800000;
+}
+.footer .license {
+  font-size: 85%;
+}
+.footer .siteMap {
+  width: 83%;
+  margin: 12px auto;
+}
+.footer .siteMap #footerLogo {
+  width: 86px;
+  clear: both;
+  float: left;
+}
+.footer .siteMap #footerLogo IMG {
+  width: 100%;
+}
+.footer .siteMap .nav {
+  float: left;
+  margin: 20px 0px 0px 50px;
+}
+.footer .siteMap UL {
+  margin-left: 8px;
+}
+.footer .siteMap LI {
+  float: left;
+  list-style: none;
+  margin-right: 45px;
+  font-size: 110%;
+  font-weight: bold;
+}
+.footer .siteMap LI A {
+  color: #800000;
+}
+.footer .siteMap LI UL {
+  margin-top: 8px;
+}
+.footer .siteMap LI UL LI {
+  font-size: 90%;
+  font-weight: normal;
+  float: none;
+  margin-right: 0px;
+}
+.footer .siteMap LI UL LI A {
+  color: #0088CC;
+}
+/***** TABLES *****/
+TH {
+  text-align: center !important;
+}
+TR {
+  height: 42px;
+}
+TR TD {
+  width: 10%;
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+TR .year,
+TR .volume {
+  background: #EAF0F9;
+  font-weight: bold;
+}
+TR .issue {
+  background: #F5F5F5;
+}

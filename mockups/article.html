@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="pt">
+	<head>
+		<meta charset="utf-8">
+		<title>SciELO - Bootstrap</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="description" content="">
+		<meta name="author" content="">
+		
+		<link href='http://fonts.googleapis.com/css?family=Chau+Philomene+One' rel='stylesheet' type='text/css'>
+			
+		<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="bootstrap/css/bootstrap-responsive.min.css" rel="stlesheet" />
+		<link href="themes/scielo/stylesheets/less/styles.less" rel="stylesheet/less" />
+		<link href="themes/scielo/stylesheets/less/responsive.less" rel="stylesheet/less" />
+		
+		<script src="themes/scielo/js/less-1.3.0.min.js" type="text/javascript"></script>
+		
+		<!-- IE6-8 support of HTML5 elements -->
+		<!--[if lt IE 9]>
+		<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+		<![endif]-->
+		
+		<!-- fav and touch icons -->
+		<link rel="shortcut icon" href="themes/scielo/ico/favicon.jpg">
+		<link rel="apple-touch-icon-precomposed" sizes="114x114" href="themes/scielo/ico/logo_114.png">
+		<link rel="apple-touch-icon-precomposed" sizes="72x72" href="themes/scielo/ico/logo_72.png">
+		<link rel="apple-touch-icon-precomposed" href="themes/scielo/ico/logo_57.png">
+	</head>
+	
+	<body>
+		<div class="top row-fluid">
+			<div class="container">
+				<div id="logo" class="span2">
+					<img src="themes/scielo/images/pt/logoScielo.png" />
+				</div>
+				<div id="journalTitle" class="span5">
+					<div id="journalLogo">
+						<a id="journalLogoTrigger" data-toggle="modal" href="#journalLogoModal"><span>logo</span></a>
+						<div class="modal fade" id="journalLogoModal" style="display: none;">
+							<div class="modal-header">
+								<a class="close" data-dismiss="modal">×</a>
+								<h3>Logo da Revista</h3>
+							</div>
+							<div class="modal-body" style="text-align: center;">
+								<img src="themes/scielo/img_temp/glogo.gif" alt="Journal logo" />
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+							</div>
+						</div>
+					</div>
+					<div id="journalTitleInner">Boletim do Museu Paraense Emílio Goeldi. Ciências Humanas</div>
+				</div>
+				<div id="topMenu" class="span5">
+					<ul>
+						<li><a href="#">Sobre</a></li>
+						<li><a href="#">Corpo Editorial</a></li>
+						<li><a href="#">Contatos</a></li>
+						<li><a href="#">Submissão de Manuscritos</a></li>
+						<li><a href="#">Política Editorial</a></li>
+						<li><a href="#">Instruções aos Autores</a></li>
+					</ul>
+				</div>
+				<div class="spacer"></div>
+			</div>
+		</div>
+		<!--div class="navbar navbar-fixed-top"-->
+		<div class="navbar">
+			<div class="container">
+				<div class="navbar-inner">
+					<div class="nav-collapse">
+						<ul class="nav nav-pills">
+							<li class="active"><a href="#">Home</a></li>
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#">Números <b class="caret"></b></a>
+								<ul class="dropdown-menu" id="menu_issues">
+									<li><a href="#">todos</a></li>
+									<li><a href="#">anterior</a></li>
+									<li><a href="#">atual</a></li>
+									<li><a href="#">próximo</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#">Artigos mais... <b class="caret"></b></a>
+								<ul class="dropdown-menu" id="menu_articles">
+									<li><a href="#">recentes</a></li>
+									<li><a href="#">visitados</a></li>
+									<li><a href="#">citados</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#">Pesquisa e Índices <b class="caret"></b></a>
+								<ul class="dropdown-menu" id="menu_search">
+									<li><a href="#">pesquisa</a></li>
+									<li><a href="#">autor</a></li>
+									<li><a href="#">título</a></li>
+									<li><a href="#">assunto</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#">Métricas <b class="caret"></b></a>
+								<ul class="dropdown-menu" id="menu_metrics">
+									<li><a href="#">citações</a></li>
+									<li><a href="#">visitas</a></li>
+									<li><a href="#">bibliometria</a></li>
+									<li><a href="#">bookmarks</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#">Destaques <b class="caret"></b></a>
+								<ul class="dropdown-menu" id="menu_highlights">
+									<li><a href="#">do editor</a></li>
+									<li><a href="#">notícias</a></li>
+								</ul>
+							</li>
+							<li class="dropdown">
+								<a class="dropdown-toggle" data-toggle="dropdown" href="#">Compartilhar <b class="caret"></b></a>
+								<div class="dropdown-menu addthis_toolbox addthis_default_style" id="menu_bookmarks">
+									<a class="addthis_button_preferred_1"></a>
+									<a class="addthis_button_preferred_2"></a>
+									<a class="addthis_button_preferred_3"></a>
+									<a class="addthis_button_preferred_4"></a>
+									<a class="addthis_button_compact"></a>
+									<a class="addthis_counter addthis_bubble_style"></a>
+								</div>
+								<script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid=ra-4eca4d7b449d1a69"></script>
+							</li>
+						</ul>
+					</div><!--/.nav-collapse -->
+				</div>
+			</div>
+		</div>
+		
+		<div class="container">
+			<div class="breadcrumb">
+				<a href="#">SciELO Brasil</a> / <a href="">Boletim do Museu Paraense Emmílio Goeldi. Ciências Humanas</a>
+			</div>
+			<div class="article">
+				<div class="articleHead row-fluid">
+					<div class="header span8">
+						<div class="journalIssue">
+							Bol. Mus. Para. Emílio Goeldi. Ciênc. hum. vol.6 no.2 Belém May/Aug. 2011
+						</div>
+						<div class="DOI_URL">
+							http://dx.doi.org/10.1590/S0102-311X2011001500002
+						</div>
+						<label>Artigo</label>
+						<div class="articleTitle currentLang">
+							Falência é fracasso? O caso da Associação dos Produtores Alternativos de Ouro Preto do Oeste, Rondônia, Brasil
+						</div>
+						<div class="articleTitle alternateLang">
+							Is bankruptcy failure? The case of the Associação dos Produtores Alternativos de Ouro Preto do Oeste, State of Rondônia, Brazil
+						</div>
+						<div class="authors">
+							Florent Kohler <sup>I</sup>; Liz Rejane Issberner <sup>II</sup>; Philippe Léna <sup>III</sup>; Guillaume Marchand <sup>IV</sup>
+						</div>
+						<div class="affiliation">
+							<ul>
+								<li><sup>I</sup> Université de Tours. Tours, França</li>
+								<li><sup>II</sup> Instituto Brasileiro de Informação em Ciência e Tecnologia. Rio de Janeiro, Rio de Janeiro, Brasil</li>
+								<li><sup>III</sup> Institut de Recherche pour le Développement. Bondy, França</li>
+								<li><sup>IV</sup> Instituto Nacional de Pesquisas da Amazônia. Manaus, Amazonas, Brasil</li>
+							</ul>
+						</div>
+						<div class="contactAuthor"><a class="btn btn-mini" data-toggle="modal" href="#myModal" ><i class="icon-envelope"></i> Autor para contato</a></div>
+						<div class="modal fade" id="myModal" style="display: none;">
+							<div class="modal-header">
+								<a class="close" data-dismiss="modal">×</a>
+								<h3>Autor para contato</h3>
+							</div>
+							<div class="modal-body">
+								<p>
+									<strong>Florent Kohler</strong><br/>
+									28 rue St Guillaume.<br/>
+									75007 - Paris, França<br/>
+									(florent.kohler@gmail.com)
+								</p>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+							</div>
+						</div>
+					</div> <!-- /header -->
+					<div class="aside span4">
+						<div class="block">
+							<!--
+							<a href="#loginBox" class="btn btn-mini" data-toggle="modal">LOGIN meu SciELO</a> ou <a href="">registre-se</a>
+							<div class="modal fade" id="loginBox" style="display: none;">
+								<div class="modal-header">
+									<a class="close" data-dismiss="modal">×</a>
+									<h3>Login My SciELO</h3>
+								</div>
+								<div class="modal-body" style="text-align: center;">
+									<form class="form-inline">
+										<input type="text" class="input-small" placeholder="Email" />
+										<input type="password" class="input-small" placeholder="Password" />
+										<label class="checkbox">
+											<input type="checkbox" /> Lembrar maus dados
+										</label>
+										<div type="submit" class="btn">Sign in</div>
+									</form>
+								</div>
+								<div class="modal-footer">
+									<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+								</div>
+							</div>
+							-->
+							<div class="blockTitle">Serviços Personalizados</div>
+							<div id="services">
+								<div class="blockService">
+									<div class="blockServiceTitle">
+										<span>
+											<i class="scielo-icon-right"></i> Artigo
+										</span>
+									</div>
+									<ul>
+										<li><a href="">Artigo em PDF</a></li>
+										<li><a href="">Artigo em XML</a></li>
+										<li><a href="">Referência do artigo</a></li>
+										<li><a href="">Como citar este artigo</a></li>
+										<li><a href="">Curriculum ScienTI</a></li>
+										<li><a href="">Tradução automática</a></li>
+										<li><a href="">Enviar este artigo por email</a></li>
+									</ul>
+								</div>
+								<div class="blockService">
+									<div class="blockServiceTitle">
+										<span>
+											<i class="scielo-icon-right"></i> Indicadores
+										</span>
+									</div>
+									<ul>
+										<li><a href="">Cited by SciELO</a></li>
+										<li><a href="">Access statistics</a></li>
+									</ul>
+								</div>
+								<div class="blockService">
+									<div class="blockServiceTitle">
+										<span>
+											<i class="scielo-icon-right"></i> Links relacionados
+										</span>
+									</div>
+									<ul>
+										<li><a href="">Similares em SciELO</a></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div> <!-- /aside -->
+				</div>
+				<div class="articleBody span12">
+					<div class="section abstract currentLang">
+						<label>Resumo</label>
+						<p>O artigo examina a falência da Associação dos
+						Produtores Alternativos (APA) de Ouro Preto do Oeste, em
+						Rondônia, buscando identificar elementos estruturantes e
+						explicativos das relações entre atores locais e
+						evidenciando seus próprios quadros interpretativos. A
+						partir de um breve histórico da implantação do Projeto
+						Integrado de Colonização (PIC) Ouro Preto do Oeste, são
+						destacadas a origem social dos colonos, sua cultura
+						política e o tipo de capital social<sup><a data-toggle="modal" href="#footnote_001">1</a></sup> construído nos
+						assentamentos. Por outro lado, apresenta-se a lógica das
+						instituições envolvidas no desenvolvimento desse
+						projeto. As relações entre os diversos atores
+						institucionais são apresentadas como uma rede
+						multiconectada, unindo os níveis local, regional,
+						nacional e internacional. A análise mostra o descompasso
+						entre a visão econômica das instituições de apoio,
+						voltadas para a produção, e as aspirações dos produtores
+						da APA. Ao final, concluímos que a falência pode estar
+						associada a dois fatores interligados: a 'desconfiança'
+						dos produtores da APA em relação aos órgãos de apoio à
+						agricultura familiar (Comissão Executiva do Plano da
+						Lavoura Cacaueira<sup><a data-toggle="modal" href="#footnote_002">2</a></sup>, Agência de Defesa Sanitária
+						Agrosilvopastoril do Estado de Rondônia, Empresa de
+						Assistência Técnica e Extensão Rural) e a ausência dos
+						governos estadual e municipal no grupo de atores do
+						sistema de redes multiconectadas, no qual poderiam ter
+						desempenhado um papel de mediadores entre aquelas
+						diferentes aspirações. Finalmente, a questão colocada
+						relativiza a noção de 'fracasso' associada à
+						falência.</p>
+						<div class="keywords">
+							<strong>Palavras-chave:</strong> Sindicalismo agrário. Cooperativa. Capital social. Redes sociais. Inovações produtivas. Rondônia.
+						</div>
+					</div>
+					<div class="section abstract alternateLang">
+						<label>Abstract</label>
+						<p>The paper studies the bankruptcy of the Alternative
+						Producers Association (APA) in Ouro Preto do Oeste,
+						State of Rondônia, Brazil, by identifying the relations
+						between the territory actors and analyzing their own
+						interpretive frame<sup><a data-toggle="modal" href="#footnote_003">3</a></sup>. After a brief history of the
+						Integrated Colonization Project (PIC) in Ouro Preto do
+						Oeste, we describe the social origin of the settlers,
+						their political culture and social capital as well as
+						the logic of the institutions engaged in the projects'
+						management. The relations between the different
+						institutional actors are presented as a connection of
+						multilevel social-ecological systems (local, regional,
+						national and international). The paper intends to show
+						the discrepancy between the mere economic logic of the
+						supporting institutions and the APA<sup><a data-toggle="modal" href="#footnote_004">4</a></sup> producers'
+						aspirations. Our conclusion is that the bankruptcy may
+						have been caused by two interconnected factors: the lack
+						of trust of APA's farmers towards agricultural support
+						agencies (Comissão Executiva do Plano da Lavoura
+						Cacaueira, Agência de Defesa Sanitária Agrosilvopastoril
+						do Estado de Rondônia, Empresa de Assistência Técnica e
+						Extensão Rural) and the failure of the State and the
+						Municipality to act in the multi-level network above
+						mentioned, which could have been a mediator amongst the
+						different aspirations. Finally, our paper discusses the
+						notion of 'failure' associated to bankruptcy.</p>
+						<div class="keywords">
+							<strong>Keywords:</strong> Agrarian syndicalism. Producers association. Social capital. Social networks. Productive innovations. Rondônia.
+						</div>
+					</div>
+					<div class="section">
+						<label>Instrodução</label>
+						<p>O caso da Associação dos Produtores Alternativos
+						(APA) de Ouro Preto do Oeste (1992-2007), em Rondônia,
+						constitui-se em um verdadeiro enigma para o pesquisador.
+						Até o ano de 2008, com efeito, os estudos, publicados ou
+						não (Russo e Pádua, 2001; Leroy, 2003; IAG, 2005;
+						Issberner, 2006, 2007; Figueiredo, 2007; Abreu e
+						Watanabe, 2008; Abreu et al., 2008), relatam uma success
+						story, tentando encontrar as razões do sucesso no
+						dinamismo dos fundadores e na capacidade de os membros
+						adotarem um modelo inovador de produção em uma região
+						marcada pelo peso da pecuária e pela desconsideração das
+						questões ambientais (GTA, 2008). Em um contexto regional
+						avesso a experiências ecologicamente sustentáveis (Souza
+						Filho, 2007), os produtores da APA lograram substituir
+						aos poucos a agricultura convencional por Sistemas
+						Agroflorestais (SAFs). Tal transformação parece possuir
+						duas razões inter-relacionadas: por um lado, havia uma
+						crença nos princípios de solidariedade e
+						compartilhamento de responsabilidades, que visa, antes
+						do sucesso econômico, à melhoria da qualidade de vida e
+						o empowerment dos mais pobres, no caso, das populações
+						dos assentamentos rurais (Freire, 2009)<sup><a data-toggle="modal" href="#footnote_005">5</a></sup>. Essa visão
+						decorre, provavelmente, da influência local exercida
+						pelas várias pastorais inspiradas na Teologia da
+						Libertação. Por outro lado, essa crença favorecia uma
+						sensibilização da população aos princípios do comércio
+						justo, da produção orgânica e do Desenvolvimento
+						Sustentável (DS). Entretanto, em 2008, o cenário se
+						transforma: a APA está falida, com uma diretoria
+						respondendo na Justiça por dívidas e processos movidos
+						por ex-funcionários.</p>
+						<p>Entender a dinâmica que levou ao estado de falência
+						foi o que motivou a realização deste estudo voltado a um
+						projeto de iniciativa local ("community-based
+						conservation", segundo Berkes, 2004, 2006, 2007),
+						considerado um exemplo de bom desempenho, contando com
+						apoios nacionais e internacionais. Nosso objetivo foi
+						investigar e analisar os múltiplos fatores que
+						condicionaram a mudança desse cenário, adotando uma
+						abordagem antropológica que busca identificar as
+						relações sociais prevalecentes na região a partir do
+						entendimento dos próprios atores1. Foram considerados
+						aspectos da história local e o papel do capital social
+						em sistemas socioecológicos interconectados e
+						multiescalas (Brondízio et al., 2009).</p>
+					</div>
+					<div class="section">
+						<label>O Contexto</label>
+						<p>A história da APA enraíza-se no processo de colonização sistemática da região empreendido, a partir do final dos anos 1960, por diferentes órgãos, que formaram, em 1970, o INCRA (Binsztok, 2008).</p>
+						<p>A rodovia BR 364, que liga Cuiabá e Porto Velho, iniciada em 1943 e terminada em 1968 pelos militares, desviou o fluxo de migração amazônico de leste para oeste. Entre 1961 e 1970, mais de 30.000 pessoas penetraram em uma região onde moravam apenas soldados da borracha, remanescentes da Segunda Guerra Mundial.</p>
+						<p>O Projeto Integrado de Colonização (PIC) Ouro Preto do Oeste (<a data-toggle="modal" href="#figure_001" title="Mostrar Figura 1">Figura 1</a>) foi lançado pela Portaria 281/70, de 1º. de junho de 1970, sendo o primeiro empreendimento do INCRA. Abrangia, inicialmente, 512.000 hectares situados entre os quilômetros 385 e 352, divididos em seis glebas (Ouro Preto, Costa Marques, Novo Destino, Santa Rosa, Djaru Uaru, Vida Nova). As primeiras famílias foram assentadas em janeiro de 1971 e o cadastro foi realizado em 1972. Ao INCRA cabiam as seguintes missões: distribuir a terra; organizar o território; administrar os projetos; assentar os migrantes nos respectivos lotes; assumir a educação, a saúde e a previdência social; enquadrar o habitat rural às unidades agrícolas; edificar a infraestrutura; criar cooperativas de produção, de crédito e de comercialização. Quanto à vida do migrante, era pontuada por três etapas: o assentamento, a consolidação e a emancipação, momento no qual o colono recebia o título definitivo. Em 1981, a maior parte dos 5.000 colonos foi emancipada e a administração do INCRA passou por uma fase de contração, com uma redução progressiva do número de funcionários (de 180, no auge do programa, a 13, em 1986). Hoje, o escritório do INCRA em Ouro Preto está em processo de fechamento.</p>
+						<p>Nesse quadro, entende-se facilmente a palavra dos habitantes quando declaram que "Aqui era tudo INCRA": o Instituto assumiu todos os papéis e criou um modelo de sociedade voltado para a produção agrícola de subsistência, com a venda dos excedentes para a cooperativa por ele instalada. Apesar de o projeto inicial ter sido voltado para o cacau (a CEPLAC foi implantada em 1971), a 'lavoura branca' acabou sendo privilegiada e o desmatamento incentivado. A irrupção da vassoura de bruxa, aliás, junto com a queda e irregularidade do preço do cacau, reorientou rapidamente as estratégias dos produtores para a pecuária, seguida pela instalação de uma indústria de laticínios. Esta política levou a uma degradação rápida do ambiente e da capacidade de regeneração dos solos, situação que se generalizou à medida que a fronteira agrícola se expandia de forma desordenada. As condições de vida da maioria dos colonos foram se deteriorando enquanto alguns indivíduos expandiam seus lotes, comprando terra de produtores falidos ou decepcionados, criando, assim, as condições para uma sociedade desigual, desprovida de alternativas econômicas, marcada pela concentração fundiária e pela pecuária extensiva que caracterizam o estado de Rondônia e boa parte da fronteira em expansão (Coy, 1986, 1996; Léna, 1986, 1991a, 1991b, 1992).</p>
+						<p>Foi nesse contexto de degradação social e ambiental que surgiu a APA. Sua criação decorreu da iniciativa de membros do Sindicato de Trabalhadores Rurais (STR), afiliados à cooperativa estabelecida pelo INCRA. Um primeiro projeto de horticultura foi experimentado em 1987, com o apoio da organização não governamental (ONG) Instituto do Patrimônio Histórico e Artístico Estadual (IPHAE), que conseguiu recursos do governo canadense. O projeto envolvia oito famílias, mas, graças a seu potencial de replicação, o número de famílias aumentou rapidamente. Em 1990, o STR passou a fomentar os sistemas agroflorestais, consolidando, ao mesmo tempo, as experiências de apicultura e hortas familiares. Dezenas de estágios de formação foram organizados com o intuito de incentivar os agricultores a adotarem novas formas de produção, abandonando o uso da coivara e de agrotóxicos. As mulheres foram envolvidas para garantir a segurança alimentar das famílias, aproveitando produtos locais para a fabricação de farinhas mistas, sobremesas, geléias, doces etc.</p>
+						<p>Em 1991, vinte famílias participavam deste modelo integrado de produção diversificada, orientado prioritariamente para autossubsistências e com práticas menos predatórias. No ano seguinte, a Assembleia fundadora da Associação dos Produtores Alternativos teve lugar com vinte e nove sócios, iniciativa do STR para criar um organismo de consolidação social, vertente econômica da luta assumida pelo sindicato. Mais tarde, uma pequena fábrica foi montada para a produção de palmito envasado de pupunha, atingindo uma média de 45 toneladas por ano. A produção era vendida para supermercados do sudeste do país e também para uma rede francesa de comércio justo. Uma das inovações implantadas pela APA foi a formação de 'agricultores técnicos', especializados em SAFs, que tinham como função difundir e replicar essa técnica nas propriedades adjacentes, em um esquema de circulação dos saberes considerado exemplar (Issberner, 2007). Ao longo de mais de dez anos, a APA percorreu uma trajetória marcada pela ampliação de sua produção e do seu mercado, gerindo fundos nacionais, como o Proambiente, exportando palmito de pupunha e ganhando, assim, notoriedade como vitrine do desenvolvimento sustentável na Amazônia, o que a tornou objeto de um grande número de reportagens na imprensa nacional e internacional.</p>
+						<p>Os vários relatórios que acompanharam seu crescimento (Leroy, 2003; IAG, 2005) sinalizam a pertinência da estratégia voltada para o crescimento da produção, apontando, porém, o fraco investimento no mercado local e nacional, bem como problemas estruturais para manter um fluxo contínuo de produtos, correndo-se, assim, o risco de perder mercados voláteis. Naquela época, a APA já passava por uma crise administrativa e financeira, de tal forma que não podia mais contar somente com a produção dos seus membros para atender seus compromissos comerciais. A Associação passou, então, a comprar de outros agricultores do estado e até do vizinho Acre, que, ao final, não receberam o total do pagamento devido. Assim, o círculo virtuoso estava pronto para se transformar em círculo vicioso.</p>
+						<p>Resumindo, se procurarmos as razões da falência da APA, a partir da visão de negócios das ONGs ou das instituições públicas, o ponto central seria a falta de coesão social entre os membros da comunidade e também entre os agricultores e os representantes locais de órgãos nacionais (CEPLAC, EMATER e Empresa Brasileira de Pesquisa Agropecuária - EMBRAPA). Sob essa perspectiva, seria possível concluir que o empreendimento não foi exitoso devido à heterogeneidade da população, ao fraco apego à terra, ao conhecimento insuficiente da flora e da fauna local, às múltiplas afiliações políticas, à falta de capacitação para elaborar e implantar um plano de negócios adequado etc. (Kohler et al., 2010). Mas, se fosse adotada a perspectiva da própria comunidade local, como explicar as razões desse 'fracasso'? Como explicar que, mesmo com o fim da APA, os SAFs permaneceram e o compromisso com o meio ambiente foi razoavelmente mantido? Com a ideia de fracasso associada à falência, perderíamos o ponto mais relevante do caso, que é justamente a longevidade da experiência (mais de quinze anos), longevidade de criar inveja em muitas comunidades chamadas 'tradicionais' (Brondízio, 2006).</p>
+					</div>
+					<div class="section">
+						<label>ETNOBOTÂNICA DA AMÉRICA LATINA</label>
+						<p>O estudo desenvolvido em São Luís do Maranhão integra-se numa abordagem comparativa das espécies de uso curativo mais consumidas num espaço geográfico dotado de identidade cultural e história de colonização europeia comum, pelo fato de haver sido povoada pelos dois povos ibéricos: os portugueses e os espanhóis. A Tabela 3 apresenta a origem de todas as plantas pesquisadas até o presente em sete regiões metropolitanas da América Latina: Belém e São Luís, no Brasil; Santiago, no Chile; Lima, no Peru; Cidade do México, Puebla e Cuernavaca, na grande metrópole centro-mexicana; Havana, Cuba; e San José, na Costa Rica. Presidente Prudente, situada no estado brasileiro de São Paulo, cidade de escassa dimensão humana, foi desestimada, por não se enquadrar na categoria de região metropolitana.</p>
+						<div class="pic">
+							<img src="images/pt/tabela3.jpg" title="Tabela 3" />
+							<div class="caption">
+								Tabela 3: Origem das espécies de uso terepêutico pesquisdas na Amiérica Latina. Fonte: Madaleno (1998 - 2010) 
+							</div>
+						</div>
+						<p>Como se conclui, as espécies registradas são majoritariamente nativas do continente americano, a que se podem juntar as não identificadas, por serem desconhecidas dos botânicos dos países em apreço. Presumimos, no entanto, que sejam também nativas. Seguem-se de perto as plantas europeias e as asiáticas. As espécies vegetais europeias são quase sempre oriundas da zona climática temperada mediterrânica, levadas para o espaço latino-americano por colonos portugueses e espanhóis.</p>
+					</div>
+					<div class="section" id="references">
+						<label>Referências</label>
+						<ul>
+							<li>BAENSCH, H. A.; RIEHL, R. <strong>Aquarien atlas.</strong> Melle: Mergus Verlag, 1985. v. 2, 1216 p. <span class="ref_link">[ <a data-toggle="modal" href="#links_ref001">Links</a> ]</span>
+								<div class="modal fade" id="links_ref001" style="display: none;">
+									<div class="modal-header">
+										<a class="close" data-dismiss="modal">×</a>
+										<h3>Links</h3>
+									</div>
+									<div class="modal-body">
+										<p>ABREU, L. S.; SIVIERO, A.; BELLON, S. Trajetória de conversão agroecológica de agricultores familiares do Sudeste da Amazônia. In: CONGRESSO DA SOCIEDADE BRASILEIRA DE ECONOMIA, ADMINISTRAÇÃO E SOCIOLOGIA RURAL, 46., 2008, Rio Branco. <strong>Atas...</strong> Rio Branco: SOBER, 2008. Disponível em: <<a href="http://www.sober.org.br/palestra/9/548.pdf">http://www.sober.org.br/palestra/9/548.pdf</a>>. Acesso em: 21 jun. 2010.</p>
+										<p>Try link to: <a href="http://scholar.google.com.br/scholar?q=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">Google</a></p>
+										<p>Similars in: <a href="http://www.scielo.br/scieloOrg/php/similar.php?lang=en&text=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">SciELO Network</a></p>
+									</div>
+									<div class="modal-footer">
+										<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+									</div>
+								</div>
+							</li>
+							<li>BARTHEM, Ronaldo Borges. <strong>Ocorrência, distribuição e biologia dos peixes da baía de Marajó, estuário amazônico.</strong> Boletim do Museu Paraense Emílio Goeldi, série Zoologia, v. 2, n. 1, p. 49- 69, 1985. <span class="ref_link">[ <a data-toggle="modal" href="#links_ref002">Links</a> ]</span>
+								<div class="modal fade" id="links_ref002" style="display: none;">
+									<div class="modal-header">
+										<a class="close" data-dismiss="modal">×</a>
+										<h3>Links</h3>
+									</div>
+									<div class="modal-body">
+										<p>ABREU, L. S.; SIVIERO, A.; BELLON, S. Trajetória de conversão agroecológica de agricultores familiares do Sudeste da Amazônia. In: CONGRESSO DA SOCIEDADE BRASILEIRA DE ECONOMIA, ADMINISTRAÇÃO E SOCIOLOGIA RURAL, 46., 2008, Rio Branco. <strong>Atas...</strong> Rio Branco: SOBER, 2008. Disponível em: <<a href="http://www.sober.org.br/palestra/9/548.pdf">http://www.sober.org.br/palestra/9/548.pdf</a>>. Acesso em: 21 jun. 2010.</p>
+										<p>Try link to: <a href="http://scholar.google.com.br/scholar?q=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">Google</a></p>
+										<p>Similars in: <a href="http://www.scielo.br/scieloOrg/php/similar.php?lang=en&text=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">SciELO Network</a></p>
+									</div>
+									<div class="modal-footer">
+										<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+									</div>
+								</div>
+							</li>
+							<li>BARTHEM, Ronaldo Borges; FABRÉ, Nídia. <strong>Biologia e diversidade dos recursos pesqueiros na Amazônia.</strong> In: RUFFINO, Mauro Luís (Ed.). A pesca e os recursos pesqueiros na Amazônia brasileira. Brasília: Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renováveis, 2004. p. 17-62. <span class="ref_link">[ <a data-toggle="modal" href="#links_ref003">Links</a> ]</span>
+								<div class="modal fade" id="links_ref003" style="display: none;">
+									<div class="modal-header">
+										<a class="close" data-dismiss="modal">×</a>
+										<h3>Links</h3>
+									</div>
+									<div class="modal-body">
+										<p>ABREU, L. S.; SIVIERO, A.; BELLON, S. Trajetória de conversão agroecológica de agricultores familiares do Sudeste da Amazônia. In: CONGRESSO DA SOCIEDADE BRASILEIRA DE ECONOMIA, ADMINISTRAÇÃO E SOCIOLOGIA RURAL, 46., 2008, Rio Branco. <strong>Atas...</strong> Rio Branco: SOBER, 2008. Disponível em: <<a href="http://www.sober.org.br/palestra/9/548.pdf">http://www.sober.org.br/palestra/9/548.pdf</a>>. Acesso em: 21 jun. 2010.</p>
+										<p>Try link to: <a href="http://scholar.google.com.br/scholar?q=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">Google</a></p>
+										<p>Similars in: <a href="http://www.scielo.br/scieloOrg/php/similar.php?lang=en&text=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">SciELO Network</a></p>
+									</div>
+									<div class="modal-footer">
+										<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+									</div>
+								</div>
+							</li>
+							<li>BATISTA, Vandick Silva. <strong>A pesca na Amazônia Central.</strong> In: RUFFINO, Mauro Luis (Ed.). A pesca e os recursos pesqueiros na Amazônia brasileira. Brasília: Instituto Brasileiro do Meio Ambiente e dos Recursos Naturais Renováveis, 2004. p. 213-243. <span class="ref_link">[ <a data-toggle="modal" href="#links_ref004">Links</a> ]</span>
+								<div class="modal fade" id="links_ref004" style="display: none;">
+									<div class="modal-header">
+										<a class="close" data-dismiss="modal">×</a>
+										<h3>Links</h3>
+									</div>
+									<div class="modal-body">
+										<p>ABREU, L. S.; SIVIERO, A.; BELLON, S. Trajetória de conversão agroecológica de agricultores familiares do Sudeste da Amazônia. In: CONGRESSO DA SOCIEDADE BRASILEIRA DE ECONOMIA, ADMINISTRAÇÃO E SOCIOLOGIA RURAL, 46., 2008, Rio Branco. <strong>Atas...</strong> Rio Branco: SOBER, 2008. Disponível em: <<a href="http://www.sober.org.br/palestra/9/548.pdf">http://www.sober.org.br/palestra/9/548.pdf</a>>. Acesso em: 21 jun. 2010.</p>
+										<p>Try link to: <a href="http://scholar.google.com.br/scholar?q=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">Google</a></p>
+										<p>Similars in: <a href="http://www.scielo.br/scieloOrg/php/similar.php?lang=en&text=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">SciELO Network</a></p>
+									</div>
+									<div class="modal-footer">
+										<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+									</div>
+								</div>
+							</li>
+							<li>BRASIL. Ministério da Pesca e Aquicultura. <strong>Boletim Estatístico da Pesca e Aquicultura.</strong> Brasil 2008-2009. Brasília, 2010. Disponível em: <<a href="http://www.sepaq.pa.gov.br/files/u1/anuario_da_pesca_completo.pdf">http://www.sepaq.pa.gov.br/files/u1/anuario_da_pesca_completo.pdf</a>>. Acesso em 23 jul. 2010. <span class="ref_link">[ <a data-toggle="modal" href="#links_ref005">Links</a> ]</span>
+								<div class="modal fade" id="links_ref005" style="display: none;">
+									<div class="modal-header">
+										<a class="close" data-dismiss="modal">×</a>
+										<h3>Links</h3>
+									</div>
+									<div class="modal-body">
+										<p>ABREU, L. S.; SIVIERO, A.; BELLON, S. Trajetória de conversão agroecológica de agricultores familiares do Sudeste da Amazônia. In: CONGRESSO DA SOCIEDADE BRASILEIRA DE ECONOMIA, ADMINISTRAÇÃO E SOCIOLOGIA RURAL, 46., 2008, Rio Branco. <strong>Atas...</strong> Rio Branco: SOBER, 2008. Disponível em: <<a href="http://www.sober.org.br/palestra/9/548.pdf">http://www.sober.org.br/palestra/9/548.pdf</a>>. Acesso em: 21 jun. 2010.</p>
+										<p>Try link to: <a href="http://scholar.google.com.br/scholar?q=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">Google</a></p>
+										<p>Similars in: <a href="http://www.scielo.br/scieloOrg/php/similar.php?lang=en&text=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">SciELO Network</a></p>
+									</div>
+									<div class="modal-footer">
+										<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+									</div>
+								</div>
+							</li>
+							<li>BURGESS, Warren E. <strong>An atlas of freshwater and marine catfishes: A preliminary survey of the Siluriformes.</strong> New Jersey: T.F.H. Publications, 1989. <span class="ref_link">[ <a data-toggle="modal" href="#links_ref006">Links</a> ]</span>
+								<div class="modal fade" id="links_ref006" style="display: none;">
+									<div class="modal-header">
+										<a class="close" data-dismiss="modal">×</a>
+										<h3>Links</h3>
+									</div>
+									<div class="modal-body">
+										<p>ABREU, L. S.; SIVIERO, A.; BELLON, S. Trajetória de conversão agroecológica de agricultores familiares do Sudeste da Amazônia. In: CONGRESSO DA SOCIEDADE BRASILEIRA DE ECONOMIA, ADMINISTRAÇÃO E SOCIOLOGIA RURAL, 46., 2008, Rio Branco. <strong>Atas...</strong> Rio Branco: SOBER, 2008. Disponível em: <<a href="http://www.sober.org.br/palestra/9/548.pdf">http://www.sober.org.br/palestra/9/548.pdf</a>>. Acesso em: 21 jun. 2010.</p>
+										<p>Try link to: <a href="http://scholar.google.com.br/scholar?q=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">Google</a></p>
+										<p>Similars in: <a href="http://www.scielo.br/scieloOrg/php/similar.php?lang=en&text=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">SciELO Network</a></p>
+									</div>
+									<div class="modal-footer">
+										<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+									</div>
+								</div>
+							</li>
+							<li>CARMONA, Priscila Amorim. <strong>Caracterização da pesca da pescada amarela Cynoscion acoupa (Lacèpede, 1801) desembarcadas no município de Bragança - Pará.</strong> 2008. 81 f. Dissertação (Mestrado em Ecologia de Ecossistemas Costeiros e Estuarinos) - Universidade Federal do Pará, Bragança, 2008. <span class="ref_link">[ <a data-toggle="modal" href="#links_ref007">Links</a> ]</span>
+								<div class="modal fade" id="links_ref007" style="display: none;">
+									<div class="modal-header">
+										<a class="close" data-dismiss="modal">×</a>
+										<h3>Links</h3>
+									</div>
+									<div class="modal-body">
+										<p>ABREU, L. S.; SIVIERO, A.; BELLON, S. Trajetória de conversão agroecológica de agricultores familiares do Sudeste da Amazônia. In: CONGRESSO DA SOCIEDADE BRASILEIRA DE ECONOMIA, ADMINISTRAÇÃO E SOCIOLOGIA RURAL, 46., 2008, Rio Branco. <strong>Atas...</strong> Rio Branco: SOBER, 2008. Disponível em: <<a href="http://www.sober.org.br/palestra/9/548.pdf">http://www.sober.org.br/palestra/9/548.pdf</a>>. Acesso em: 21 jun. 2010.</p>
+										<p>Try link to: <a href="http://scholar.google.com.br/scholar?q=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">Google</a></p>
+										<p>Similars in: <a href="http://www.scielo.br/scieloOrg/php/similar.php?lang=en&text=Agro%20forestry%20systems%20and%20food%20security%20among%20smallholder%20farmers%20of%20the%20Brazilian%20Amazon:%20A%20strategy%20for%20environmental%20global%20crisis%20Anais...">SciELO Network</a></p>
+									</div>
+									<div class="modal-footer">
+										<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+									</div>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="section historic">
+						<p>Recebido em <strong>18/09/2010</strong> - Aprovado em <strong>01/08/2011</strong></p>
+					</div>
+					<div class="section figures">
+						<div class="modal fade" id="figure_001" style="display: none;">
+							<div class="modal-header">
+								<a class="close" data-dismiss="modal">×</a>
+								<h3>Figura 1</h3>
+							</div>
+							<div class="modal-body">
+								<img src="themes/scielo/img_temp/a05fig1.jpg" />
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+							</div>
+						</div>
+					</div>
+					<div class="section footnotes">
+						<div class="modal fade" id="footnote_001" style="display: none;">
+							<div class="modal-header">
+								<a class="close" data-dismiss="modal">×</a>
+								<h3>Footnote 1</h3>
+							</div>
+							<div class="modal-body">
+								<p>De acordo com Eduardo Viveiros de Castro (2002, p. 486, grifos do autor), "a antropologia se distingue [da sociologia] na medida em que ela presta atenção ao que as outras sociedades têm a dizer sobre as relações sociais, e não, simplesmente, parte do que a nossa tem a dizer e tenta ver como é que isso funciona lá. Trata-se de tentar dialogar para valer, tratar as outras culturas não como objetos (...) mas como possíveis interlocutores de uma teoria mais geral das relações sociais. Para mim, se há uma diferença entre antropologia e sociologia, seria essa: o objeto do discurso antropológico tende a estar no mesmo plano epistemológico que o sujeito deste discurso".</p>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+							</div>
+						</div>
+						<div class="modal fade" id="footnote_002" style="display: none;">
+							<div class="modal-header">
+								<a class="close" data-dismiss="modal">×</a>
+								<h3>Footnote 2</h3>
+							</div>
+							<div class="modal-body">
+								<p>Esse discurso deve ser relativizado. Na maioria dos assentamentos, existe uma forte rotatividade, a taxa de permanência varia em função dos locais, dos períodos considerados e dos autores, por exemplo: 20% (Picard, 1998), 40% (Léna, 1992) etc. Os motivos de desistência são extremamente variados, incluindo a especulação fundiária. Em certos lugares, enquanto o preço dos produtos agrícolas está em baixa, o preço da terra é multiplicado por dois.</p>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+							</div>
+						</div>
+						<div class="modal fade" id="footnote_003" style="display: none;">
+							<div class="modal-header">
+								<a class="close" data-dismiss="modal">×</a>
+								<h3>Footnote 3</h3>
+							</div>
+							<div class="modal-body">
+								<p>Parte dos conhecimentos ligados à fauna e à flora local vem dos seringueiros, que continuaram morando nos lotes dos assentados antes de serem deslocados.</p>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+							</div>
+						</div>
+						<div class="modal fade" id="footnote_004" style="display: none;">
+							<div class="modal-header">
+								<a class="close" data-dismiss="modal">×</a>
+								<h3>Footnote 4</h3>
+							</div>
+							<div class="modal-body">
+								<p>O contexto de interlocução com pesquisadores pode induzir a tais declarações. Por isso, devem ser aceitas com cautela (Ferreira, 2004; Kohler, 2008; Roe et al., 2000).</p>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+							</div>
+						</div>
+						<div class="modal fade" id="footnote_005" style="display: none;">
+							<div class="modal-header">
+								<a class="close" data-dismiss="modal">×</a>
+								<h3>Footnote 5</h3>
+							</div>
+							<div class="modal-body">
+								<p>O programa "Les déterminants géographiques, démographiques et socio-économiques de la durabilité en Amazonie brésilienne - DURAMAZ" elaborou um sistema de indicadores modulares (Marchand, 2010) que visa apreender os principais condicionantes do DS na Amazônia brasileira, em treze campos distintos, considerando aspectos geográficos, socioeconômicos, culturais ou ambientais. As conclusões gerais do programa, relativas aos 13 campos pesquisados, foram divulgadas em Le Tourneau e Droulers (2010).</p>
+							</div>
+							<div class="modal-footer">
+								<a href="#" class="btn" data-dismiss="modal">Fechar</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div><!-- /article -->
+		</div> <!-- /container -->
+		<div class="footer">
+			<div class="container row-fluid">
+				<div class="address span8">
+					<span class="editor">MCT/Museu Paraense Emílio Goeldi</span><br/>
+					Av. Magalhães Barata, 376 - São Braz<br/>
+					66040-170 - Belém - PA<br/>
+					Tel/Fax: (55 91) 3249-6373<br/>
+					boletim.humanas@museu-goeldi.br
+				</div>
+				<div class="license span4">
+					<img src="themes/scielo/images/common/cc_by-nc_80x15.png" /><br/>
+					Todo o conteúdo deste periódico, exceto onde está identificado, está licenciado sob uma <a href="http://creativecommons.org/licenses/by-nc/3.0/deed.pt">Licença Creative Commons</a>
+				</div>
+				<div class="siteMap">
+					<div id="footerLogo">
+						<img src="themes/scielo/images/pt/logoScielo.png" />
+					</div>
+					<div class="nav">
+						<ul>
+							<li class="topLevel">
+								<a href="#">Números</a>
+								<ul>
+									<li><a href="#">todos</a></li>
+									<li><a href="#">anterior</a></li>
+									<li><a href="#">atual</a></li>
+									<li><a href="#">próximo</a></li>
+								</ul>
+							</li>
+							<li class="topLevel">
+								<a href="#">Artigos mais...</a>
+								<ul>
+									<li><a href="#">recentes</a></li>
+									<li><a href="#">visitados</a></li>
+									<li><a href="#">citados</a></li>
+								</ul>
+							</li>
+							<li class="topLevel">
+								<a href="#">Pesquisa e Índices</a>
+								<ul>
+									<li><a href="#">pesquisa</a></li>
+									<li><a href="#">autor</a></li>
+									<li><a href="#">título</a></li>
+									<li><a href="#">assunto</a></li>
+								</ul>
+							</li>
+							<li class="topLevel">
+								<a href="#">Métricas</a>
+								<ul>
+									<li><a href="#">citações</a></li>
+									<li><a href="#">visitas</a></li>
+									<li><a href="#">bibliometria</a></li>
+									<li><a href="#">bookmarks</a></li>
+								</ul>
+							</li>
+							<li class="topLevel">
+								<a href="#">Destaques</a>
+								<ul>
+									<li><a href="#">do editor</a></li>
+									<li><a href="#">notícias</a></li>
+								</ul>
+							</li>
+						</ul>
+					</div> <!-- /nav -->
+				</div> <!-- /siteMap -->
+			</div> <!-- /container -->
+		</div> <!-- /footer -->
+		
+		<!-- javascript
+		================================================== -->
+
+		
+		<script src="themes/scielo/js/jquery.js"></script>
+		<script src="bootstrap/js/bootstrap.min.js"></script>
+	</body>
+</html>
