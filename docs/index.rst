@@ -17,6 +17,7 @@ design.
 
    dev/vision
    dev/mockups
+   dev/datamodel
    files/index
    meetings/index
 
