@@ -102,6 +102,8 @@ Requisitos não definidos
 * O sistema deve permitir a gestão de alguns dados do periódico, tais como: Sobre a revista, Corpo 
   editorial, Instruções aos autores, Assinaturas e o Rodapé (markdown?). Ou essa funcionalidade será
   uma aplicação no Journal Manager?
+* O mockup home_periodico defini serviços de notícias e notas do editor. Esse produto será
+  desenvolvido no contexto deste projeto? 
 
 .. _SciELOManager: http://manager.scielo.org/
 
