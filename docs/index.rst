@@ -22,6 +22,7 @@ and design decisions.
    :maxdepth: 2
 
    dev/vision
+   dev/mockups
    files/index
    meetings/index
 
