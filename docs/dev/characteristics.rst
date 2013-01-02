@@ -48,7 +48,7 @@ Uso da Ferramenta
 Acessos Mensais
 ===============
 
-    o número médio de acessos do tipo **pageview** no período de 1 de janeiro de 2012 até 
+    A média mensal de acessos do tipo **pageview** no período de 1 de janeiro de 2012 até 
     31 de dezembro de 2012 é de 41.236.286.
 
     * Africa do Sul: 74.000
