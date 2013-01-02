@@ -108,6 +108,6 @@ Africa do Sul, Bolivia, Paraguai, Perú, Uruguai, West Indian Medical Journal, B
 Divulgação Científica e Terceiros
 =================================
 
-Ciência e Cultura, ComCiência, Conhecimento e Inovação, Enfermagem (RevEnf), Pesicologia (PEPSIC),
+Ciência e Cultura, ComCiência, Conhecimento e Inovação, Enfermagem (RevEnf), Psicologia (PEPSIC),
 Odontologia (RevOdonto), Secretaria de Saúde Pública (SES), EMRO, Tropika, Geologia (PPEGEO), UNESP,
 Avaliação.
