@@ -16,6 +16,7 @@ design.
    :maxdepth: 2
 
    dev/vision
+   dev/characteristics
    dev/mockups
    dev/datamodel
    files/index

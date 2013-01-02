@@ -6,10 +6,10 @@ Motivações
 ==========
 
 * Manter a arquitetura de aplicações e os serviços disponibilizados aos usuário em um padrão 
-  internacional de qualidade, diminuir os custos operacionais, de manutenção e suporte a rede 
-  SciELO, permitindo a atualização dos aplicações de forma automática equacionando a qualidade 
-  tecnologica de todas as coleções da Rede SciELO e de coleções não certificadas que fazem uso das 
-  aplicações da metodologia.
+  internacional de qualidade, diminuir os :doc:`custos operacionais, de manutenção e suporte a rede 
+  SciELO<characteristics>`, permitindo a atualização dos aplicações de forma automática equacionando 
+  a qualidade tecnologica de todas as coleções da Rede SciELO e de coleções não certificadas que 
+  fazem uso das aplicações da metodologia.
 
 * Empoderar o desenvolvimento de novas aplicações e serviços, evoluindo a arquitetura das aplicações
   SciELO para um padrão de profissionalismo equiparado a grandes empresas do mercado 
@@ -58,7 +58,7 @@ Quais problemas esta aplicação deve solucionar?
 
 * Migrar toda rede SciELO para uso das novas aplicações.
 * Mudança de paradigma para o uso de aplicações como serviço. (Application as a Service)
-* Mudança de paradigma de uso uma arquitetura decentralizada para uma arquitetura centralizada.
+* Mudança de paradigma de uso de uma arquitetura decentralizada para uma arquitetura centralizada.
 
 Macro Necessidades
 ==================
