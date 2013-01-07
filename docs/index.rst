@@ -19,6 +19,7 @@ design.
    dev/characteristics
    dev/mockups
    dev/datamodel
+   dev/storyboards
    files/index
    meetings/index
 
