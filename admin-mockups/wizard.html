@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+
+<html xmlns:fb="http://ogp.me/ns/fb#" lang="pt-BR">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link rel="stylesheet" type="text/css" href="bootstrap/css/bootstrap.min.css">
+  </head>
+  <body>
+    <div class="navbar navbar-inverse navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="#">Brasil</a>
+          <div class="nav-collapse collapse">
+            <ul class="nav">
+              <li class="active"><a href="journals.html">Periódicos </a></li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Páginas Secundárias <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Sobre Nós</a></li>
+                  <li><a href="#">Corpo Editorial</a></li>
+                  <li><a href="#">Instruções aos Autores</a></li>
+                  <li class="divider"></li>
+                  <li class="nav-header">Outros</li>
+                  <li><a href="#">Assinaturas</a></li>
+                  <li><a href="#">Outras Opções</a></li>
+                </ul>
+              </li>
+              <li class="dropdown">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">Configurações
+                  <b class="caret"></b></a>
+                <ul class="dropdown-menu">
+                  <li><a href="#">Rodapé</a></li>
+                  <li><a href="#">Imagens</a></li>
+                  <li><a href="#">Página Inícial</a></li>
+                  <li><a href="#">Caixa de Ferramenta</a></li>
+                  <li><a href="wizard.html">Configuração OPAC</a></li>
+                  <li class="divider"></li>
+                  <li class="nav-header">Config. de Serviços</li>
+                  <li><a href="#">Citações</a></li>
+                  <li><a href="#">Artigos Relacionados</a></li>
+                  <li><a href="#">Estatística</a></li>
+                </ul>
+              </li>
+            </ul>
+            <ul class="nav pull-right">
+              <li class="dropdown" id="nav-user">
+                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                  <img alt="Gravatar" src="https://secure.gravatar.com/avatar/74ccef328abd9bcfd9035aa179510a24?s=18&amp;d=mm" style="vertical-align:top;">
+                    atta.jamil@gmail.com
+                  <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                  <li>
+                    <a href="#">
+                      <i class="icon-edit"></i>
+                        configurações do usuário
+                    </a>
+                  </li>
+                  <li class="divider"></li>
+                  <li>
+                    <a href="#">
+                      <i class="icon-off"></i>
+                        sair
+                    </a>
+                  </li>
+                </ul>
+              </li>
+          </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+
+      <div style="margin-top: 50px;">
+        <form>
+          <fieldset>
+            <legend>Configuração OPAC</legend>
+            <label>Nome do Catalago</label>
+            <input class="input-xxlarge" type="text">
+            <span class="help-block">Exemplo: Brasil</span>
+            <label>Tipo de Catalago</label>
+            <select>
+              <option>Regional</option>
+              <option>Temático</option>
+            </select>
+            <label>Pais</label>
+            <select>
+              <option>Brasil</option>
+              <option>Chile</option>
+              <option>Argentina</option>
+              <option>Colombia</option>
+              <option>Espanha</option>
+            </select>
+          </fieldset>
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Salvar</button>
+            <button type="button" class="btn">Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+      <hr>
+
+      <footer>
+        <p>SciELO - Scientific Electronic Library Online</p>
+      </footer>
+
+    </div>
+
+  </body>
+  <script type="text/javascript" src="bootstrap/js/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+</html>
