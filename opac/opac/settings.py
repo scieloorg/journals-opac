@@ -3,7 +3,7 @@ import os
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
-PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
+BASE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..')
 
 ADMINS = (
     # ('Your Name', 'your_email@example.com'),
@@ -117,6 +117,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'catalog',
     # Uncomment the next line to enable the admin:
     # 'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
@@ -152,6 +153,5 @@ LOGGING = {
     }
 }
 
-BASE_PATH = PROJECT_PATH
 TEST_DISCOVERY_ROOT = BASE_PATH
 TEST_RUNNER = 'utils.runner.DiscoveryRunner'
