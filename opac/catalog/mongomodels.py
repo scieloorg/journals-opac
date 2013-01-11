@@ -38,8 +38,6 @@ class MongoConnector(object):
             self._ensure_indexes()
 
 
-
-
 class MongoManager(MongoConnector):
     """
     Wraps a subset of pymongo.collection.Collection methods, in order
@@ -87,7 +85,26 @@ class ManagerFactory(object):
         return cls._objects
 
 
-class Article(MongoConnector):
+class Document(MongoConnector):
+
+    def __setattr__(self, name, value):
+        # only some attributes are allowed to be set in the instance
+        if name in ['_conn', 'db', 'col', '_data']:
+            super(Document, self).__setattr__(name, value)
+        else:
+            _data = self.__dict__.setdefault('_data', {})
+            _data[name] = value
+
+    def __getattr__(self, name):
+        if name in self._data:
+            return self._data[name]
+        else:
+            raise AttributeError(
+                "'%s' object has no attribute '%s'" % (self.__class__, name)
+            )
+
+
+class Article(Document):
     _collection_name_ = 'articles'
     objects = ManagerFactory()
 
@@ -113,22 +130,6 @@ class Article(MongoConnector):
         """
         self.col.ensure_index('issue_ref')
 
-    def __setattr__(self, name, value):
-        # only some attributes are allowed to be set in the instance
-        if name in ['_conn', 'db', 'col', '_data']:
-            super(Article, self).__setattr__(name, value)
-        else:
-            _data = self.__dict__.setdefault('_data', {})
-            _data[name] = value
-
-    def __getattr__(self, name):
-        if name in self._data:
-            return self._data[name]
-        else:
-            raise AttributeError(
-                "'%s' object has no attribute '%s'" % (self.__class__, name)
-            )
-
     @property
     def original_title(self):
         try:
@@ -137,7 +138,7 @@ class Article(MongoConnector):
             return u''
 
 
-class Journal(MongoConnector):
+class Journal(Document):
     _collection_name_ = 'journals'
     objects = ManagerFactory()
 
@@ -162,19 +163,3 @@ class Journal(MongoConnector):
         Registers all the MongoDB indexes needed by Article instances
         """
         self.col.ensure_index('issue_ref')
-
-    def __setattr__(self, name, value):
-        # only some attributes are allowed to be set in the instance
-        if name in ['_conn', 'db', 'col', '_data']:
-            super(Journal, self).__setattr__(name, value)
-        else:
-            _data = self.__dict__.setdefault('_data', {})
-            _data[name] = value
-
-    def __getattr__(self, name):
-        if name in self._data:
-            return self._data[name]
-        else:
-            raise AttributeError(
-                "'%s' object has no attribute '%s'" % (self.__class__, name)
-            )
