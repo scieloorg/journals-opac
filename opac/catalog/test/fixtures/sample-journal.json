@@ -1,0 +1,128 @@
+{
+  "abstract_keyword_languages": null,
+  "acronym": "AISS",
+  "collections": "/api/v1/collections/1/",
+  "contact": null,
+  "copyrighter": "Istituto Superiore di Sanità",
+  "cover": null,
+  "created": "2010-04-09T00:00:00",
+  "creator": "/api/v1/users/1/",
+  "ctrl_vocabulary": "nd",
+  "current_ahead_documents": 0,
+  "editor_address": "Viale Regina Elena 299, 00161 Italy Rome, Tel.: 0039 06 4990 2945, Fax: 0039 06 4990 2253",
+  "editor_address_city": "",
+  "editor_address_country": "",
+  "editor_address_state": "",
+  "editor_address_zip": "",
+  "editor_email": "annali@iss.it",
+  "editor_name": "",
+  "editor_phone1": "",
+  "editor_phone2": null,
+  "editorial_standard": "vancouv",
+  "eletronic_issn": "",
+  "final_num": "",
+  "final_vol": "",
+  "final_year": null,
+  "frequency": "Q",
+  "id": 1,
+  "index_coverage": "chemabs\nembase\nmedline\npascal\nzoological records",
+  "init_num": "1",
+  "init_vol": "1",
+  "init_year": "1965",
+  "is_indexed_aehci": false,
+  "is_indexed_scie": false,
+  "is_indexed_ssci": false,
+  "issues": [
+    {
+      "cover": null,
+      "created": "2010-04-01T01:01:01",
+      "ctrl_vocabulary": "nd",
+      "editorial_standard": "vancouv",
+      "id": 1,
+      "is_marked_up": false,
+      "is_press_release": false,
+      "is_trashed": false,
+      "label": "45 (4)",
+      "number": "4",
+      "order": 4,
+      "publication_end_month": 12,
+      "publication_start_month": 10,
+      "publication_year": 2009,
+      "resource_uri": "/api/v1/issues/1/",
+      "sections": [
+        {
+          "id": 514,
+          "articles": [
+            "AISS-JHjashA",
+          ]
+        }
+      ],
+      "suppl_number": null,
+      "suppl_volume": null,
+      "total_documents": 17,
+      "updated": "2012-11-08T10:35:37.193612",
+      "volume": "45"
+    }
+  ],
+  "languages": [
+    "en",
+    "it"
+  ],
+  "logo": null,
+  "medline_code": null,
+  "medline_title": null,
+  "missions": [
+    {"en": "To disseminate information on researches in public health"}
+  ],
+  "national_code": null,
+  "notes": "",
+  "other_previous_title": "",
+  "other_titles": [],
+  "previous_ahead_documents": 0,
+  "print_issn": "0021-2571",
+  "pub_level": "CT",
+  "pub_status": "current",
+  "pub_status_history": [
+    {
+      "date": "2010-04-01T00:00:00",
+      "status": "current"
+    }
+  ],
+  "pub_status_reason": "",
+  "publication_city": "Roma",
+  "publisher_country": "IT",
+  "publisher_name": "Istituto Superiore di Sanità",
+  "publisher_state": "",
+  "resource_uri": "/api/v1/journals/1/",
+  "scielo_issn": "print",
+  "secs_code": "",
+  "short_title": "Ann. Ist. Super. Sanità",
+  "sponsors": [
+    1
+  ],
+  "study_areas": [
+    "Agricultural Sciences"
+  ],
+  "subject_descriptors": "public health",
+  "title": "Annali dell'Istituto Superiore di Sanità",
+  "title_iso": "Ann. Ist. Super. Sanità",
+  "updated": "2012-11-08T10:35:00.448421",
+  "url_journal": null,
+  "url_online_submission": null,
+  "use_license": {
+    "disclaimer": "",
+    "id": 1,
+    "license_code": "",
+    "reference_url": null,
+    "resource_uri": "/api/v1/uselicenses/1/"
+  },
+  "sections": [
+    {
+      "id": 514,
+      "resource_uri": "/api/v1/sections/514/",
+      "titles": [
+        {"en": "WHO Publications"}
+      ]
+    }
+  ]
+}
