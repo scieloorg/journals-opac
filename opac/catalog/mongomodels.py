@@ -160,6 +160,41 @@ class Journal(Document):
 
     def _ensure_indexes(self):
         """
-        Registers all the MongoDB indexes needed by Article instances
+        Registers all the MongoDB indexes
         """
         self.col.ensure_index('issue_ref')
+
+    def list_issues(self):
+        """
+        Iterates on all issues of the journal
+        """
+
+        for issue in self.issues:
+            yield Issue(**issue['data'])
+
+
+class Issue(Document):
+    _collection_name_ = 'journals'
+    objects = ManagerFactory()
+
+    init_params = ['mongodb_driver', 'mongo_uri', 'mongo_collection']
+
+    def __init__(self, **kwargs):
+        # cleaning up init args
+        init_args = {}
+        for param in self.init_params:
+            if param in kwargs:
+                init_args[param] = kwargs.pop(param)
+
+        if 'mongo_collection' not in init_args:
+            init_args['mongo_collection'] = 'journals'
+
+        super(Issue, self).__init__(**init_args)
+
+        self._data = kwargs
+
+    def _ensure_indexes(self):
+        """
+        Registers all the MongoDB indexes
+        """
+        self.col.ensure_index('issues.id')

@@ -33,35 +33,37 @@
   "is_indexed_scie": false,
   "is_indexed_ssci": false,
   "issues": [
-    {
-      "cover": null,
-      "created": "2010-04-01T01:01:01",
-      "ctrl_vocabulary": "nd",
-      "editorial_standard": "vancouv",
-      "id": 1,
-      "is_marked_up": false,
-      "is_press_release": false,
-      "is_trashed": false,
-      "label": "45 (4)",
-      "number": "4",
-      "order": 4,
-      "publication_end_month": 12,
-      "publication_start_month": 10,
-      "publication_year": 2009,
-      "resource_uri": "/api/v1/issues/1/",
-      "sections": [
+    { "id": 1,
+      "data": {
+        "cover": null,
+        "created": "2010-04-01T01:01:01",
+        "ctrl_vocabulary": "nd",
+        "editorial_standard": "vancouv",
+        "id": 1,
+        "is_marked_up": false,
+        "is_press_release": false,
+        "is_trashed": false,
+        "label": "45 (4)",
+        "number": "4",
+        "order": 4,
+        "publication_end_month": 12,
+        "publication_start_month": 10,
+        "publication_year": 2009,
+        "resource_uri": "/api/v1/issues/1/",
+        "sections": [
         {
           "id": 514,
           "articles": [
             "AISS-JHjashA",
           ]
         }
-      ],
-      "suppl_number": null,
-      "suppl_volume": null,
-      "total_documents": 17,
-      "updated": "2012-11-08T10:35:37.193612",
-      "volume": "45"
+        ],
+        "suppl_number": null,
+        "suppl_volume": null,
+        "total_documents": 17,
+        "updated": "2012-11-08T10:35:37.193612",
+        "volume": "45"
+        }
     }
   ],
   "languages": [
