@@ -59,7 +59,13 @@ class MongoManager(object):
         if 'mongo_collection' not in kwargs:
             kwargs['mongo_collection'] = self._doc._collection_name_
 
+        indexes = kwargs.pop('indexes', [])
+
         self._mongoconn = mongoconn_lib(**kwargs)
+
+        # ensure all needed mongodb indexes had been created
+        if indexes:
+            self._ensure_indexes(indexes)
 
     def __getattr__(self, name):
 
@@ -75,24 +81,37 @@ class MongoManager(object):
         else:
             raise AttributeError()
 
+    def _ensure_indexes(self, indexes):
+        for index in indexes:
+            self._mongoconn.col.ensure_index(index)
+
 
 class ManagerFactory(object):
+
+    def __init__(self, collection,
+                       indexes,
+                       mongomanager_lib=MongoManager):
+        self.collection = collection
+        self.indexes = indexes
+        self._mongomanager = mongomanager_lib
+
     def __get__(self, instance, cls):
         if not hasattr(cls, '_objects'):
-            setattr(cls, '_objects', MongoManager(cls))
+            setattr(cls, '_objects', self._mongomanager(cls,
+                mongo_collection=self.collection, indexes=self.indexes))
 
         return cls._objects
 
 
-class Document(MongoConnector):
+class Document(object):
+
+    def __init__(self, **kwargs):
+        for arg, value in kwargs.items():
+            setattr(self, arg, value)
 
     def __setattr__(self, name, value):
-        # only some attributes are allowed to be set in the instance
-        if name in ['_conn', 'db', 'col', '_data']:
-            super(Document, self).__setattr__(name, value)
-        else:
-            _data = self.__dict__.setdefault('_data', {})
-            _data[name] = value
+        _data = self.__dict__.setdefault('_data', {})
+        _data[name] = value
 
     def __getattr__(self, name):
         if name in self._data:
@@ -104,30 +123,7 @@ class Document(MongoConnector):
 
 
 class Article(Document):
-    _collection_name_ = 'articles'
-    objects = ManagerFactory()
-
-    init_params = ['mongodb_driver', 'mongo_uri', 'mongo_collection']
-
-    def __init__(self, **kwargs):
-        # cleaning up init args
-        init_args = {}
-        for param in self.init_params:
-            if param in kwargs:
-                init_args[param] = kwargs.pop(param)
-
-        if 'mongo_collection' not in init_args:
-            init_args['mongo_collection'] = 'articles'
-
-        super(Article, self).__init__(**init_args)
-
-        self._data = kwargs
-
-    def _ensure_indexes(self):
-        """
-        Registers all the MongoDB indexes needed by Article instances
-        """
-        self.col.ensure_index('issue_ref')
+    objects = ManagerFactory(collection='articles', indexes=['issue_ref'])
 
     @property
     def original_title(self):
@@ -138,30 +134,7 @@ class Article(Document):
 
 
 class Journal(Document):
-    _collection_name_ = 'journals'
-    objects = ManagerFactory()
-
-    init_params = ['mongodb_driver', 'mongo_uri', 'mongo_collection']
-
-    def __init__(self, **kwargs):
-        # cleaning up init args
-        init_args = {}
-        for param in self.init_params:
-            if param in kwargs:
-                init_args[param] = kwargs.pop(param)
-
-        if 'mongo_collection' not in init_args:
-            init_args['mongo_collection'] = 'journals'
-
-        super(Journal, self).__init__(**init_args)
-
-        self._data = kwargs
-
-    def _ensure_indexes(self):
-        """
-        Registers all the MongoDB indexes
-        """
-        self.col.ensure_index('issue_ref')
+    objects = ManagerFactory(collection='journals', indexes=['issue_ref'])
 
     def list_issues(self):
         """
@@ -173,27 +146,4 @@ class Journal(Document):
 
 
 class Issue(Document):
-    _collection_name_ = 'journals'
-    objects = ManagerFactory()
-
-    init_params = ['mongodb_driver', 'mongo_uri', 'mongo_collection']
-
-    def __init__(self, **kwargs):
-        # cleaning up init args
-        init_args = {}
-        for param in self.init_params:
-            if param in kwargs:
-                init_args[param] = kwargs.pop(param)
-
-        if 'mongo_collection' not in init_args:
-            init_args['mongo_collection'] = 'journals'
-
-        super(Issue, self).__init__(**init_args)
-
-        self._data = kwargs
-
-    def _ensure_indexes(self):
-        """
-        Registers all the MongoDB indexes
-        """
-        self.col.ensure_index('issues.id')
+    objects = ManagerFactory(collection='journals', indexes=['issues.id'])

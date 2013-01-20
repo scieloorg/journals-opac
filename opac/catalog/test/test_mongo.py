@@ -1,4 +1,6 @@
 # coding: utf8
+import unittest
+
 from django.test import TestCase
 import pymongo
 from mocker import (
@@ -146,107 +148,76 @@ class MongoManagerTest(TestCase, MockerTestCase):
         for r in resultset:
             self.assertEqual(r, {'title': 'Some title'})
 
+    def test_indexes_are_created(self):
+        mongo_driver = self.mocker.mock()
+        mongo_conn = self.mocker.mock()
+        mongo_db = self.mocker.mock(pymongo.database.Database)
+        mongo_col = self.mocker.mock()
+        article = self.mocker.mock()
+
+        mongo_driver.Connection(host=ANY, port=ANY)
+        self.mocker.result(mongo_conn)
+
+        mongo_conn[ANY]
+        self.mocker.result(mongo_db)
+
+        mongo_db.authenticate(ANY, ANY)
+        self.mocker.result(None)
+
+        mongo_db['articles']
+        self.mocker.result(mongo_col)
+
+        mongo_col.ensure_index('issues_ref')
+        self.mocker.result(None)
+
+        self.mocker.replay()
+
+        mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
+        mm = self._makeOne(article,
+                           mongodb_driver=mongo_driver,
+                           mongo_uri=mongo_uri,
+                           mongo_collection='articles',
+                           indexes=['issues_ref'])
+
+        # the main idea is to assert that pymongo's
+        # ensure_index() method is called, and mocker
+        # asserts this to us. The assertion below is
+        # just a placebo.
+        self.assertTrue(True)
+
+
 
 class ArticleModelTest(TestCase, MockerTestCase):
 
     def _makeOne(self, *args, **kwargs):
         from catalog.mongomodels import Article
+
+        monkey_patches = kwargs.pop('monkeypatch', {})
+        for attr, patch in monkey_patches.items():
+            setattr(Article, attr, patch)
+
         return Article(*args, **kwargs)
 
     def test_simple_attr_access(self):
-        mongo_driver = self.mocker.mock()
-        mongo_conn = self.mocker.mock()
-        mongo_db = self.mocker.mock(pymongo.database.Database)
-        mongo_col = self.mocker.mock()
-
-        mongo_driver.Connection(host=ANY, port=ANY)
-        self.mocker.result(mongo_conn)
-
-        mongo_conn[ANY]
-        self.mocker.result(mongo_db)
-
-        mongo_db.authenticate(ANY, ANY)
-        self.mocker.result(None)
-
-        mongo_db['articles']
-        self.mocker.result(mongo_col)
-
-        mongo_col.ensure_index(ANY)
-        self.mocker.result(None)
-
-        self.mocker.replay()
-
         article_microdata = {
             'title': 'Micronucleated lymphocytes in parents of lalala children'
         }
 
-        mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        a = self._makeOne(mongodb_driver=mongo_driver,
-                          mongo_uri=mongo_uri,
-                          **article_microdata)
+        a = self._makeOne(**article_microdata)
 
         self.assertEqual(a.title,
             'Micronucleated lymphocytes in parents of lalala children')
 
     def test_simple_late_defined_attr(self):
-        mongo_driver = self.mocker.mock()
-        mongo_conn = self.mocker.mock()
-        mongo_db = self.mocker.mock(pymongo.database.Database)
-        mongo_col = self.mocker.mock()
-
-        mongo_driver.Connection(host=ANY, port=ANY)
-        self.mocker.result(mongo_conn)
-
-        mongo_conn[ANY]
-        self.mocker.result(mongo_db)
-
-        mongo_db.authenticate(ANY, ANY)
-        self.mocker.result(None)
-
-        mongo_db['articles']
-        self.mocker.result(mongo_col)
-
-        mongo_col.ensure_index(ANY)
-        self.mocker.result(None)
-
-        self.mocker.replay()
-
-        mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        a = self._makeOne(mongodb_driver=mongo_driver,
-                          mongo_uri=mongo_uri)
+        a = self._makeOne()
 
         a.title = 'Micronucleated lymphocytes in parents of lalala children'
         self.assertEqual(a.title,
             'Micronucleated lymphocytes in parents of lalala children')
 
+    @unittest.expectedFailure
     def test_needed_indexes_are_created(self):
-        mongo_driver = self.mocker.mock()
-        mongo_conn = self.mocker.mock()
-        mongo_db = self.mocker.mock(pymongo.database.Database)
-        mongo_col = self.mocker.mock()
-
-        mongo_driver.Connection(host=ANY, port=ANY)
-        self.mocker.result(mongo_conn)
-
-        mongo_conn[ANY]
-        self.mocker.result(mongo_db)
-
-        mongo_db.authenticate(ANY, ANY)
-        self.mocker.result(None)
-
-        mongo_db['articles']
-        self.mocker.result(mongo_col)
-
-        mongo_col.ensure_index('issue_ref')
-        self.mocker.result(None)
-
-        self.mocker.replay()
-
-        mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        a = self._makeOne(mongodb_driver=mongo_driver,
-                          mongo_uri=mongo_uri)
-
-        self.assertTrue(True) # placebo
+        self.assertTrue(False)
 
 
 class JournalModelTest(TestCase, MockerTestCase):
@@ -256,94 +227,23 @@ class JournalModelTest(TestCase, MockerTestCase):
         return Journal(*args, **kwargs)
 
     def test_simple_attr_access(self):
-        mongo_driver = self.mocker.mock()
-        mongo_conn = self.mocker.mock()
-        mongo_db = self.mocker.mock(pymongo.database.Database)
-        mongo_col = self.mocker.mock()
-
-        mongo_driver.Connection(host=ANY, port=ANY)
-        self.mocker.result(mongo_conn)
-
-        mongo_conn[ANY]
-        self.mocker.result(mongo_db)
-
-        mongo_db.authenticate(ANY, ANY)
-        self.mocker.result(None)
-
-        mongo_db['journals']
-        self.mocker.result(mongo_col)
-
-        mongo_col.ensure_index(ANY)
-        self.mocker.result(None)
-
-        self.mocker.replay()
-
         journal_microdata = {
             'title': 'Micronucleated lymphocytes in parents of lalala children'
         }
 
-        mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        j = self._makeOne(mongodb_driver=mongo_driver,
-                          mongo_uri=mongo_uri,
-                          **journal_microdata)
+        j = self._makeOne(**journal_microdata)
 
         self.assertEqual(j.title,
             'Micronucleated lymphocytes in parents of lalala children')
 
     def test_simple_late_defined_attr(self):
-        mongo_driver = self.mocker.mock()
-        mongo_conn = self.mocker.mock()
-        mongo_db = self.mocker.mock(pymongo.database.Database)
-        mongo_col = self.mocker.mock()
-
-        mongo_driver.Connection(host=ANY, port=ANY)
-        self.mocker.result(mongo_conn)
-
-        mongo_conn[ANY]
-        self.mocker.result(mongo_db)
-
-        mongo_db.authenticate(ANY, ANY)
-        self.mocker.result(None)
-
-        mongo_db['journals']
-        self.mocker.result(mongo_col)
-
-        mongo_col.ensure_index(ANY)
-        self.mocker.result(None)
-
-        self.mocker.replay()
-
-        mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        j = self._makeOne(mongodb_driver=mongo_driver,
-                          mongo_uri=mongo_uri)
+        j = self._makeOne()
 
         j.title = 'Micronucleated lymphocytes in parents of lalala children'
         self.assertEqual(j.title,
             'Micronucleated lymphocytes in parents of lalala children')
 
     def test_list_issues_must_return_a_lazy_object(self):
-        mongo_driver = self.mocker.mock()
-        mongo_conn = self.mocker.mock()
-        mongo_db = self.mocker.mock(pymongo.database.Database)
-        mongo_col = self.mocker.mock()
-
-        mongo_driver.Connection(host=ANY, port=ANY)
-        self.mocker.result(mongo_conn)
-
-        mongo_conn[ANY]
-        self.mocker.result(mongo_db)
-
-        mongo_db.authenticate(ANY, ANY)
-        self.mocker.result(None)
-
-        mongo_db['journals']
-        self.mocker.result(mongo_col)
-
-        mongo_col.ensure_index(ANY)
-        self.mocker.result(None)
-
-        self.mocker.replay()
-
         issues_data = {
             "issues": [
                 {
@@ -382,15 +282,16 @@ class JournalModelTest(TestCase, MockerTestCase):
             ],
         }
 
-        mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        j = self._makeOne(mongodb_driver=mongo_driver,
-                          mongo_uri=mongo_uri,
-                          **issues_data)
+        j = self._makeOne(**issues_data)
 
         issues = j.list_issues()
         self.assertTrue(hasattr(issues, 'next'))
         issue = issues.next()
         self.assertEqual(issue.editorial_standard, 'vancouv')
+
+    @unittest.expectedFailure
+    def test_needed_indexes_are_created(self):
+        self.assertTrue(False)
 
 
 class IssueModelTest(TestCase, MockerTestCase):
@@ -400,96 +301,22 @@ class IssueModelTest(TestCase, MockerTestCase):
         return Issue(*args, **kwargs)
 
     def test_simple_attr_access(self):
-        mongo_driver = self.mocker.mock()
-        mongo_conn = self.mocker.mock()
-        mongo_db = self.mocker.mock(pymongo.database.Database)
-        mongo_col = self.mocker.mock()
-
-        mongo_driver.Connection(host=ANY, port=ANY)
-        self.mocker.result(mongo_conn)
-
-        mongo_conn[ANY]
-        self.mocker.result(mongo_db)
-
-        mongo_db.authenticate(ANY, ANY)
-        self.mocker.result(None)
-
-        mongo_db['journals']
-        self.mocker.result(mongo_col)
-
-        mongo_col.ensure_index(ANY)
-        self.mocker.result(None)
-
-        self.mocker.replay()
-
         issue_microdata = {
             'title': 'foo bar'
         }
 
-        mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        i = self._makeOne(mongodb_driver=mongo_driver,
-                          mongo_uri=mongo_uri,
-                          **issue_microdata)
+        i = self._makeOne(**issue_microdata)
 
         self.assertEqual(i.title,
             'foo bar')
 
     def test_simple_late_defined_attr(self):
-        mongo_driver = self.mocker.mock()
-        mongo_conn = self.mocker.mock()
-        mongo_db = self.mocker.mock(pymongo.database.Database)
-        mongo_col = self.mocker.mock()
-
-        mongo_driver.Connection(host=ANY, port=ANY)
-        self.mocker.result(mongo_conn)
-
-        mongo_conn[ANY]
-        self.mocker.result(mongo_db)
-
-        mongo_db.authenticate(ANY, ANY)
-        self.mocker.result(None)
-
-        mongo_db['journals']
-        self.mocker.result(mongo_col)
-
-        mongo_col.ensure_index(ANY)
-        self.mocker.result(None)
-
-        self.mocker.replay()
-
-        mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        i = self._makeOne(mongodb_driver=mongo_driver,
-                          mongo_uri=mongo_uri)
+        i = self._makeOne()
 
         i.title = 'fooisis barisis'
         self.assertEqual(i.title,
             'fooisis barisis')
 
+    @unittest.expectedFailure
     def test_needed_indexes_are_created(self):
-        mongo_driver = self.mocker.mock()
-        mongo_conn = self.mocker.mock()
-        mongo_db = self.mocker.mock(pymongo.database.Database)
-        mongo_col = self.mocker.mock()
-
-        mongo_driver.Connection(host=ANY, port=ANY)
-        self.mocker.result(mongo_conn)
-
-        mongo_conn[ANY]
-        self.mocker.result(mongo_db)
-
-        mongo_db.authenticate(ANY, ANY)
-        self.mocker.result(None)
-
-        mongo_db['journals']
-        self.mocker.result(mongo_col)
-
-        mongo_col.ensure_index('issues.id')
-        self.mocker.result(None)
-
-        self.mocker.replay()
-
-        mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        a = self._makeOne(mongodb_driver=mongo_driver,
-                          mongo_uri=mongo_uri)
-
-        self.assertTrue(True) # placebo
+        self.assertTrue(False)
