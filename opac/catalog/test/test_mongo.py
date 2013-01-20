@@ -42,7 +42,7 @@ class MongoManagerTest(TestCase, MockerTestCase):
                            mongo_uri=mongo_uri,
                            mongo_collection='articles')
 
-        self.assertIsInstance(mm.db, pymongo.database.Database)
+        self.assertIsInstance(mm._mongoconn.db, pymongo.database.Database)
 
     def test_instrospect_object_for_mongo_collection_discovery(self):
         mongo_driver = self.mocker.mock()
@@ -73,7 +73,7 @@ class MongoManagerTest(TestCase, MockerTestCase):
                            mongodb_driver=mongo_driver,
                            mongo_uri=mongo_uri)
 
-        self.assertTrue(mm.col)
+        self.assertTrue(mm._mongoconn.col)
 
     def test_expose_pymongo_find_method(self):
         from catalog.mongomodels import Article

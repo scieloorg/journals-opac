@@ -38,7 +38,7 @@ class MongoConnector(object):
             self._ensure_indexes()
 
 
-class MongoManager(MongoConnector):
+class MongoManager(object):
     """
     Wraps a subset of pymongo.collection.Collection methods, in order
     to act as a manager for mongodb documents. The collection must be
@@ -52,29 +52,28 @@ class MongoManager(MongoConnector):
     """
     exposed_api_methods = ['find', 'find_one']
 
-    def __init__(self, doc, **kwargs):
+    def __init__(self, doc, mongoconn_lib=MongoConnector, **kwargs):
         self._doc = doc
 
         # introspect the ``self._doc`` class to discover the collection name
         if 'mongo_collection' not in kwargs:
             kwargs['mongo_collection'] = self._doc._collection_name_
 
-        super(MongoManager, self).__init__(**kwargs)
+        self._mongoconn = mongoconn_lib(**kwargs)
 
     def __getattr__(self, name):
 
         if name in self.exposed_api_methods:
-            if not self.col:
+            if not self._mongoconn.col:
                 raise ValueError(
                     'method %s needs a collection to be defined' % name)
 
-            if hasattr(self.col, name):
-                return getattr(self.col, name)
+            if hasattr(self._mongoconn.col, name):
+                return getattr(self._mongoconn.col, name)
             else:
                 raise AttributeError()
         else:
-            # django makes mystical things on attr retrieval
-            super(MongoManager, self).__getattr__(name)
+            raise AttributeError()
 
 
 class ManagerFactory(object):
