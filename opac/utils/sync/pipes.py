@@ -79,7 +79,7 @@ class Pipe(object):
             'publication_year': 2009,
             'resource_uri': '/api/v1/issues/1/',
             'sections': [
-            '/api/v1/sections/514/',
+                '/api/v1/sections/514/',
             ],
             'suppl_number': None,
             'suppl_volume': None,
@@ -115,7 +115,10 @@ class PIssue(Pipe):
 
             del(_tmp_issue['journal'])
 
-            new_issues.append(_tmp_issue)
+            # rearranging the overall structure
+            _new_issue = {'id': _tmp_issue['id'], 'data': _tmp_issue}
+
+            new_issues.append(_new_issue)
 
         # rebinding the issues attr
         data['issues'] = new_issues

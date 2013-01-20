@@ -127,7 +127,6 @@ class PIssueTest(unittest.TestCase):
         from utils.sync.pipes import PIssue
         return PIssue(*args, **kwargs)
 
-    @unittest.expectedFailure
     def test_full_transformation(self):
         data = {
                     'issues': [
@@ -139,29 +138,32 @@ class PIssueTest(unittest.TestCase):
         expected = {
             'issues': [
                 {
-                  'cover': None,
-                  'created': '2010-04-01T01:01:01',
-                  'ctrl_vocabulary': 'nd',
-                  'editorial_standard': 'vancouv',
-                  'id': 1,
-                  'is_marked_up': False,
-                  'is_press_release': False,
-                  'is_trashed': False,
-                  'label': '45 (4)',
-                  'number': '4',
-                  'order': 4,
-                  'publication_end_month': 12,
-                  'publication_start_month': 10,
-                  'publication_year': 2009,
-                  'resource_uri': '/api/v1/issues/1/',
-                  'sections': [
-                    '/api/v1/sections/514/',
-                  ],
-                  'suppl_number': None,
-                  'suppl_volume': None,
-                  'total_documents': 17,
-                  'updated': '2012-11-08T10:35:37.193612',
-                  'volume': '45'
+                    'id': 1,
+                    'data': {
+                        'cover': None,
+                        'created': '2010-04-01T01:01:01',
+                        'ctrl_vocabulary': 'nd',
+                        'editorial_standard': 'vancouv',
+                        'id': 1,
+                        'is_marked_up': False,
+                        'is_press_release': False,
+                        'is_trashed': False,
+                        'label': '45 (4)',
+                        'number': '4',
+                        'order': 4,
+                        'publication_end_month': 12,
+                        'publication_start_month': 10,
+                        'publication_year': 2009,
+                        'resource_uri': '/api/v1/issues/1/',
+                        'sections': [
+                            '/api/v1/sections/514/',
+                        ],
+                        'suppl_number': None,
+                        'suppl_volume': None,
+                        'total_documents': 17,
+                        'updated': '2012-11-08T10:35:37.193612',
+                        'volume': '45'
+                    }
                 }
             ],
         }
