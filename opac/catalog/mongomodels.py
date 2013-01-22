@@ -167,6 +167,7 @@ class Journal(Document):
     def list_issues(self):
         """
         Iterates on all issues of the journal
+        FIXME: This method must get the metadata from mongodb
         """
 
         for issue in self.issues:
@@ -198,3 +199,23 @@ class Issue(Document):
         Registers all the MongoDB indexes
         """
         self.col.ensure_index('issues.id')
+
+    def get_issue(self, journal_id, issue_id):
+        """
+        Return a specific issue
+        FIXME: This method must get the metadata from mongodb
+        """
+        return Issue(**self.issues[0]['data'])
+
+    def list_article_id(self, journal_id, issue_id):
+        """
+        Return a list of article id
+        FIXME: This method must get the metadata from mongodb
+        """
+        issue = self.get_issue(journal_id, issue_id)
+
+        for section in issue.sections:
+            for article in section['articles']:
+                yield article
+
+
