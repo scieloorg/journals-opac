@@ -86,12 +86,22 @@ class PipeTests(mocker.MockerTestCase):
             'volume': '45'
         }
 
+        mock_manager_api = self.mocker.mock()
+
+        mock_manager_api('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_manager_api)
+
+        mock_manager_api.fetch_data('issues', '1')
+        self.mocker.result(expected)
+
+        self.mocker.replay()
+
         class Blitz(Pipe):
             def transform(self, data):
                 """This is just a placebo"""
 
-        blitz = Blitz(data)
-        res = blitz._fetch_resource('issues', '1')
+        blitz = Blitz(data, manager_api_lib=mock_manager_api)
+        res = blitz._fetch_resource('/api/v1/issues/1/')
 
         self.assertEqual(res, expected)
 
@@ -121,7 +131,7 @@ class PipeTests(mocker.MockerTestCase):
         self.assertEqual(iter(p).next(), data)
 
 
-class PIssueTest(unittest.TestCase):
+class PIssueTest(mocker.MockerTestCase):
 
     def _makeOne(self, *args, **kwargs):
         from utils.sync.pipes import PIssue
@@ -133,7 +143,33 @@ class PIssueTest(unittest.TestCase):
                         '/api/v1/issues/1/'
                     ]
                 }
-        pissue = self._makeOne(data)
+
+        expected_api_res = {
+            'cover': None,
+            'created': '2010-04-01T01:01:01',
+            'ctrl_vocabulary': 'nd',
+            'editorial_standard': 'vancouv',
+            'id': 1,
+            'is_marked_up': False,
+            'is_press_release': False,
+            'is_trashed': False,
+            'journal': '/api/v1/journals/1/',
+            'label': '45 (4)',
+            'number': '4',
+            'order': 4,
+            'publication_end_month': 12,
+            'publication_start_month': 10,
+            'publication_year': 2009,
+            'resource_uri': '/api/v1/issues/1/',
+            'sections': [
+            '/api/v1/sections/514/',
+            ],
+            'suppl_number': None,
+            'suppl_volume': None,
+            'total_documents': 17,
+            'updated': '2012-11-08T10:35:37.193612',
+            'volume': '45'
+        }
 
         expected = {
             'issues': [
@@ -168,4 +204,124 @@ class PIssueTest(unittest.TestCase):
             ],
         }
 
+        mock_manager_api = self.mocker.mock()
+
+        mock_manager_api('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_manager_api)
+
+        mock_manager_api.fetch_data('issues', '1')
+        self.mocker.result(expected_api_res)
+
+        self.mocker.replay()
+
+        pissue = self._makeOne(data, manager_api_lib=mock_manager_api)
+
         self.assertEqual(iter(pissue).next(), expected)
+
+    def test_issues_key_exists_and_its_value_is_a_valid_precondition(self):
+        data = {
+                    'issues': [
+                        '/api/v1/issues/1/',
+                        '/api/v1/issues/2/',
+                        '/api/v1/issues/3/',
+                    ]
+                }
+
+        from utils.sync.pipes import pissue_precondition
+
+        self.assertIsNone(pissue_precondition(data))
+
+    def test_wrong_endpoint_must_invalidade_the_precondition(self):
+        data = {
+                    'issues': [
+                        '/api/v1/issues/1/',
+                        '/api/v1/foo/2/',
+                        '/api/v1/issues/3/',
+                    ]
+                }
+
+        from utils.sync.pipes import pissue_precondition
+        from utils.sync.pipes import UnmetPrecondition
+
+        self.assertRaises(UnmetPrecondition, lambda: pissue_precondition(data))
+
+    def test_transformation_is_bypassed_if_precondition_fails(self):
+        data = {
+                    'issues': [
+                        '/api/v1/foo/1/',
+                        '/api/v1/issues/2/'
+                    ]
+                }
+
+        mock_manager_api = self.mocker.mock()
+
+        mock_manager_api('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_manager_api)
+
+        self.mocker.replay()
+
+        pissue = self._makeOne(data, manager_api_lib=mock_manager_api)
+
+        self.assertEqual(pissue.transform(data), data)
+
+
+class PMissionTest(mocker.MockerTestCase):
+
+    def _makeOne(self, *args, **kwargs):
+        from utils.sync.pipes import PMission
+        return PMission(*args, **kwargs)
+
+    def test_full_transformation(self):
+        data = {
+            "missions": [
+                [
+                    "en",
+                    "To disseminate information on researches in public health."
+                ]
+            ]
+        }
+
+        expected = {
+            'missions': {
+                "en": "To disseminate information on researches in public health."
+            }
+        }
+
+        mock_manager_api = self.mocker.mock()
+
+        mock_manager_api('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_manager_api)
+
+        self.mocker.replay()
+
+        pmission = self._makeOne(data, manager_api_lib=mock_manager_api)
+
+        self.assertEqual(pmission.transform(data), expected)
+
+    def test_missions_key_exists_and_its_value_is_a_valid_precondition(self):
+        data = {
+            'missions': '',
+        }
+
+        from utils.sync.pipes import pmission_precondition
+
+        self.assertIsNone(pmission_precondition(data))
+
+    def test_transformation_is_bypassed_if_precondition_fails(self):
+        data = {
+            'issues': [
+                '/api/v1/foo/1/',
+                '/api/v1/issues/2/'
+            ]
+        }
+
+        mock_manager_api = self.mocker.mock()
+
+        mock_manager_api('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_manager_api)
+
+        self.mocker.replay()
+
+        pmission = self._makeOne(data, manager_api_lib=mock_manager_api)
+
+        self.assertEqual(pmission.transform(data), data)

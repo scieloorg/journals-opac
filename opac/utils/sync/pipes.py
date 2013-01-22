@@ -1,5 +1,8 @@
 # coding: utf-8
 import abc
+import re
+
+from utils.sync.datacollector import SciELOManagerAPI
 
 
 class UnmetPrecondition(Exception):
@@ -39,54 +42,50 @@ class Pipe(object):
     """
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, data):
+    def __init__(self, data, manager_api_lib=SciELOManagerAPI):
         """
         ``data`` can be the raw data, in case the pipe is the
         first segment of the pipeline, or a generator in case
         it receives data from another pipe.
         """
-        if not hasattr(data, 'next'):
+        self._manager_api = manager_api_lib('http://manager.scielo.org/api/v1/')
+
+        # initial data
+        if isinstance(data, dict):
             data = [data]
 
         self._iterable_data = data
 
     def __iter__(self):
+        """
+        Iters through all items of ``self._iterable_data``, yielding its
+        data already transformed.
+
+        The iterable interface is the heart of the pipeline machinery.
+        """
         for data in self._iterable_data:
             yield self.transform(data)
 
-    def _fetch_resource(self, endpoint, resource_id):
+    def _parse_resource_uri(self, resource_uri):
         """
-        Fetch data of the specific resource.
+        Parses a tipical resource path and returns a key-value pair
+        with the ``endpoint`` and ``resource_id``.
+        """
+        cleaned = [seg for seg in resource_uri.split('/') if seg]
+        endpoint, resource_id = cleaned[-2:]
+
+        return {'endpoint': endpoint, 'resource_id': resource_id}
+
+    def _fetch_resource(self, resource_path):
+        """
+        Fetch data from a specific resource.
 
         ``endpoint`` is a string representing the entity type.
         ``resource_id`` is a string.
         """
-        return {
-            'cover': None,
-            'created': '2010-04-01T01:01:01',
-            'ctrl_vocabulary': 'nd',
-            'editorial_standard': 'vancouv',
-            'id': 1,
-            'is_marked_up': False,
-            'is_press_release': False,
-            'is_trashed': False,
-            'journal': '/api/v1/journals/1/',
-            'label': '45 (4)',
-            'number': '4',
-            'order': 4,
-            'publication_end_month': 12,
-            'publication_start_month': 10,
-            'publication_year': 2009,
-            'resource_uri': '/api/v1/issues/1/',
-            'sections': [
-                '/api/v1/sections/514/',
-            ],
-            'suppl_number': None,
-            'suppl_volume': None,
-            'total_documents': 17,
-            'updated': '2012-11-08T10:35:37.193612',
-            'volume': '45'
-        }
+        _qry_params = self._parse_resource_uri(resource_path)
+        return self._manager_api.fetch_data(_qry_params['endpoint'],
+            _qry_params['resource_id'])
 
     @abc.abstractmethod
     def transform(self, data):
@@ -95,25 +94,32 @@ class Pipe(object):
         """
 
 
+def pissue_precondition(data):
+    """
+    Asserts that:
+
+    * The item ``issues`` exists.
+    * All resources are valid in terms of syntax.
+    """
+    pattern = re.compile('/api/v1/issues/\d+/$')
+
+    if 'issues' not in data:
+        raise UnmetPrecondition('missing issues item')
+
+    if not all([re.match(pattern, uri) for uri in data['issues']]):
+        raise UnmetPrecondition('invalid uri')
+
+
 class PIssue(Pipe):
-    """
-    Transforms Issues
-    """
-    def _parse_resource_uri(self, resource_uri):
-        cleaned = [seg for seg in resource_uri.split('/') if seg]
-        endpoint, resource_id = cleaned[-2:]
 
-        return {'endpoint': endpoint, 'resource_id': resource_id}
-
+    @precondition(pissue_precondition)
     def transform(self, data):
-
         new_issues = []
         for issue in data['issues']:
-            _qry_params = self._parse_resource_uri(issue)
-            _tmp_issue = self._fetch_resource(_qry_params['endpoint'],
-                _qry_params['resource_id'])
+            _tmp_issue = self._fetch_resource(issue)
 
-            del(_tmp_issue['journal'])
+            if 'journal' in _tmp_issue:
+                del(_tmp_issue['journal'])
 
             # rearranging the overall structure
             _new_issue = {'id': _tmp_issue['id'], 'data': _tmp_issue}
@@ -122,5 +128,30 @@ class PIssue(Pipe):
 
         # rebinding the issues attr
         data['issues'] = new_issues
+
+        return data
+
+
+def pmission_precondition(data):
+    """
+    Asserts that:
+
+    * The item ``missions`` exists.
+    """
+    if 'missions' not in data:
+        raise UnmetPrecondition('missing missions item')
+
+
+class PMission(Pipe):
+
+    @precondition(pmission_precondition)
+    def transform(self, data):
+
+        new_missions = {}
+        for mission in data['missions']:
+            new_missions[mission[0]] = mission[1]
+
+        # rebinding the issues attr
+        data['missions'] = new_missions
 
         return data
