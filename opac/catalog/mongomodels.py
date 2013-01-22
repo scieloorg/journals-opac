@@ -132,6 +132,10 @@ class Article(Document):
         except KeyError:
             return u''
 
+    @classmethod
+    def get_article(cls, article_id):
+        return Article(**cls.objects.find_one({'id': article_id}))
+
 
 class Journal(Document):
     objects = ManagerFactory(collection='journals', indexes=['issue_ref'])
@@ -139,7 +143,6 @@ class Journal(Document):
     def list_issues(self):
         """
         Iterates on all issues of the journal
-        FIXME: This method must get the metadata from mongodb
         """
 
         for issue in self.issues:
@@ -149,21 +152,34 @@ class Journal(Document):
 class Issue(Document):
     objects = ManagerFactory(collection='journals', indexes=['issues.id'])
 
-    def get_issue(self, journal_id, issue_id):
+    @classmethod
+    def get_issue(cls, journal_id, issue_id):
         """
-        Return a specific issue
-        FIXME: This method must get the metadata from mongodb
+        Return a specific issue from a specific journal
         """
-        return Issue(**self.issues[0]['data'])
 
-    def list_article_id(self, journal_id, issue_id):
-        """
-        Return a list of article id
-        FIXME: This method must get the metadata from mongodb
-        """
-        issue = self.get_issue(journal_id, issue_id)
+        return Issue(**cls.objects.find_one({'id': journal_id,
+                                            'issues.id': issue_id},
+                                            {'issues.data': 1})['data'])
 
-        for section in issue.sections:
-            for article in section['articles']:
-                yield article
+    def list_articles(self):
+        """
+        Return a list of articles
+        """
 
+        for section in self.sections:
+            for article_id in section['articles']:
+                yield Article.get_article(article_id)
+
+
+class Section(Document):
+    objects = ManagerFactory(collection='journals', indexes=['sections.id'])
+
+    @classmethod
+    def get_section(cls, journal_id, section_id):
+        """
+        Return a specific section from a specific journal
+        """
+
+        return Section(**cls.objects.find_one({'id': journal_id,
+                        'sections.id': section_id}))
