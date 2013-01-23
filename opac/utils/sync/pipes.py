@@ -51,7 +51,7 @@ class Pipe(object):
         self._manager_api = manager_api_lib('http://manager.scielo.org/api/v1/')
 
         # initial data
-        if isinstance(data, dict):
+        if not isinstance(data, Pipe):
             data = [data]
 
         self._iterable_data = data
@@ -201,3 +201,25 @@ class PSection(Pipe):
         data['sections'] = new_sections
 
         return data
+
+
+class Pipeline(object):
+    """
+    Represents a chain of pipes (duh).
+
+    ``*args`` are the pipes that will be executed in order
+    to transform the input data.
+    """
+    def __init__(self, *args):
+        self._pipes = args
+
+    def run(self, data):
+        """
+        Wires the pipeline and returns a lazy object of
+        the transformed data.
+        """
+        for pipe in self._pipes:
+            data = pipe(data)
+        else:
+            for out_data in data:
+                yield out_data
