@@ -1,5 +1,4 @@
 # coding: utf-8
-
 import unittest
 
 import mocker
@@ -245,6 +244,20 @@ class PIssueTest(mocker.MockerTestCase):
 
         self.assertRaises(UnmetPrecondition, lambda: pissue_precondition(data))
 
+    def test_invalid_resource_id_must_invalidade_the_precondition(self):
+        data = {
+                    'issues': [
+                        '/api/v1/issues/1/',
+                        '/api/v1/issues/bar/',
+                        '/api/v1/issues/3/',
+                    ]
+                }
+
+        from utils.sync.pipes import pissue_precondition
+        from utils.sync.pipes import UnmetPrecondition
+
+        self.assertRaises(UnmetPrecondition, lambda: pissue_precondition(data))
+
     def test_transformation_is_bypassed_if_precondition_fails(self):
         data = {
                     'issues': [
@@ -325,3 +338,191 @@ class PMissionTest(mocker.MockerTestCase):
         pmission = self._makeOne(data, manager_api_lib=mock_manager_api)
 
         self.assertEqual(pmission.transform(data), data)
+
+
+class PSectionTest(mocker.MockerTestCase):
+
+    def _makeOne(self, *args, **kwargs):
+        from utils.sync.pipes import PSection
+        return PSection(*args, **kwargs)
+
+    def test_toplevel_transformation(self):
+        data = {
+            'sections': [
+                '/api/v1/sections/514/',
+            ],
+        }
+
+        expected_api_res = {
+            'code': 'AISS-5pvs',
+            'created': '2012-11-08T10:35:32.886155',
+            'id': 514,
+            'is_trashed': False,
+            'issues': [
+                '/api/v1/issues/1/'
+            ],
+            'journal': '/api/v1/journals/1/',
+            'resource_uri': '/api/v1/sections/514/',
+            'titles': [
+                [
+                    'en',
+                    'WHO Publications'
+                ]
+            ],
+            'updated': '2012-12-03T11:09:15.907132'
+        }
+
+        expected = {
+            'sections': [
+                {
+                    'id': 514,
+                    'resource_uri': '/api/v1/sections/514/',
+                    'titles': [
+                        {'en': 'WHO Publications'}
+                    ]
+                }
+            ]
+        }
+
+        mock_manager_api = self.mocker.mock()
+
+        mock_manager_api('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_manager_api)
+
+        mock_manager_api.fetch_data('sections', '514')
+        self.mocker.result(expected_api_res)
+
+        self.mocker.replay()
+
+        psection = self._makeOne(data, manager_api_lib=mock_manager_api)
+
+        self.assertEqual(psection.transform(data), expected)
+
+    def test_innerlevel_transformation(self):
+        data = {
+            'issues': [
+                {
+                    'id': 1,
+                    'data': {
+                        'sections': [
+                            '/api/v1/sections/514/',
+                        ]
+                    }
+                }
+            ],
+            'sections': [
+                '/api/v1/sections/514/',
+            ],
+        }
+
+        expected_api_res = {
+            'code': 'AISS-5pvs',
+            'created': '2012-11-08T10:35:32.886155',
+            'id': 514,
+            'is_trashed': False,
+            'issues': [
+                '/api/v1/issues/1/'
+            ],
+            'journal': '/api/v1/journals/1/',
+            'resource_uri': '/api/v1/sections/514/',
+            'titles': [
+                [
+                    'en',
+                    'WHO Publications'
+                ]
+            ],
+            'updated': '2012-12-03T11:09:15.907132'
+        }
+
+        expected = {
+            'issues': [
+                {
+                    'id': 1,
+                    'data': {
+                        'sections': [
+                            {'id': 514},
+                        ]
+                    }
+                },
+            ],
+            'sections': [
+                {
+                    'id': 514,
+                    'resource_uri': '/api/v1/sections/514/',
+                    'titles': [
+                        {'en': 'WHO Publications'}
+                    ]
+                }
+            ]
+        }
+
+        mock_manager_api = self.mocker.mock()
+
+        mock_manager_api('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_manager_api)
+
+        mock_manager_api.fetch_data('sections', '514')
+        self.mocker.result(expected_api_res)
+
+        self.mocker.replay()
+
+        psection = self._makeOne(data, manager_api_lib=mock_manager_api)
+
+        self.assertEqual(psection.transform(data), expected)
+
+    def test_sections_key_exists_and_its_value_is_a_valid_precondition(self):
+        data = {
+            'sections': '',
+        }
+
+        from utils.sync.pipes import psection_precondition
+
+        self.assertIsNone(psection_precondition(data))
+
+    def test_wrong_endpoint_must_invalidade_the_precondition(self):
+        data = {
+            'sections': [
+                '/api/v1/sections/514/',
+                '/api/v1/baz/515/',
+                '/api/v1/sections/516/',
+            ]
+        }
+
+        from utils.sync.pipes import psection_precondition
+        from utils.sync.pipes import UnmetPrecondition
+
+        self.assertRaises(UnmetPrecondition, lambda: psection_precondition(data))
+
+    def test_invalid_resource_id_must_invalidade_the_precondition(self):
+        data = {
+            'sections': [
+                '/api/v1/sections/514/',
+                '/api/v1/sections/baz/',
+                '/api/v1/sections/516/',
+            ]
+        }
+
+        from utils.sync.pipes import psection_precondition
+        from utils.sync.pipes import UnmetPrecondition
+
+        self.assertRaises(UnmetPrecondition, lambda: psection_precondition(data))
+
+    def test_transformation_is_bypassed_if_precondition_fails(self):
+        data = {
+            'sections': [
+                '/api/v1/sections/514/',
+                '/api/v1/baz/515/',
+                '/api/v1/sections/516/',
+            ]
+        }
+
+        mock_manager_api = self.mocker.mock()
+
+        mock_manager_api('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_manager_api)
+
+        self.mocker.replay()
+
+        psection = self._makeOne(data, manager_api_lib=mock_manager_api)
+
+        self.assertEqual(psection.transform(data), data)

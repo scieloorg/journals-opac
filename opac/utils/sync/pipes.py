@@ -104,7 +104,7 @@ def pissue_precondition(data):
     pattern = re.compile('/api/v1/issues/\d+/$')
 
     if 'issues' not in data:
-        raise UnmetPrecondition('missing issues item')
+        raise UnmetPrecondition('missing item "issues"')
 
     if not all([re.match(pattern, uri) for uri in data['issues']]):
         raise UnmetPrecondition('invalid uri')
@@ -139,7 +139,7 @@ def pmission_precondition(data):
     * The item ``missions`` exists.
     """
     if 'missions' not in data:
-        raise UnmetPrecondition('missing missions item')
+        raise UnmetPrecondition('missing item "missions"')
 
 
 class PMission(Pipe):
@@ -153,5 +153,51 @@ class PMission(Pipe):
 
         # rebinding the issues attr
         data['missions'] = new_missions
+
+        return data
+
+
+def psection_precondition(data):
+    """
+    Asserts that:
+
+    * ``sections`` exists
+    * ``rosource_uri``'s are valid
+    """
+    pattern = re.compile('/api/v1/sections/\d+/$')
+
+    if 'sections' not in data:
+        raise UnmetPrecondition('missing item "sections"')
+
+    if not all([re.match(pattern, uri) for uri in data['sections']]):
+        raise UnmetPrecondition('invalid uri')
+
+
+class PSection(Pipe):
+
+    @precondition(psection_precondition)
+    def transform(self, data):
+
+        new_sections = []
+        for section in data['sections']:
+            _api_res = self._fetch_resource(section)
+            _tmp_section = {
+                'id': _api_res['id'],
+                'resource_uri': section,
+                'titles': [{title[0]: title[1]} for title in _api_res['titles']]
+            }
+            new_sections.append(_tmp_section)
+
+        if 'issues' in data:
+            for issue in data['issues']:
+                for i, section in enumerate(issue['data']['sections']):
+                    _tmp_inner_section = {
+                        'id': int(self._parse_resource_uri(section)['resource_id']),
+                    }
+                    # Changing the inner section datastructure cirurgically
+                    issue['data']['sections'][i] = _tmp_inner_section
+
+        # rebinding the sections attr
+        data['sections'] = new_sections
 
         return data
