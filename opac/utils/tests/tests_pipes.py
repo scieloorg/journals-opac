@@ -87,7 +87,8 @@ class PipeTests(mocker.MockerTestCase):
 
         mock_manager_api = self.mocker.mock()
 
-        mock_manager_api('http://manager.scielo.org/api/v1/')
+        mock_manager_api('http://manager.scielo.org/api/v1/',
+            username=mocker.ANY, api_key=mocker.ANY)
         self.mocker.result(mock_manager_api)
 
         mock_manager_api.fetch_data('issues', '1')
@@ -207,7 +208,8 @@ class PIssueTest(mocker.MockerTestCase):
 
         mock_manager_api = self.mocker.mock()
 
-        mock_manager_api('http://manager.scielo.org/api/v1/')
+        mock_manager_api('http://manager.scielo.org/api/v1/',
+            username=mocker.ANY, api_key=mocker.ANY)
         self.mocker.result(mock_manager_api)
 
         mock_manager_api.fetch_data('issues', '1')
@@ -270,7 +272,8 @@ class PIssueTest(mocker.MockerTestCase):
 
         mock_manager_api = self.mocker.mock()
 
-        mock_manager_api('http://manager.scielo.org/api/v1/')
+        mock_manager_api('http://manager.scielo.org/api/v1/',
+            username=mocker.ANY, api_key=mocker.ANY)
         self.mocker.result(mock_manager_api)
 
         self.mocker.replay()
@@ -304,7 +307,8 @@ class PMissionTest(mocker.MockerTestCase):
 
         mock_manager_api = self.mocker.mock()
 
-        mock_manager_api('http://manager.scielo.org/api/v1/')
+        mock_manager_api('http://manager.scielo.org/api/v1/',
+            username=mocker.ANY, api_key=mocker.ANY)
         self.mocker.result(mock_manager_api)
 
         self.mocker.replay()
@@ -332,7 +336,8 @@ class PMissionTest(mocker.MockerTestCase):
 
         mock_manager_api = self.mocker.mock()
 
-        mock_manager_api('http://manager.scielo.org/api/v1/')
+        mock_manager_api('http://manager.scielo.org/api/v1/',
+            username=mocker.ANY, api_key=mocker.ANY)
         self.mocker.result(mock_manager_api)
 
         self.mocker.replay()
@@ -388,7 +393,8 @@ class PSectionTest(mocker.MockerTestCase):
 
         mock_manager_api = self.mocker.mock()
 
-        mock_manager_api('http://manager.scielo.org/api/v1/')
+        mock_manager_api('http://manager.scielo.org/api/v1/',
+            username=mocker.ANY, api_key=mocker.ANY)
         self.mocker.result(mock_manager_api)
 
         mock_manager_api.fetch_data('sections', '514')
@@ -460,7 +466,8 @@ class PSectionTest(mocker.MockerTestCase):
 
         mock_manager_api = self.mocker.mock()
 
-        mock_manager_api('http://manager.scielo.org/api/v1/')
+        mock_manager_api('http://manager.scielo.org/api/v1/',
+            username=mocker.ANY, api_key=mocker.ANY)
         self.mocker.result(mock_manager_api)
 
         mock_manager_api.fetch_data('sections', '514')
@@ -520,7 +527,8 @@ class PSectionTest(mocker.MockerTestCase):
 
         mock_manager_api = self.mocker.mock()
 
-        mock_manager_api('http://manager.scielo.org/api/v1/')
+        mock_manager_api('http://manager.scielo.org/api/v1/',
+            username=mocker.ANY, api_key=mocker.ANY)
         self.mocker.result(mock_manager_api)
 
         self.mocker.replay()
@@ -528,3 +536,26 @@ class PSectionTest(mocker.MockerTestCase):
         psection = self._makeOne(data, manager_api_lib=mock_manager_api)
 
         self.assertEqual(psection.transform(data), data)
+
+
+class PCleanupTest(mocker.MockerTestCase):
+
+    def _makeOne(self, *args, **kwargs):
+        from utils.sync.pipes import PCleanup
+        return PCleanup(*args, **kwargs)
+
+    def test_removes_transform_item(self):
+        data = {'is_trashed': 'foo'}
+        expected = {}
+
+        mock_manager_api = self.mocker.mock()
+
+        mock_manager_api('http://manager.scielo.org/api/v1/',
+            username=mocker.ANY, api_key=mocker.ANY)
+        self.mocker.result(mock_manager_api)
+
+        self.mocker.replay()
+
+        pcleanup = self._makeOne(data, manager_api_lib=mock_manager_api)
+
+        self.assertEqual(pcleanup.transform(data), expected)
