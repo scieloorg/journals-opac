@@ -1,0 +1,24 @@
+# this file contains permanent settings, specific to the
+# opac project.
+
+#
+# Custom test runner
+#
+TEST_DISCOVERY_ROOT = BASE_PATH
+TEST_RUNNER = 'utils.runner.DiscoveryRunner'
+
+
+#
+# SciELO Manager API configuration
+#
+SCIELOMANAGER_API_URI = 'http://manager.scielo.org/api/v1/'
+
+# need to be replaced at settings_local.include
+SCIELOMANAGER_API_USERNAME = 'invalid_user'
+SCIELOMANAGER_API_KEY = 'invalid_token'
+
+try:
+    execfile(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+        'settings_local.include'))
+except IOError:
+    exit('Missing configuration file: "settings_local.include"')
