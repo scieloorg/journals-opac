@@ -2,6 +2,8 @@
 import abc
 import re
 
+from django.conf import settings
+
 from utils.sync.datacollector import SciELOManagerAPI
 
 
@@ -42,11 +44,22 @@ class Pipe(object):
     """
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, data, manager_api_lib=SciELOManagerAPI):
+    def __init__(self, data,
+                       manager_api_lib=SciELOManagerAPI,
+                       settings=settings):
         """
         ``data`` must be an iterable
         """
-        self._manager_api = manager_api_lib('http://manager.scielo.org/api/v1/')
+        api_username = getattr(settings, 'SCIELOMANAGER_API_USERNAME', None)
+        api_key = getattr(settings, 'SCIELOMANAGER_API_KEY', None)
+        api_uri = getattr(settings, 'SCIELOMANAGER_API_URI', None)
+
+        if not api_username or not api_key or not api_uri:
+            raise ValueError('missing config to manager api')
+
+        self._manager_api = manager_api_lib(api_uri,
+                                            username=api_username,
+                                            api_key=api_key)
         self._iterable_data = data
 
     def __iter__(self):
@@ -192,6 +205,15 @@ class PSection(Pipe):
 
         # rebinding the sections attr
         data['sections'] = new_sections
+
+        return data
+
+
+class PCleanup(Pipe):
+
+    def transform(self, data):
+        if 'is_trashed' in data:
+            del(data['is_trashed'])
 
         return data
 

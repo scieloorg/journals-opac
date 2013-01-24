@@ -153,5 +153,5 @@ LOGGING = {
     }
 }
 
-TEST_DISCOVERY_ROOT = BASE_PATH
-TEST_RUNNER = 'utils.runner.DiscoveryRunner'
+execfile(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+    'settings_opac.include'))
