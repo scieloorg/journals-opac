@@ -44,16 +44,9 @@ class Pipe(object):
 
     def __init__(self, data, manager_api_lib=SciELOManagerAPI):
         """
-        ``data`` can be the raw data, in case the pipe is the
-        first segment of the pipeline, or a generator in case
-        it receives data from another pipe.
+        ``data`` must be an iterable
         """
         self._manager_api = manager_api_lib('http://manager.scielo.org/api/v1/')
-
-        # initial data
-        if not isinstance(data, Pipe):
-            data = [data]
-
         self._iterable_data = data
 
     def __iter__(self):
@@ -213,11 +206,21 @@ class Pipeline(object):
     def __init__(self, *args):
         self._pipes = args
 
-    def run(self, data):
+    def run(self, data, rewrap=False):
         """
         Wires the pipeline and returns a lazy object of
         the transformed data.
+
+        ``data`` must be an iterable, where a full document
+        must be returned for each loop
+
+        ``rewrap`` is a bool that indicates the need to rewrap
+        data in case iterating over it produces undesired data,
+        for instance ``dict`` instances.
         """
+        if rewrap:
+            data = [data]
+
         for pipe in self._pipes:
             data = pipe(data)
         else:

@@ -137,11 +137,13 @@ class PIssueTest(mocker.MockerTestCase):
         return PIssue(*args, **kwargs)
 
     def test_full_transformation(self):
-        data = {
-                    'issues': [
-                        '/api/v1/issues/1/'
-                    ]
-                }
+        data = [
+            {
+                'issues': [
+                    '/api/v1/issues/1/'
+                ]
+            }
+        ]
 
         expected_api_res = {
             'cover': None,
