@@ -1,3 +1,4 @@
 django
 slumber
+requests==0.13.3
 pymongo
