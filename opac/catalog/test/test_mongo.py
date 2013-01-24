@@ -420,6 +420,131 @@ class IssueModelTest(TestCase, MockerTestCase):
 
         self.assertTrue(hasattr(articles, 'next'))
 
+    def test_list_sections_articles_from_issue_must_return_a_lazy_object(self):
+        from catalog.mongomodels import Issue
+        from catalog.mongomodels import Section
+        from catalog.mongomodels import Article
+
+        issue_mock_objects = self.mocker.mock()
+        section_mock_objects = self.mocker.mock()
+        article_mock_objects = self.mocker.mock()
+
+        issue_section_microdata = {
+            'data': {
+                "cover": None,
+                "created": "2010-04-01T01:01:01",
+                "ctrl_vocabulary": "nd",
+                "editorial_standard": "vancouv",
+                "id": 1,
+                "is_marked_up": False,
+                "is_press_release": False,
+                "is_trashed": False,
+                "label": "45 (4)",
+                "number": "4",
+                "order": 4,
+                "publication_end_month": 12,
+                "publication_start_month": 10,
+                "publication_year": 2009,
+                "resource_uri": "/api/v1/issues/1/",
+                "sections": [
+                {
+                  "id": 514,
+                  "articles": [
+                    "AISS-JHjashA",
+                  ]
+                }
+                ],
+                "suppl_number": None,
+                "suppl_volume": None,
+                "total_documents": 17,
+                "updated": "2012-11-08T10:35:37.193612",
+                "volume": "45"
+            },
+            "sections": [
+            {
+              "id": 514,
+              "resource_uri": "/api/v1/sections/514/",
+              "titles": [
+                {"en": "WHO Publications"}
+              ]
+            }
+            ],
+        }
+
+        section_microdata = {
+              "id": 514,
+              "resource_uri": "/api/v1/sections/514/",
+              "titles": [
+                {"en": "WHO Publications"}
+              ]
+        }
+
+        article_microdata = {
+            "id": "AISS-JHjashAs",
+             "title-group": {
+                "en": "Management of health-care waste in Izmir, Turkey",
+                "it": "Gestione dei rifiuti sanitari in Izmir, Turchia"
+              },
+            "contrib-group": {
+                "author": [
+                  {
+                    "role": "ND",
+                    "given-names": "Ahmet",
+                    "surname": "Soysal",
+                    "affiliations": [
+                      "A01"
+                    ]
+                  },
+                  {
+                    "role": "ND",
+                    "given-names": "Hatice",
+                    "surname": "Simsek",
+                    "affiliations": [
+                      "A01"
+                    ]
+                  },
+                  {
+                    "role": "ND",
+                    "given-names": "Dilek",
+                    "surname": "Soysal",
+                    "affiliations": [
+                      "A02"
+                    ]
+                  },
+                  {
+                    "role": "ND",
+                    "given-names": "Funda",
+                    "surname": "Alyu",
+                    "affiliations": [
+                      "A03"
+                    ]
+                  }
+                ]
+            },
+        }
+
+        issue_mock_objects.find_one({'id': 1, 'issues.id': 1}, {'issues.data': 1})
+        self.mocker.result(issue_section_microdata)
+
+        section_mock_objects.find_one({'id': 1, 'sections.id': 514})
+        self.mocker.result(section_microdata)
+
+        article_mock_objects.find_one({'id': 'AISS-JHjashA'})
+        self.mocker.result(article_microdata)
+
+        self.mocker.replay()
+
+        Issue.objects = issue_mock_objects
+        Section.objects = section_mock_objects
+        Article.objects = article_mock_objects
+
+        issue = Issue.get_issue(journal_id=1, issue_id=1)
+
+        sections_articles = issue.list_sections_articles('en')
+        self.assertTrue(hasattr(sections_articles, 'next'))
+        section_article = sections_articles.next()
+        self.assertIsInstance(section_article['WHO Publications'][0], Article)
+
 
 class SectionModelTest(TestCase, MockerTestCase):
     def _makeOne(self, *args, **kwargs):
@@ -447,4 +572,29 @@ class SectionModelTest(TestCase, MockerTestCase):
 
         section = Section.get_section(journal_id=1, section_id=514)
         self.assertIsInstance(section, Section)
-        self.assertEqual(section.titles[0]['en'], 'WHO Publications')
+        self.assertEqual(section.get_section_title('en'), 'WHO Publications')
+
+    def test_get_section_title_by_language(self):
+        from catalog.mongomodels import Section
+        mock_objects = self.mocker.mock()
+
+        section_microdata = {
+              "id": 514,
+              "resource_uri": "/api/v1/sections/514/",
+              "titles": [
+                {"en": "WHO Publications"}
+              ]
+        }
+
+        mock_objects.find_one({'id': 1, 'sections.id': 514})
+        self.mocker.result(section_microdata)
+
+        self.mocker.replay()
+
+        Section.objects = mock_objects
+
+        section = Section.get_section(journal_id=1, section_id=514)
+
+        section_title = section.get_section_title('en')
+
+        self.assertEqual(section_title, 'WHO Publications')

@@ -171,6 +171,25 @@ class Issue(Document):
             for article_id in section['articles']:
                 yield Article.get_article(article_id)
 
+    def list_sections_articles(self, language):
+        """
+        Return a dictionary containing the sections and their corresponding
+        articles
+        Example:
+            {'WHO Publications': [article_object]}
+        """
+        import collections
+
+        sec_art = collections.OrderedDict()
+        lst_art = list()
+
+        for section in self.sections:
+            journal_section = Section.get_section(self.id, section['id'])
+            for article_id in section['articles']:
+                lst_art.append(Article.get_article(article_id))
+                sec_art[journal_section.get_section_title(language)] = lst_art
+                yield sec_art
+
 
 class Section(Document):
     objects = ManagerFactory(collection='journals', indexes=['sections.id'])
@@ -183,3 +202,11 @@ class Section(Document):
 
         return Section(**cls.objects.find_one({'id': journal_id,
                         'sections.id': section_id}))
+
+    def get_section_title(self, language):
+        """
+        Return the title of a specific section
+        """
+        for title in self.titles:
+            if language in title:
+                return title[language]
