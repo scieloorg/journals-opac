@@ -445,6 +445,9 @@ class IssueModelTest(TestCase, MockerTestCase):
         self.assertTrue(hasattr(sections, 'next'))
         section = sections.next()
         self.assertEqual(section.id, 514)
+        self.assertEqual(section.get_title('en'), 'WHO Publications')
+        self.assertIsInstance(section.articles, list)
+        self.assertTrue(section.articles[0], 'AISS-JHjashA')
 
 
 class SectionModelTest(TestCase, MockerTestCase):

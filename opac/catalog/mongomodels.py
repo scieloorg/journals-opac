@@ -164,11 +164,12 @@ class Issue(Document):
 
     def list_sections(self):
         """
-        Return a list of sections
+        Return a list of sections and their related articles
         """
-        for section in self.sections:
-            section = Section.get_section(self.id, section['id'])
-            yield section
+        for issue_section in self.sections:
+            journal_section = Section.get_section(self.id, issue_section['id'])
+            journal_section.articles = issue_section['articles']
+            yield journal_section
 
 
 class Section(Document):
