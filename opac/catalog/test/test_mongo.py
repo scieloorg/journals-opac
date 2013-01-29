@@ -357,7 +357,7 @@ class IssueModelTest(TestCase, MockerTestCase):
             }
         }
 
-        mock_objects.find_one({'id': 1, 'issues.id': 1}, {'issues.data': 1})
+        mock_objects.findOne({'id': 1, 'issues.id': 1}, {'issues.data': 1})
         self.mocker.result(issue_microdata)
 
         self.mocker.replay()
@@ -370,11 +370,14 @@ class IssueModelTest(TestCase, MockerTestCase):
         self.assertEqual(issue.total_documents, 17)
         self.assertEqual(issue.id, 1)
 
-    def test_list_of_articles_from_issue_must_return_a_lazy_object(self):
+    def test_list_sections_from_issue_must_return_a_lazy_object(self):
         from catalog.mongomodels import Issue
-        mock_objects = self.mocker.mock()
+        from catalog.mongomodels import Section
 
-        issue_microdata = {
+        issue_mock_objects = self.mocker.mock()
+        section_mock_objects = self.mocker.mock()
+
+        issue_section_microdata = {
             'data': {
                 "cover": None,
                 "created": "2010-04-01T01:01:01",
@@ -404,21 +407,47 @@ class IssueModelTest(TestCase, MockerTestCase):
                 "total_documents": 17,
                 "updated": "2012-11-08T10:35:37.193612",
                 "volume": "45"
+            },
+            "sections": [
+            {
+              "id": 514,
+              "resource_uri": "/api/v1/sections/514/",
+              "titles": [
+                {"en": "WHO Publications"}
+              ]
             }
+            ],
         }
 
-        mock_objects.find_one({'id': 1, 'issues.id': 1}, {'issues.data': 1})
-        self.mocker.result(issue_microdata)
+        section_microdata = {
+              "id": 514,
+              "resource_uri": "/api/v1/sections/514/",
+              "titles": [
+                {"en": "WHO Publications"}
+              ]
+        }
+
+        issue_mock_objects.findOne({'id': 1, 'issues.id': 1}, {'issues.data': 1})
+        self.mocker.result(issue_section_microdata)
+
+        section_mock_objects.findOne({'id': 1, 'sections.id': 514}, {'sections': 1})
+        self.mocker.result(section_microdata)
 
         self.mocker.replay()
 
-        Issue.objects = mock_objects
+        Issue.objects = issue_mock_objects
+        Section.objects = section_mock_objects
 
         issue = Issue.get_issue(journal_id=1, issue_id=1)
 
-        articles = issue.list_articles()
+        sections = issue.list_sections()
 
-        self.assertTrue(hasattr(articles, 'next'))
+        self.assertTrue(hasattr(sections, 'next'))
+        section = sections.next()
+        self.assertEqual(section.id, 514)
+        self.assertEqual(section.get_title('en'), 'WHO Publications')
+        self.assertIsInstance(section.articles, list)
+        self.assertTrue(section.articles[0], 'AISS-JHjashA')
 
 
 class SectionModelTest(TestCase, MockerTestCase):
@@ -438,7 +467,7 @@ class SectionModelTest(TestCase, MockerTestCase):
               ]
         }
 
-        mock_objects.find_one({'id': 1, 'sections.id': 514})
+        mock_objects.findOne({'id': 1, 'sections.id': 514}, {'sections': 1})
         self.mocker.result(section_microdata)
 
         self.mocker.replay()
@@ -447,4 +476,29 @@ class SectionModelTest(TestCase, MockerTestCase):
 
         section = Section.get_section(journal_id=1, section_id=514)
         self.assertIsInstance(section, Section)
-        self.assertEqual(section.titles[0]['en'], 'WHO Publications')
+        self.assertEqual(section.get_title('en'), 'WHO Publications')
+
+    def test_get_section_title_by_language(self):
+        from catalog.mongomodels import Section
+        mock_objects = self.mocker.mock()
+
+        section_microdata = {
+              "id": 514,
+              "resource_uri": "/api/v1/sections/514/",
+              "titles": [
+                {"en": "WHO Publications"}
+              ]
+        }
+
+        mock_objects.findOne({'id': 1, 'sections.id': 514}, {'sections': 1})
+        self.mocker.result(section_microdata)
+
+        self.mocker.replay()
+
+        Section.objects = mock_objects
+
+        section = Section.get_section(journal_id=1, section_id=514)
+
+        section_title = section.get_title('en')
+
+        self.assertEqual(section_title, 'WHO Publications')
