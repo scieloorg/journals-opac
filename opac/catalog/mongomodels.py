@@ -127,6 +127,9 @@ class Article(Document):
 
     @property
     def original_title(self):
+        """
+        Return the defaut title
+        """
         try:
             return self._data['title-group'][self._data['default-language']]
         except KeyError:
@@ -134,7 +137,17 @@ class Article(Document):
 
     @classmethod
     def get_article(cls, article_id):
+        """
+        Return the article by id
+        """
         return Article(**cls.objects.findOne({'id': article_id}))
+
+    def list_authors(self):
+        """
+        Iterates on all authors of the journal
+        """
+        for author in self.contrib_group['author']:
+            yield author
 
 
 class Journal(Document):
@@ -166,9 +179,16 @@ class Issue(Document):
         """
         Return a list of sections and their related articles
         """
+
+        articles_list = list()
+
         for issue_section in self.sections:
             journal_section = Section.get_section(self.id, issue_section['id'])
-            journal_section.articles = issue_section['articles']
+
+            for article_id in issue_section['articles']:
+                articles_list.append(Article.get_article(article_id))
+
+            journal_section.articles = articles_list
             yield journal_section
 
 

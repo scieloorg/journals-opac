@@ -214,6 +214,68 @@ class ArticleModelTest(TestCase, MockerTestCase):
         self.assertEqual(a.title,
             'Micronucleated lymphocytes in parents of lalala children')
 
+    def test_list_authors_must_return_a_lazy_object(self):
+        from catalog.mongomodels import Article
+        article_mock_objects = self.mocker.mock()
+
+        article_authors_microdata = {
+            "id": "AISS-JHjashA",
+            "journal_id": "aiss",
+            "contrib_group": {
+                "author": [
+                  {
+                    "role": "ND",
+                    "given_names": "Ahmet",
+                    "surname": "Soysal",
+                    "affiliations": [
+                      "A01"
+                    ]
+                  },
+                  {
+                    "role": "ND",
+                    "given_names": "Hatice",
+                    "surname": "Simsek",
+                    "affiliations": [
+                      "A01"
+                    ]
+                  },
+                  {
+                    "role": "ND",
+                    "given_names": "Dilek",
+                    "surname": "Soysal",
+                    "affiliations": [
+                      "A02"
+                    ]
+                  },
+                  {
+                    "role": "ND",
+                    "given_names": "Funda",
+                    "surname": "Alyu",
+                    "affiliations": [
+                      "A03"
+                    ]
+                  }
+                ]
+            },
+        }
+
+        article_mock_objects.findOne({'id': 'AISS-JHjashA'})
+        self.mocker.result(article_authors_microdata)
+
+        self.mocker.replay()
+
+        Article.objects = article_mock_objects
+
+        article = Article.get_article('AISS-JHjashA')
+
+        list_authors = article.list_authors()
+
+        self.assertTrue(hasattr(list_authors, 'next'))
+        author_1 = list_authors.next()
+        self.assertEqual(author_1['given_names'], "Ahmet")
+        author_2 = list_authors.next()
+        self.assertEqual(author_2['surname'], "Simsek")
+
     @unittest.expectedFailure
     def test_needed_indexes_are_created(self):
         self.assertTrue(False)
@@ -373,9 +435,11 @@ class IssueModelTest(TestCase, MockerTestCase):
     def test_list_sections_from_issue_must_return_a_lazy_object(self):
         from catalog.mongomodels import Issue
         from catalog.mongomodels import Section
+        from catalog.mongomodels import Article
 
         issue_mock_objects = self.mocker.mock()
         section_mock_objects = self.mocker.mock()
+        article_mock_objects = self.mocker.mock()
 
         issue_section_microdata = {
             'data': {
@@ -427,16 +491,25 @@ class IssueModelTest(TestCase, MockerTestCase):
               ]
         }
 
+        article_microdata = {
+            'id': 'AISS-JHjashA',
+            'title': 'Micronucleated lymphocytes in parents of lalala children'
+        }
+
         issue_mock_objects.findOne({'id': 1, 'issues.id': 1}, {'issues.data': 1})
         self.mocker.result(issue_section_microdata)
 
         section_mock_objects.findOne({'id': 1, 'sections.id': 514}, {'sections': 1})
         self.mocker.result(section_microdata)
 
+        article_mock_objects.findOne({'id': 'AISS-JHjashA'})
+        self.mocker.result(article_microdata)
+
         self.mocker.replay()
 
         Issue.objects = issue_mock_objects
         Section.objects = section_mock_objects
+        Article.objects = article_mock_objects
 
         issue = Issue.get_issue(journal_id=1, issue_id=1)
 
@@ -447,7 +520,7 @@ class IssueModelTest(TestCase, MockerTestCase):
         self.assertEqual(section.id, 514)
         self.assertEqual(section.get_title('en'), 'WHO Publications')
         self.assertIsInstance(section.articles, list)
-        self.assertTrue(section.articles[0], 'AISS-JHjashA')
+        self.assertIsInstance(section.articles[0], Article)
 
 
 class SectionModelTest(TestCase, MockerTestCase):
