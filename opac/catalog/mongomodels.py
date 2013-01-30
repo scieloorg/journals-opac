@@ -134,7 +134,14 @@ class Article(Document):
 
     @classmethod
     def get_article(cls, article_id):
+        """
+        Return the article by id
+        """
         return Article(**cls.objects.find_one({'id': article_id}))
+
+    def list_authors(self):
+        for author in self.contrib_group['author']:
+            yield author
 
 
 class Journal(Document):
@@ -162,14 +169,21 @@ class Issue(Document):
                                             'issues.id': issue_id},
                                             {'issues.data': 1})['data'])
 
-    def list_articles(self):
+    def list_sections(self):
         """
-        Return a list of articles
+        Return a list of sections and their related articles
         """
 
-        for section in self.sections:
-            for article_id in section['articles']:
-                yield Article.get_article(article_id)
+        articles_list = list()
+
+        for issue_section in self.sections:
+            journal_section = Section.get_section(self.id, issue_section['id'])
+
+            for article_id in issue_section['articles']:
+                articles_list.append(Article.get_article(article_id))
+
+            journal_section.articles = articles_list
+            yield journal_section
 
 
 class Section(Document):
@@ -180,6 +194,13 @@ class Section(Document):
         """
         Return a specific section from a specific journal
         """
-
         return Section(**cls.objects.find_one({'id': journal_id,
-                        'sections.id': section_id}))
+                        'sections.id': section_id}, {'sections.data': 1})['data'])
+
+    def get_title(self, language):
+        """
+        Return the title of a specific section
+        """
+        for title in self.titles:
+            if language in title:
+                return title[language]
