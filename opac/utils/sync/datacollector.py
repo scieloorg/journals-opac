@@ -31,6 +31,7 @@ class SciELOManagerAPI(object):
             kwargs['api_key'] = self._api_key
 
         resource = getattr(self._api, endpoint)
+
         if resource_id:
             resource = resource(resource_id)
 
