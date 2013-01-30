@@ -259,7 +259,7 @@ class ArticleModelTest(TestCase, MockerTestCase):
             },
         }
 
-        article_mock_objects.findOne({'id': 'AISS-JHjashA'})
+        article_mock_objects.find_one({'id': 'AISS-JHjashA'})
         self.mocker.result(article_authors_microdata)
 
         self.mocker.replay()
@@ -419,7 +419,7 @@ class IssueModelTest(TestCase, MockerTestCase):
             }
         }
 
-        mock_objects.findOne({'id': 1, 'issues.id': 1}, {'issues.data': 1})
+        mock_objects.find_one({'id': 1, 'issues.id': 1}, {'issues.data': 1})
         self.mocker.result(issue_microdata)
 
         self.mocker.replay()
@@ -442,7 +442,7 @@ class IssueModelTest(TestCase, MockerTestCase):
         article_mock_objects = self.mocker.mock()
 
         issue_section_microdata = {
-            'data': {
+            "data": {
                 "cover": None,
                 "created": "2010-04-01T01:01:01",
                 "ctrl_vocabulary": "nd",
@@ -472,23 +472,28 @@ class IssueModelTest(TestCase, MockerTestCase):
                 "updated": "2012-11-08T10:35:37.193612",
                 "volume": "45"
             },
-            "sections": [
-            {
-              "id": 514,
-              "resource_uri": "/api/v1/sections/514/",
-              "titles": [
-                {"en": "WHO Publications"}
-              ]
-            }
-            ],
+          "sections": [
+              {
+                "id": 514,
+                "data": {
+                    "id": 514,
+                    "resource_uri": "/api/v1/sections/514/",
+                    "titles": [
+                      {"en": "WHO Publications"}
+                    ]
+                }
+              }
+            ]
         }
 
         section_microdata = {
+          "data": {
               "id": 514,
               "resource_uri": "/api/v1/sections/514/",
               "titles": [
                 {"en": "WHO Publications"}
               ]
+          }
         }
 
         article_microdata = {
@@ -496,13 +501,13 @@ class IssueModelTest(TestCase, MockerTestCase):
             'title': 'Micronucleated lymphocytes in parents of lalala children'
         }
 
-        issue_mock_objects.findOne({'id': 1, 'issues.id': 1}, {'issues.data': 1})
+        issue_mock_objects.find_one({'id': 1, 'issues.id': 1}, {'issues.data': 1})
         self.mocker.result(issue_section_microdata)
 
-        section_mock_objects.findOne({'id': 1, 'sections.id': 514}, {'sections': 1})
+        section_mock_objects.find_one({'id': 1, 'sections.id': 514}, {'sections.data': 1})
         self.mocker.result(section_microdata)
 
-        article_mock_objects.findOne({'id': 'AISS-JHjashA'})
+        article_mock_objects.find_one({'id': 'AISS-JHjashA'})
         self.mocker.result(article_microdata)
 
         self.mocker.replay()
@@ -528,19 +533,21 @@ class SectionModelTest(TestCase, MockerTestCase):
         from catalog.mongomodels import Section
         return Section(*args, **kwargs)
 
-    def test_get_section_passing_journal_id_and_section_id_and_language(self):
+    def test_get_section_passing_journal_id_and_section_id(self):
         from catalog.mongomodels import Section
         mock_objects = self.mocker.mock()
 
         section_microdata = {
+          "data": {
               "id": 514,
               "resource_uri": "/api/v1/sections/514/",
               "titles": [
                 {"en": "WHO Publications"}
               ]
-        }
+            }
+          }
 
-        mock_objects.findOne({'id': 1, 'sections.id': 514}, {'sections': 1})
+        mock_objects.find_one({'id': 1, 'sections.id': 514}, {'sections.data': 1})
         self.mocker.result(section_microdata)
 
         self.mocker.replay()
@@ -549,21 +556,23 @@ class SectionModelTest(TestCase, MockerTestCase):
 
         section = Section.get_section(journal_id=1, section_id=514)
         self.assertIsInstance(section, Section)
-        self.assertEqual(section.get_title('en'), 'WHO Publications')
+        self.assertEqual(section.resource_uri, '/api/v1/sections/514/')
 
     def test_get_section_title_by_language(self):
         from catalog.mongomodels import Section
         mock_objects = self.mocker.mock()
 
         section_microdata = {
-              "id": 514,
-              "resource_uri": "/api/v1/sections/514/",
-              "titles": [
-                {"en": "WHO Publications"}
-              ]
-        }
+            "data": {
+                "id": 514,
+                "resource_uri": "/api/v1/sections/514/",
+                "titles": [
+                  {"en": "WHO Publications"}
+                ]
+            }
+          }
 
-        mock_objects.findOne({'id': 1, 'sections.id': 514}, {'sections': 1})
+        mock_objects.find_one({'id': 1, 'sections.id': 514}, {'sections.data': 1})
         self.mocker.result(section_microdata)
 
         self.mocker.replay()

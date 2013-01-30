@@ -144,10 +144,13 @@ Journal
       "sections": [
         {
           "id": 514,
-          "resource_uri": "/api/v1/sections/514/",
-          "titles": [
-            {"en": "WHO Publications"}
-          ]
+          "data": {
+              "id": 514,
+              "resource_uri": "/api/v1/sections/514/",
+              "titles": [
+                {"en": "WHO Publications"}
+              ]
+          }
         }
       ]
     }

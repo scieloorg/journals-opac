@@ -50,7 +50,7 @@ class MongoManager(object):
     methods:
     http://api.mongodb.org/python/current/api/pymongo/collection.html
     """
-    exposed_api_methods = ['find', 'findOne']
+    exposed_api_methods = ['find', 'find_one']
 
     def __init__(self, doc, mongoconn_lib=MongoConnector, **kwargs):
         self._doc = doc
@@ -127,9 +127,6 @@ class Article(Document):
 
     @property
     def original_title(self):
-        """
-        Return the defaut title
-        """
         try:
             return self._data['title-group'][self._data['default-language']]
         except KeyError:
@@ -140,12 +137,9 @@ class Article(Document):
         """
         Return the article by id
         """
-        return Article(**cls.objects.findOne({'id': article_id}))
+        return Article(**cls.objects.find_one({'id': article_id}))
 
     def list_authors(self):
-        """
-        Iterates on all authors of the journal
-        """
         for author in self.contrib_group['author']:
             yield author
 
@@ -171,7 +165,7 @@ class Issue(Document):
         Return a specific issue from a specific journal
         """
 
-        return Issue(**cls.objects.findOne({'id': journal_id,
+        return Issue(**cls.objects.find_one({'id': journal_id,
                                             'issues.id': issue_id},
                                             {'issues.data': 1})['data'])
 
@@ -200,8 +194,8 @@ class Section(Document):
         """
         Return a specific section from a specific journal
         """
-        return Section(**cls.objects.findOne({'id': journal_id,
-                        'sections.id': section_id}, {'sections': 1}))
+        return Section(**cls.objects.find_one({'id': journal_id,
+                        'sections.id': section_id}, {'sections.data': 1})['data'])
 
     def get_title(self, language):
         """
