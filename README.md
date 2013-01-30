@@ -1,9 +1,10 @@
 Journals OPAC (Catálogo Online de revistas da coleção SciELO)
 ==============================================================
 
-Ferramenta que expõe, para o usuário final, o catálogo de uma coleção SciELO.
+See more information about this project in http://docs.scielo.org
 
-Documentação em: http://docs.scielo.org/projects/journals-opac/en/latest/
+[![Build Status](https://travis-ci.org/scieloorg/journals-opac.png?branch=master)](https://travis-ci.org/scieloorg/journals-opac)
+[See Build details](http://travis-ci.org/#!/scieloorg/journals-opac)
 
 Use License
 ===========
