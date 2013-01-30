@@ -174,7 +174,7 @@ class Issue(Document):
         Return a list of sections and their related articles
         """
 
-        articles_list = list()
+        articles_list = []
 
         for issue_section in self.sections:
             journal_section = Section.get_section(self.id, issue_section['id'])
@@ -196,11 +196,3 @@ class Section(Document):
         """
         return Section(**cls.objects.find_one({'id': journal_id,
                         'sections.id': section_id}, {'sections.data': 1})['data'])
-
-    def get_title(self, language):
-        """
-        Return the title of a specific section
-        """
-        for title in self.titles:
-            if language in title:
-                return title[language]

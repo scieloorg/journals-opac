@@ -490,9 +490,7 @@ class IssueModelTest(TestCase, MockerTestCase):
           "data": {
               "id": 514,
               "resource_uri": "/api/v1/sections/514/",
-              "titles": [
-                {"en": "WHO Publications"}
-              ]
+              "titles": {"en": "WHO Publications"}
           }
         }
 
@@ -523,7 +521,6 @@ class IssueModelTest(TestCase, MockerTestCase):
         self.assertTrue(hasattr(sections, 'next'))
         section = sections.next()
         self.assertEqual(section.id, 514)
-        self.assertEqual(section.get_title('en'), 'WHO Publications')
         self.assertIsInstance(section.articles, list)
         self.assertIsInstance(section.articles[0], Article)
 
@@ -541,9 +538,7 @@ class SectionModelTest(TestCase, MockerTestCase):
           "data": {
               "id": 514,
               "resource_uri": "/api/v1/sections/514/",
-              "titles": [
-                {"en": "WHO Publications"}
-              ]
+              "titles": {"en": "WHO Publications"}
             }
           }
 
@@ -566,9 +561,7 @@ class SectionModelTest(TestCase, MockerTestCase):
             "data": {
                 "id": 514,
                 "resource_uri": "/api/v1/sections/514/",
-                "titles": [
-                  {"en": "WHO Publications"}
-                ]
+                "titles": {"en": "WHO Publications"}
             }
           }
 
@@ -581,6 +574,6 @@ class SectionModelTest(TestCase, MockerTestCase):
 
         section = Section.get_section(journal_id=1, section_id=514)
 
-        section_title = section.get_title('en')
+        section_title = section.titles['en']
 
         self.assertEqual(section_title, 'WHO Publications')

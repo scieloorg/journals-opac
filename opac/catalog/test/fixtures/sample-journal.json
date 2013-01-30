@@ -73,9 +73,9 @@
   "logo": null,
   "medline_code": null,
   "medline_title": null,
-  "missions": [
-    {"en": "To disseminate information on researches in public health"}
-  ],
+  "missions": {
+    "en": "To disseminate information on researches in public health"
+  },
   "national_code": null,
   "notes": "",
   "other_previous_title": "",
@@ -124,9 +124,9 @@
       "data": {
           "id": 514,
           "resource_uri": "/api/v1/sections/514/",
-          "titles": [
-            {"en": "WHO Publications"}
-          ]
+          "titles": {
+            "en": "WHO Publications"
+          }
       }
     }
   ]
