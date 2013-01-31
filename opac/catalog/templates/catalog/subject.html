@@ -2,28 +2,64 @@
 
 {% block header %}
 <div class="span3" style="text-align: center;">
-  <img src="/static/images/en/logop.png" />
+  <a href="/"><img src="/static/images/en/logop.png" /></a>
 </div>
 <div class="span9">
   <div class="row">
-    <div class="span3 offset1">
-      serial brownsing
-    </div>
-    <div class="span8">
-      article brownsing
-    </div>
-  </div>
-  <div class="row">
-    <div class="btn-group span3 offset1">
-      <a href="/alpha" class="btn btn-primary"><strong>alpha</strong></a>
-      <a href="/subject" class="btn btn-primary disabled"><strong>subject</strong></a>
-      <a href="http://search.scielo.org" target="blank" class="btn btn-primary"><strong>form</strong></a>
-    </div>
-    <div class="btn-group span8">
-      <a href="#" class="btn btn-primary"><strong>author</strong></a>
-      <a href="#" class="btn btn-primary"><strong>subject</strong></a>
-      <a href="http://search.scielo.org" target="blank" class="btn btn-primary"><strong>form</strong></a>
-    </div>
+    <dl class="span4">
+      <dt>serial brownsing</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="/alpha" class="btn btn-primary"><strong>alpha</strong></a>
+          <a href="/subject" class="btn btn-primary disabled"><strong>subject</strong></a>
+          <a href="http://search.scielo.org" 
+             target="_blank" 
+             class="btn btn-primary">
+             <strong>form</strong>
+          </a>
+        </div>
+      </dd>
+    </dl>
+    <dl class="span4">
+      <dt>article brownsing</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="http://search.scielo.org" 
+             target="_blank" 
+             class="btn btn-primary">
+             <strong>author</strong>
+          </a>
+          <a href="http://search.scielo.org" 
+             target="_blank"
+             class="btn btn-primary">
+             <strong>subject</strong>
+          </a>
+          <a href="http://search.scielo.org" 
+             target="_blank" 
+             class="btn btn-primary">
+             <strong>form</strong>
+          </a>
+        </div>
+      </dd>
+    </dl>
+    <dl class="span4">
+      <dt>reports</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="/usage" class="btn btn-primary"><strong>usage</strong></a>
+          <a href="http://statbiblio.scielo.org/stat_biblio/index.php?lang=en" 
+             class="btn btn-primary" 
+             target="_blank">
+             <strong>citations</strong>
+          </a>
+          <a href="http://statbiblio.scielo.org/stat_biblio/index.php?xml=http://statbiblio.scielo.org/stat_biblio/xml/16.xml&lang=en&state=16" 
+             target="_blank" 
+             class="btn btn-primary">
+             <strong>co-authors</strong>
+          </a>
+        </div>
+      </dd>
+    </dl>
   </div>
 </div>
 {% endblock %}
@@ -62,8 +98,7 @@
    <dd>
     <ul>
       <li>
-        <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as - 
-        <a href="#">Scientia Agricola</a>
+        <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as - <a href="#">Scientia Agricola</a>
       </li>
     </ul>
     <ul>

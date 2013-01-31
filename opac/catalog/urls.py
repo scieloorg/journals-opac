@@ -6,5 +6,6 @@ urlpatterns = patterns('',
     url(r'^$', direct_to_template, {'template': 'catalog/index.html'}),
     url(r'^alpha/$', direct_to_template, {'template': 'catalog/alpha.html'}),
     url(r'^subject/$', direct_to_template, {'template': 'catalog/subject.html'}),
+    url(r'^usage/$', direct_to_template, {'template': 'catalog/usage.html'}),
 
 )
