@@ -1,0 +1,24 @@
+.toc_article li {
+    margin-top: 10px;
+    font-weight: bold;
+}
+
+.toc_article_authors li {
+    font-weight: normal;
+    margin-top: 0px;
+}
+
+.toc_article_links {
+    font-weight: normal;
+    margin-top: 10px;
+}
+
+.toc_article_links li {
+    font-weight: normal;
+    margin-top: 0px;
+}
+
+.issue_toc dt {
+    font-size: 20px;
+    margin-top: 50px;
+}
