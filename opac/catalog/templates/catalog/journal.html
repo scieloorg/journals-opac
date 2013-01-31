@@ -1,7 +1,7 @@
 {% extends "base_lv1.html" %}
 
 {% block body %}
-<div class="span3">
+<div class="span2">
   <h6>Updated on<br/> May 15, 2012</h6>
   <ul class="unstyled">
     <li><a href="#" target="_blank">portuguese</a></li>
@@ -16,21 +16,54 @@
   </ul>
   <a href="#"><img src="/static/images/en/submission.png" /></a>
 </div>
-<div class="span6">
+<div class="span7" style="border-left: 1px solid; border-right: 1px solid; padding-left: 20px;">
   <center>
     <img src="/static/images/journals/logo/id_journal.gif" />
-    <form class="form-inline">
-      <input type="text" class="input-small" placeholder="Email">
-      <input type="password" class="input-small" placeholder="Password">
-      <label class="checkbox">
-      <input type="checkbox"> Remember me
-      </label>
-      <button type="submit" class="btn">Sign in</button>
-    </form>
   </center>
+    <h4>Search</h4>
+    <form class="form-inline">
+      <input type="text" class="input-large" placeholder="Enter one or more words">
+      <select  class="input-medium">
+        <option value="0021-2571">All Indexes</option>
+        <option value="">Title</option>
+        <option value="">Author</option>
+        <option value="">Subject</option>
+      </select>
+      <select class="input-medium">
+        <option value="0021-2571">This Journal</option>
+        <option value="">All Collection</option>
+      </select>
+      <button class="btn btn-small btn-primary">Search</button>
+    </form>
+    <dl>
+      <dd>Publication of</dd>
+      <dd><strong>Istituto Superiore di Sanità</strong></dd>
+      <dd><span class="text-info"><em>Print version</em> ISSN </span>0021-2571</dd>
+      <dd><small>Mission</small></dd>
+      <dd><span class="text-info">To disseminate information on researches in public health.</sapn><dd>
+    </dl>
 </div>
 <div class="span3">
-right
+  <h4>Press Releases</h4>
+  <dl>
+    <dt>Articles</dt>
+    <dd>
+      <ul>
+        <li class="muted"><a hrf="#">2012/09 - v42 n.3 First record of Trichodina heterodentata (Ciliophora: Trichodinidae) from Arapaima gigas cultivated in Peru</a></li>
+        <li class="muted"><a hrf="#">2012/06 - v42 n.2 Soil CO2 efflux in central Amazonia: environmental and methodological effects</a></li>
+      </ul>
+    </dd>
+  </dl>
+  <h4><img src="/static/images/twitter.png" width="20px"/> Twitter</h4>
+  <ul>
+    <li class="muted"><a hrf="#">2012/09 - v42 n.3 First record of Trichodina heterodentata (Ciliophora: Trichodinidae) from Arapaima gigas cultivated in Peru</a></li>
+    <li class="muted"><a hrf="#">2012/06 - v42 n.2 Soil CO2 efflux in central Amazonia: environmental and methodological effects</a></li>
+  </ul>
+  <h4><img src="/static/images/facebook.png" width="20px"/> Facebook</h4>
+  <ul>
+    <li class="muted"><a hrf="#">2012/09 - v42 n.3 First record of Trichodina heterodentata (Ciliophora: Trichodinidae) from Arapaima gigas cultivated in Peru</a></li>
+    <li class="muted"><a hrf="#">2012/06 - v42 n.2 Soil CO2 efflux in central Amazonia: environmental and methodological effects</a></li>
+  </ul>
 </div>
 
 {% endblock %}
