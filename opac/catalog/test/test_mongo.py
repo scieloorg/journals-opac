@@ -407,6 +407,24 @@ class JournalModelTest(TestCase, MockerTestCase):
             for j in area['journals']:
                 self.assertTrue(isinstance(j, Journal))
 
+    def test_issues_count_when_all_needed_data_exists(self):
+        issues_data = {"issues": [{'id': 1}]}
+
+        j = self._makeOne(**issues_data)
+        self.assertEqual(j.issues_count, 1)
+
+    def test_issues_count_when_issues_are_empty(self):
+        issues_data = {'issues': []}
+
+        j = self._makeOne(**issues_data)
+        self.assertEqual(j.issues_count, 0)
+
+    def test_issues_count_when_issues_are_missing(self):
+        issues_data = {}
+
+        j = self._makeOne(**issues_data)
+        self.assertEqual(j.issues_count, 0)
+
 
 class IssueModelTest(TestCase, MockerTestCase):
 
