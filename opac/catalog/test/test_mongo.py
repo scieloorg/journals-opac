@@ -354,6 +354,74 @@ class JournalModelTest(TestCase, MockerTestCase):
     def test_needed_indexes_are_created(self):
         self.assertTrue(False)
 
+    def test_list_journals(self):
+        from catalog.mongomodels import list_journals, Journal
+
+        mock_mongomanager = self.mocker.mock()
+
+        mock_mongomanager('journals')
+        self.mocker.result(mock_mongomanager)
+
+        mock_mongomanager.find({})
+        self.mocker.result(mock_mongomanager)
+
+        mock_mongomanager.sort('title', direction=pymongo.ASCENDING)
+        self.mocker.result([{'title': 'Micronucleated lymphocytes in parents of lalala children'}])
+
+        self.mocker.replay()
+
+        journals = list_journals(mongomanager_lib=mock_mongomanager)
+        for j in journals:
+            self.assertTrue(isinstance(j, Journal))
+
+    def test_list_journals_by_study_areas_returns_the_right_areas(self):
+        from catalog.mongomodels import list_journals_by_study_areas
+
+        mock_mongomanager = self.mocker.mock()
+
+        mock_mongomanager('journals')
+        self.mocker.result(mock_mongomanager)
+
+        mock_mongomanager.distinct('study_areas')
+        self.mocker.result(['Zap', 'Zaz', 'Spam'])
+
+        self.mocker.replay()
+
+        journals = list_journals_by_study_areas(mongomanager_lib=mock_mongomanager)
+        self.assertEqual([j['area'] for j in journals], ['Zap', 'Zaz', 'Spam'])
+
+    def test_list_journals_by_study_areas_returns_valid_journals(self):
+        from catalog.mongomodels import list_journals_by_study_areas, Journal
+
+        mock_mongomanager = self.mocker.mock()
+
+        mock_mongomanager('journals')
+        self.mocker.result(mock_mongomanager)
+        self.mocker.count(4)
+
+        mock_mongomanager.distinct('study_areas')
+        self.mocker.result(['Zap', 'Zaz', 'Spam'])
+
+        mock_mongomanager.find({'study_areas': 'Zap'})
+        self.mocker.result(mock_mongomanager)
+
+        mock_mongomanager.find({'study_areas': 'Zaz'})
+        self.mocker.result(mock_mongomanager)
+
+        mock_mongomanager.find({'study_areas': 'Spam'})
+        self.mocker.result(mock_mongomanager)
+
+        mock_mongomanager.sort('title', direction=pymongo.ASCENDING)
+        self.mocker.result([{'title': 'Micronucleated lymphocytes in parents of lalala children'}])
+        self.mocker.count(3)
+
+        self.mocker.replay()
+
+        areas = list_journals_by_study_areas(mongomanager_lib=mock_mongomanager)
+        for area in areas:
+            for j in area['journals']:
+                self.assertTrue(isinstance(j, Journal))
+
 
 class IssueModelTest(TestCase, MockerTestCase):
 

@@ -50,7 +50,7 @@ class MongoManager(object):
     methods:
     http://api.mongodb.org/python/current/api/pymongo/collection.html
     """
-    exposed_api_methods = ['find', 'find_one']
+    exposed_api_methods = ['find', 'find_one', 'distinct']
 
     def __init__(self, doc, mongoconn_lib=MongoConnector, **kwargs):
         self._doc = doc
@@ -144,8 +144,50 @@ class Article(Document):
             yield author
 
 
+def list_journals(criteria=None, mongomanager_lib=MongoManager):
+    """
+    Lists all journals present in a collection
+
+    ``criteria`` is a dict of query params, in the form::
+
+        list_journals(criteria={'study_areas': 'Natural Sciences'})
+    """
+    mm = mongomanager_lib('journals')
+
+    criteria = {} if criteria is None else criteria
+
+    if not isinstance(criteria, dict):
+        raise ValueError('criteria must be dict')
+
+    for result in mm.find(criteria).sort('title', direction=pymongo.ASCENDING):
+        yield Journal(**result)
+
+
+def list_journals_by_study_areas(mongomanager_lib=MongoManager):
+    """
+    Lists all journals by study area, returning the following format::
+
+        [{'area': 'Agricultural Sciences', 'journals': [<journal 1>]}]
+    """
+    mm = mongomanager_lib('journals')
+
+    areas = mm.distinct('study_areas')
+
+    areas_list = []
+    for area in areas:
+        item = {
+            'area': area,
+            'journals': list_journals(criteria={'study_areas': area},
+                                      mongomanager_lib=mongomanager_lib)
+        }
+        areas_list.append(item)
+
+    return areas_list
+
+
 class Journal(Document):
-    objects = ManagerFactory(collection='journals', indexes=['issue_ref'])
+    objects = ManagerFactory(collection='journals',
+        indexes=['issue_ref', 'title', 'study_areas'])
 
     def list_issues(self):
         """
