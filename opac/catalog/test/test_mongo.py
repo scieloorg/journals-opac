@@ -22,7 +22,6 @@ class MongoManagerTest(TestCase, MockerTestCase):
         mongo_conn = self.mocker.mock()
         mongo_db = self.mocker.mock(pymongo.database.Database)
         mongo_col = self.mocker.mock()
-        article = self.mocker.mock()
 
         mongo_driver.Connection(host=ANY, port=ANY)
         self.mocker.result(mongo_conn)
@@ -39,8 +38,7 @@ class MongoManagerTest(TestCase, MockerTestCase):
         self.mocker.replay()
 
         mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        mm = self._makeOne(article,
-                           mongodb_driver=mongo_driver,
+        mm = self._makeOne(mongodb_driver=mongo_driver,
                            mongo_uri=mongo_uri,
                            mongo_collection='articles')
 
@@ -51,7 +49,6 @@ class MongoManagerTest(TestCase, MockerTestCase):
         mongo_conn = self.mocker.mock()
         mongo_db = self.mocker.mock(pymongo.database.Database)
         mongo_col = self.mocker.mock()
-        article = self.mocker.mock()
 
         mongo_driver.Connection(host=ANY, port=ANY)
         self.mocker.result(mongo_conn)
@@ -62,29 +59,24 @@ class MongoManagerTest(TestCase, MockerTestCase):
         mongo_db.authenticate(ANY, ANY)
         self.mocker.result(None)
 
-        article._collection_name_
-        self.mocker.result('articles')
-
         mongo_db['articles']
         self.mocker.result(mongo_col)
 
         self.mocker.replay()
 
         mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        mm = self._makeOne(article,
+        mm = self._makeOne(mongo_collection='articles',
                            mongodb_driver=mongo_driver,
                            mongo_uri=mongo_uri)
 
         self.assertTrue(mm._mongoconn.col)
 
     def test_expose_pymongo_find_method(self):
-        from catalog.mongomodels import Article
-
         mongo_driver = self.mocker.mock()
         mongo_conn = self.mocker.mock()
         mongo_db = self.mocker.mock(pymongo.database.Database)
         mongo_col = self.mocker.mock()
-        article = self.mocker.mock(Article)
+
         mongo_cursor = self.mocker.mock(pymongo.cursor.Cursor)
 
         mongo_driver.Connection(host=ANY, port=ANY)
@@ -105,21 +97,17 @@ class MongoManagerTest(TestCase, MockerTestCase):
         self.mocker.replay()
 
         mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        mm = self._makeOne(article,
-                           mongodb_driver=mongo_driver,
+        mm = self._makeOne(mongodb_driver=mongo_driver,
                            mongo_uri=mongo_uri,
                            mongo_collection='articles')
 
         self.assertIsInstance(mm.find(), pymongo.cursor.Cursor)
 
     def test_raw_access_to_pymongo_api(self):
-        from catalog.mongomodels import Article
-
         mongo_driver = self.mocker.mock()
         mongo_conn = self.mocker.mock()
         mongo_db = self.mocker.mock(pymongo.database.Database)
         mongo_col = self.mocker.mock()
-        article = self.mocker.mock(Article)
 
         mongo_driver.Connection(host=ANY, port=ANY)
         self.mocker.result(mongo_conn)
@@ -139,8 +127,7 @@ class MongoManagerTest(TestCase, MockerTestCase):
         self.mocker.replay()
 
         mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        mm = self._makeOne(article,
-                           mongodb_driver=mongo_driver,
+        mm = self._makeOne(mongodb_driver=mongo_driver,
                            mongo_uri=mongo_uri,
                            mongo_collection='articles')
 
@@ -153,7 +140,6 @@ class MongoManagerTest(TestCase, MockerTestCase):
         mongo_conn = self.mocker.mock()
         mongo_db = self.mocker.mock(pymongo.database.Database)
         mongo_col = self.mocker.mock()
-        article = self.mocker.mock()
 
         mongo_driver.Connection(host=ANY, port=ANY)
         self.mocker.result(mongo_conn)
@@ -173,8 +159,7 @@ class MongoManagerTest(TestCase, MockerTestCase):
         self.mocker.replay()
 
         mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        mm = self._makeOne(article,
-                           mongodb_driver=mongo_driver,
+        mm = self._makeOne(mongodb_driver=mongo_driver,
                            mongo_uri=mongo_uri,
                            mongo_collection='articles',
                            indexes=['issues_ref'])
@@ -353,6 +338,74 @@ class JournalModelTest(TestCase, MockerTestCase):
     @unittest.expectedFailure
     def test_needed_indexes_are_created(self):
         self.assertTrue(False)
+
+    def test_list_journals(self):
+        from catalog.mongomodels import list_journals, Journal
+
+        mock_mongomanager = self.mocker.mock()
+
+        mock_mongomanager(mongo_collection='journals')
+        self.mocker.result(mock_mongomanager)
+
+        mock_mongomanager.find({})
+        self.mocker.result(mock_mongomanager)
+
+        mock_mongomanager.sort('title', direction=pymongo.ASCENDING)
+        self.mocker.result([{'title': 'Micronucleated lymphocytes in parents of lalala children'}])
+
+        self.mocker.replay()
+
+        journals = list_journals(mongomanager_lib=mock_mongomanager)
+        for j in journals:
+            self.assertTrue(isinstance(j, Journal))
+
+    def test_list_journals_by_study_areas_returns_the_right_areas(self):
+        from catalog.mongomodels import list_journals_by_study_areas
+
+        mock_mongomanager = self.mocker.mock()
+
+        mock_mongomanager(mongo_collection='journals')
+        self.mocker.result(mock_mongomanager)
+
+        mock_mongomanager.distinct('study_areas')
+        self.mocker.result(['Zap', 'Zaz', 'Spam'])
+
+        self.mocker.replay()
+
+        journals = list_journals_by_study_areas(mongomanager_lib=mock_mongomanager)
+        self.assertEqual([j['area'] for j in journals], ['Zap', 'Zaz', 'Spam'])
+
+    def test_list_journals_by_study_areas_returns_valid_journals(self):
+        from catalog.mongomodels import list_journals_by_study_areas, Journal
+
+        mock_mongomanager = self.mocker.mock()
+
+        mock_mongomanager(mongo_collection='journals')
+        self.mocker.result(mock_mongomanager)
+        self.mocker.count(4)
+
+        mock_mongomanager.distinct('study_areas')
+        self.mocker.result(['Zap', 'Zaz', 'Spam'])
+
+        mock_mongomanager.find({'study_areas': 'Zap'})
+        self.mocker.result(mock_mongomanager)
+
+        mock_mongomanager.find({'study_areas': 'Zaz'})
+        self.mocker.result(mock_mongomanager)
+
+        mock_mongomanager.find({'study_areas': 'Spam'})
+        self.mocker.result(mock_mongomanager)
+
+        mock_mongomanager.sort('title', direction=pymongo.ASCENDING)
+        self.mocker.result([{'title': 'Micronucleated lymphocytes in parents of lalala children'}])
+        self.mocker.count(3)
+
+        self.mocker.replay()
+
+        areas = list_journals_by_study_areas(mongomanager_lib=mock_mongomanager)
+        for area in areas:
+            for j in area['journals']:
+                self.assertTrue(isinstance(j, Journal))
 
 
 class IssueModelTest(TestCase, MockerTestCase):
