@@ -104,6 +104,8 @@ class ManagerFactory(object):
 class Document(object):
 
     def __init__(self, **kwargs):
+        self._data = {}
+
         for arg, value in kwargs.items():
             setattr(self, arg, value)
 
@@ -194,6 +196,13 @@ class Journal(Document):
 
         for issue in self.issues:
             yield Issue(**issue['data'])
+
+    @property
+    def issues_count(self):
+        try:
+            return len(self.issues)
+        except AttributeError:
+            return 0
 
 
 class Issue(Document):
