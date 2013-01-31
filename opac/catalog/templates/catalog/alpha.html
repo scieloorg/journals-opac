@@ -1,4 +1,5 @@
 {% extends "base_lv0.html" %}
+{% load catalog %}
 
 {% block header %}
 <div class="span3" style="text-align: center;">
@@ -65,40 +66,15 @@
 {% endblock %}
 
 {% block body %}
+
 <h3 style="text-align: center;">Library Collection</h3>
+
+
 <h4>Alphabetic list - 15 serials listed</h4>
 <dl>
  <dt>Current titles - 15 serial listed</dt>
  <dd>
-  <ul>
-    <li><a href="/journal">Annali dell'Istituto Superiore di Sanità</a> - 12 issues</li>
-  </ul>
-  <ul>
-    <li><a href="/journal">Bulletin of the World Health Organization</a> - 215 issues</li>
-  </ul>
-  <ul>
-    <li><a href="/journal">Cadernos de Saúde Pública</a> - 215 issues</li>
-    <li><a href="/journal">Ciência &amp; Saúde Coletiva</a> - 87 issues</li>
-  </ul>
-  <ul>
-    <li><a href="/journal">Gaceta Sanitaria</a> - 66 issues</li>
-  </ul>
-  <ul>
-    <li><a href="/journal">MEDICC Review</a> - 6 issues</li>
-  </ul>
-  <ul>
-    <li><a href="/journal">Revista Brasileira de Epidemiologia</a> - 55 issues</li>
-    <li><a href="#">Revista Cubana de Salud Pública</a> - 25 issues</li>
-    <li><a href="#">Revista de Salud Pública </a> - 46 issues</li>
-    <li><a href="#">Revista de Saúde Pública</a> - 256 issues</li>
-    <li><a href="#">Revista Española de Salud Pública</a> - 94 issues</li>
-    <li><a href="#">Revista Panamericana de Salud Pública</a> - 184 issues</li>
-    <li><a href="#">Revista Peruana de Medicina Experimental y Salud Pública</a> - 12 issues</li>
-  </ul>
-  <ul>
-    <li><a href="#">Salud Colectiva</a> - 25 issues</li>
-    <li><a href="#">Salud Pública de México</a> - 126 issues</li>
-  </ul>
+  {% journal_alpha_list journals %}
  </dd>
 </dl>
 <dl>
