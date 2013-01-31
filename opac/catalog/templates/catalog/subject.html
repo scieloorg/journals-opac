@@ -1,0 +1,213 @@
+{% extends "base_lv0.html" %}
+
+{% block header %}
+<div class="span3" style="text-align: center;">
+  <a href="/"><img src="/static/images/en/logop.png" /></a>
+</div>
+<div class="span9">
+  <div class="row">
+    <dl class="span4">
+      <dt>serial brownsing</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="/alpha" class="btn btn-small btn-primary"><strong>alpha</strong></a>
+          <a href="/subject" class="btn btn-small btn-primary disabled"><strong>subject</strong></a>
+          <a href="http://search.scielo.org" 
+             target="_blank" 
+             class="btn btn-small btn-primary">
+             <strong>form</strong>
+          </a>
+        </div>
+      </dd>
+    </dl>
+    <dl class="span4">
+      <dt>article brownsing</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="http://search.scielo.org" 
+             target="_blank" 
+             class="btn btn-small btn-primary">
+             <strong>author</strong>
+          </a>
+          <a href="http://search.scielo.org" 
+             target="_blank"
+             class="btn btn-small btn-primary">
+             <strong>subject</strong>
+          </a>
+          <a href="http://search.scielo.org" 
+             target="_blank" 
+             class="btn btn-small btn-primary">
+             <strong>form</strong>
+          </a>
+        </div>
+      </dd>
+    </dl>
+    <dl class="span4">
+      <dt>reports</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="/usage" class="btn btn-small btn-primary"><strong>usage</strong></a>
+          <a href="http://statbiblio.scielo.org/stat_biblio/index.php?lang=en" 
+             class="btn btn-small btn-primary" 
+             target="_blank">
+             <strong>citations</strong>
+          </a>
+          <a href="http://statbiblio.scielo.org/stat_biblio/index.php?xml=http://statbiblio.scielo.org/stat_biblio/xml/16.xml&lang=en&state=16" 
+             target="_blank" 
+             class="btn btn-small btn-primary">
+             <strong>co-authors</strong>
+          </a>
+        </div>
+      </dd>
+    </dl>
+  </div>
+</div>
+{% endblock %}
+
+{% block body %}
+<h3 style="text-align: center;">Library Collection</h3>
+<h4>Subjects</h4>
+<ul class="unstyled">
+  <li><a href="#AGRICULTURALSCIENCES">AGRICULTURAL SCIENCES</a></li>
+  <li><a href="#HEALTHSCIENCES">HEALTH SCIENCES</a></li>
+  <li><a href="#SOCIALSCIENCES">SOCIAL SCIENCES</a></li>
+</ul>
+<h4>Subject list of serials</h4>
+<dl>
+ <dt><a name="AGRICULTURALSCIENCES"></a>AGRICULTURAL SCIENCES</dt>
+ <dd>
+  <dl>
+    <dt>
+      Current titles
+    </dt>
+    <dd>
+      <ul>
+        <li><a href="/journal">Annali dell'Istituto Superiore di Sanità</a> - 12 issues</li>
+      </ul>
+      <ul>
+        <li><a href="/journal">Bulletin of the World Health Organization</a> - 215 issues</li>
+      </ul>
+      <ul>
+        <li><a href="#">Cadernos de Saúde Pública</a> - 215 issues</li>
+        <li><a href="#">Ciência &amp; Saúde Coletiva</a> - 87 issues</li>
+      </ul>
+    </dd>
+  </dl>
+  <dl>
+   <dt>Non-current titles</dt>
+   <dd>
+    <ul>
+      <li>
+        <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as - <a href="#">Scientia Agricola</a>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a href="#">Entomología y Vectores</a> - 3 issues - Deceased in 2005
+      </li>
+      <li>
+        <a href="#">Estudos Afro-Asiáticos</a> - 9 issues - Indexing interrupted by committee in January 2004
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a href="#">Revista Brasileira de Otorrinolaringologia</a> - 46 issues - Continued as Brazilian Journal of Otorhinolaryngology (Impresso)
+      </li>
+    </ul>
+   </dd>
+  </dl>
+ </dd>
+</dl>
+<dl>
+ <dt><a name="HEALTHSCIENCES"></a>HEALTH SCIENCES</dt>
+ <dd>
+  <dl>
+    <dt>
+      Current titles
+    </dt>
+    <dd>
+      <ul>
+        <li><a href="#">Annali dell'Istituto Superiore di Sanità</a> - 12 issues</li>
+      </ul>
+      <ul>
+        <li><a href="#">Bulletin of the World Health Organization</a> - 215 issues</li>
+      </ul>
+      <ul>
+        <li><a href="#">Cadernos de Saúde Pública</a> - 215 issues</li>
+        <li><a href="#">Ciência &amp; Saúde Coletiva</a> - 87 issues</li>
+      </ul>
+    </dd>
+  </dl>
+  <dl>
+   <dt>Non-current titles</dt>
+   <dd>
+    <ul>
+      <li>
+        <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as - 
+        <a href="#">Scientia Agricola</a>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a href="#">Entomología y Vectores</a> - 3 issues - Deceased in 2005
+      </li>
+      <li>
+        <a href="#">Estudos Afro-Asiáticos</a> - 9 issues - Indexing interrupted by committee in January 2004
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a href="#">Revista Brasileira de Otorrinolaringologia</a> - 46 issues - Continued as Brazilian Journal of Otorhinolaryngology (Impresso)
+      </li>
+    </ul>
+   </dd>
+  </dl>
+ </dd>
+</dl>
+<dl>
+ <dt><a name="SOCIALSCIENCES"></a>SOCIAL SCIENCES</dt>
+ <dd>
+  <dl>
+    <dt>
+      Current titles
+    </dt>
+    <dd>
+      <ul>
+        <li><a href="#">Annali dell'Istituto Superiore di Sanità</a> - 12 issues</li>
+      </ul>
+      <ul>
+        <li><a href="#">Bulletin of the World Health Organization</a> - 215 issues</li>
+      </ul>
+      <ul>
+        <li><a href="#">Cadernos de Saúde Pública</a> - 215 issues</li>
+        <li><a href="#">Ciência &amp; Saúde Coletiva</a> - 87 issues</li>
+      </ul>
+    </dd>
+  </dl>
+  <dl>
+   <dt>Non-current titles</dt>
+   <dd>
+    <ul>
+      <li>
+        <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as - 
+        <a href="#">Scientia Agricola</a>
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a href="#">Entomología y Vectores</a> - 3 issues - Deceased in 2005
+      </li>
+      <li>
+        <a href="#">Estudos Afro-Asiáticos</a> - 9 issues - Indexing interrupted by committee in January 2004
+      </li>
+    </ul>
+    <ul>
+      <li>
+        <a href="#">Revista Brasileira de Otorrinolaringologia</a> - 46 issues - Continued as Brazilian Journal of Otorhinolaryngology (Impresso)
+      </li>
+    </ul>
+   </dd>
+  </dl>
+ </dd>
+</dl>
+{% endblock %}

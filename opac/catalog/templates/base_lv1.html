@@ -1,0 +1,54 @@
+{% extends "base_lv0.html" %}
+
+{% block header %}
+<div class="span3" style="text-align: center;">
+  <a href="/"><img src="/static/images/en/logop.png" /></a>
+</div>
+<div class="span9">
+  <div class="row">
+    <dl class="span5">
+      <dt>journal issues</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="/journal" class="btn btn-small btn-primary"><strong>home</strong></a>
+          <a href="/grid" class="btn btn-small btn-primary"><strong>all</strong></a>
+          <a href="/issue/1" class="btn btn-small btn-primary disabled"><strong>previous</strong></a>
+          <a href="/issue/2" class="btn btn-small btn-primary"><strong>current</strong></a>
+          <a href="/issue/3" class="btn btn-small btn-primary"><strong>next</strong></a>
+        </div>
+      </dd>
+    </dl>
+    <dl class="span4">
+      <dt>journal article search</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="http://search.scielo.org" 
+             target="_blank" 
+             class="btn btn-small btn-primary">
+             <strong>author</strong>
+          </a>
+          <a href="http://search.scielo.org" 
+             target="_blank"
+             class="btn btn-small btn-primary">
+             <strong>subject</strong>
+          </a>
+          <a href="http://search.scielo.org" 
+             target="_blank" 
+             class="btn btn-small btn-primary">
+             <strong>form</strong>
+          </a>
+        </div>
+      </dd>
+    </dl>
+    <dl class="span2">
+      <dt>Collection</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="/alpha" class="btn btn-small btn-primary"><strong>alpha</strong></a>
+          <a href="/subject" class="btn btn-small btn-primary"><strong>subject</strong></a>
+        </div>
+      </dd>
+    </dl>
+  </div>
+</div>
+{% endblock %}
