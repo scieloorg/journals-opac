@@ -6,7 +6,7 @@ import pymongo
 
 
 MONGO_URI = getattr(settings, 'MONGO_URI',
-    'mongodb://localhost:27017/journalmanager')
+    'mongodb://localhost:27017/journalsopac')
 
 
 class DbOperationsError(Exception):
@@ -52,12 +52,10 @@ class MongoManager(object):
     """
     exposed_api_methods = ['find', 'find_one', 'distinct']
 
-    def __init__(self, doc, mongoconn_lib=MongoConnector, **kwargs):
-        self._doc = doc
+    def __init__(self, mongoconn_lib=MongoConnector, **kwargs):
 
-        # introspect the ``self._doc`` class to discover the collection name
         if 'mongo_collection' not in kwargs:
-            kwargs['mongo_collection'] = self._doc._collection_name_
+            raise ValueError('missing mongo_collection')
 
         indexes = kwargs.pop('indexes', [])
 
@@ -97,7 +95,7 @@ class ManagerFactory(object):
 
     def __get__(self, instance, cls):
         if not hasattr(cls, '_objects'):
-            setattr(cls, '_objects', self._mongomanager(cls,
+            setattr(cls, '_objects', self._mongomanager(
                 mongo_collection=self.collection, indexes=self.indexes))
 
         return cls._objects
@@ -152,7 +150,7 @@ def list_journals(criteria=None, mongomanager_lib=MongoManager):
 
         list_journals(criteria={'study_areas': 'Natural Sciences'})
     """
-    mm = mongomanager_lib('journals')
+    mm = mongomanager_lib(mongo_collection='journals')
 
     criteria = {} if criteria is None else criteria
 
@@ -169,7 +167,7 @@ def list_journals_by_study_areas(mongomanager_lib=MongoManager):
 
         [{'area': 'Agricultural Sciences', 'journals': [<journal 1>]}]
     """
-    mm = mongomanager_lib('journals')
+    mm = mongomanager_lib(mongo_collection='journals')
 
     areas = mm.distinct('study_areas')
 

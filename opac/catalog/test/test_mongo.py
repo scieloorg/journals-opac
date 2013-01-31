@@ -22,7 +22,6 @@ class MongoManagerTest(TestCase, MockerTestCase):
         mongo_conn = self.mocker.mock()
         mongo_db = self.mocker.mock(pymongo.database.Database)
         mongo_col = self.mocker.mock()
-        article = self.mocker.mock()
 
         mongo_driver.Connection(host=ANY, port=ANY)
         self.mocker.result(mongo_conn)
@@ -39,8 +38,7 @@ class MongoManagerTest(TestCase, MockerTestCase):
         self.mocker.replay()
 
         mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        mm = self._makeOne(article,
-                           mongodb_driver=mongo_driver,
+        mm = self._makeOne(mongodb_driver=mongo_driver,
                            mongo_uri=mongo_uri,
                            mongo_collection='articles')
 
@@ -51,7 +49,6 @@ class MongoManagerTest(TestCase, MockerTestCase):
         mongo_conn = self.mocker.mock()
         mongo_db = self.mocker.mock(pymongo.database.Database)
         mongo_col = self.mocker.mock()
-        article = self.mocker.mock()
 
         mongo_driver.Connection(host=ANY, port=ANY)
         self.mocker.result(mongo_conn)
@@ -62,29 +59,24 @@ class MongoManagerTest(TestCase, MockerTestCase):
         mongo_db.authenticate(ANY, ANY)
         self.mocker.result(None)
 
-        article._collection_name_
-        self.mocker.result('articles')
-
         mongo_db['articles']
         self.mocker.result(mongo_col)
 
         self.mocker.replay()
 
         mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        mm = self._makeOne(article,
+        mm = self._makeOne(mongo_collection='articles',
                            mongodb_driver=mongo_driver,
                            mongo_uri=mongo_uri)
 
         self.assertTrue(mm._mongoconn.col)
 
     def test_expose_pymongo_find_method(self):
-        from catalog.mongomodels import Article
-
         mongo_driver = self.mocker.mock()
         mongo_conn = self.mocker.mock()
         mongo_db = self.mocker.mock(pymongo.database.Database)
         mongo_col = self.mocker.mock()
-        article = self.mocker.mock(Article)
+
         mongo_cursor = self.mocker.mock(pymongo.cursor.Cursor)
 
         mongo_driver.Connection(host=ANY, port=ANY)
@@ -105,21 +97,17 @@ class MongoManagerTest(TestCase, MockerTestCase):
         self.mocker.replay()
 
         mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        mm = self._makeOne(article,
-                           mongodb_driver=mongo_driver,
+        mm = self._makeOne(mongodb_driver=mongo_driver,
                            mongo_uri=mongo_uri,
                            mongo_collection='articles')
 
         self.assertIsInstance(mm.find(), pymongo.cursor.Cursor)
 
     def test_raw_access_to_pymongo_api(self):
-        from catalog.mongomodels import Article
-
         mongo_driver = self.mocker.mock()
         mongo_conn = self.mocker.mock()
         mongo_db = self.mocker.mock(pymongo.database.Database)
         mongo_col = self.mocker.mock()
-        article = self.mocker.mock(Article)
 
         mongo_driver.Connection(host=ANY, port=ANY)
         self.mocker.result(mongo_conn)
@@ -139,8 +127,7 @@ class MongoManagerTest(TestCase, MockerTestCase):
         self.mocker.replay()
 
         mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        mm = self._makeOne(article,
-                           mongodb_driver=mongo_driver,
+        mm = self._makeOne(mongodb_driver=mongo_driver,
                            mongo_uri=mongo_uri,
                            mongo_collection='articles')
 
@@ -153,7 +140,6 @@ class MongoManagerTest(TestCase, MockerTestCase):
         mongo_conn = self.mocker.mock()
         mongo_db = self.mocker.mock(pymongo.database.Database)
         mongo_col = self.mocker.mock()
-        article = self.mocker.mock()
 
         mongo_driver.Connection(host=ANY, port=ANY)
         self.mocker.result(mongo_conn)
@@ -173,8 +159,7 @@ class MongoManagerTest(TestCase, MockerTestCase):
         self.mocker.replay()
 
         mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
-        mm = self._makeOne(article,
-                           mongodb_driver=mongo_driver,
+        mm = self._makeOne(mongodb_driver=mongo_driver,
                            mongo_uri=mongo_uri,
                            mongo_collection='articles',
                            indexes=['issues_ref'])
@@ -359,7 +344,7 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         mock_mongomanager = self.mocker.mock()
 
-        mock_mongomanager('journals')
+        mock_mongomanager(mongo_collection='journals')
         self.mocker.result(mock_mongomanager)
 
         mock_mongomanager.find({})
@@ -379,7 +364,7 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         mock_mongomanager = self.mocker.mock()
 
-        mock_mongomanager('journals')
+        mock_mongomanager(mongo_collection='journals')
         self.mocker.result(mock_mongomanager)
 
         mock_mongomanager.distinct('study_areas')
@@ -395,7 +380,7 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         mock_mongomanager = self.mocker.mock()
 
-        mock_mongomanager('journals')
+        mock_mongomanager(mongo_collection='journals')
         self.mocker.result(mock_mongomanager)
         self.mocker.count(4)
 
