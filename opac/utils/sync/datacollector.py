@@ -1,5 +1,19 @@
 # coding: utf-8
+import logging
+import time
+
+from django.conf import settings
 import slumber
+import requests
+
+
+logger = logging.getLogger(__name__)
+ITEMS_PER_REQUEST = 50
+
+
+class ResourceUnavailableError(Exception):
+    def __init__(self, *args, **kwargs):
+        super(ResourceUnavailableError, self).__init__(*args, **kwargs)
 
 
 class SciELOManagerAPI(object):
@@ -9,15 +23,18 @@ class SciELOManagerAPI(object):
     """
 
     def __init__(self,
-                 resource_url,
                  slumber_lib=slumber,
-                 username=None,
-                 api_key=None):
-        self._resource_url = resource_url
+                 settings=settings):
+
+        self._resource_url = getattr(settings, 'SCIELOMANAGER_API_URI', None)
+        self._api_key = getattr(settings, 'SCIELOMANAGER_API_KEY', None)
+        self._username = getattr(settings, 'SCIELOMANAGER_API_USERNAME', None)
+
+        if not self._resource_url or not self._api_key or not self._username:
+            raise ValueError('missing config to manager api')
+
         self._slumber_lib = slumber_lib
-        self._api = self._slumber_lib.API(resource_url)
-        self._username = username
-        self._api_key = api_key
+        self._api = self._slumber_lib.API(self._resource_url)
 
     def fetch_data(self, endpoint,
                          resource_id=None,
@@ -25,6 +42,7 @@ class SciELOManagerAPI(object):
         """
         Fetches the specified resource from the SciELO Manager API.
         """
+        err_count = 0
 
         if all([self._username, self._api_key]):
             kwargs['username'] = self._username
@@ -35,4 +53,63 @@ class SciELOManagerAPI(object):
         if resource_id:
             resource = resource(resource_id)
 
-        return resource.get(**kwargs)
+        while True:
+            try:
+                return resource.get(**kwargs)
+            except requests.exceptions.ConnectionError as exc:
+                if err_count < 10:
+                    wait_secs = err_count * 5
+                    logger.info('Connection failed. Waiting %ss to retry.' % wait_secs)
+                    time.sleep(wait_secs)
+                    err_count += 1
+                    continue
+                else:
+                    logger.error('Unable to connect to resource (%s).' % exc)
+                    raise ResourceUnavailableError(exc)
+            else:
+                err_count = 0
+
+    def iter_docs(self, endpoint, collection):
+        """
+        Iterates over all documents of a given endpoint and collection.
+
+        ``endpoint`` must be a valid endpoint at
+        http://manager.scielo.org/api/v1/
+
+        ``collection`` is a string of a valid name_slug. A complete
+        list os collections is available at
+        http://manager.scielo.org/api/v1/collections/
+
+        Note that you need a valid API KEY in order to query the
+        Manager API. Read more at: http://ref.scielo.org/ddkpmx
+        """
+        offset = 0
+        limit = ITEMS_PER_REQUEST
+
+        while True:
+            doc = self.fetch_data(endpoint,
+                                   offset=offset,
+                                   limit=limit,
+                                   collection=collection)
+
+            for obj in doc['objects']:
+                # we are interested only in non-trashed items.
+                if obj.get('is_trashed'):
+                    continue
+
+                yield obj
+
+            if not doc['meta']['next']:
+                raise StopIteration()
+            else:
+                offset += ITEMS_PER_REQUEST
+
+    def get_all_journals(self, collection):
+        """
+        Get all journals of a given collection
+
+        ``collection`` is a string of a valid name_slug. A complete
+        list os collections is available at
+        http://manager.scielo.org/api/v1/collections/
+        """
+        return self.iter_docs('journals', collection)
