@@ -9,4 +9,6 @@ def list_journals(request):
 
 
 def list_journals_by_subject(request):
-    pass
+    areas_list = mongomodels.list_journals_by_study_areas()
+
+    return render_to_response('catalog/subject.html', {'areas_list': areas_list})
