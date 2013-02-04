@@ -1,4 +1,5 @@
 {% extends "base_lv0.html" %}
+{% load catalog %}
 
 {% block header %}
 <div class="span3" style="text-align: center;">
@@ -12,8 +13,8 @@
         <div class="btn-group">
           <a href="/alpha" class="btn btn-small btn-primary"><strong>alpha</strong></a>
           <a href="/subject" class="btn btn-small btn-primary disabled"><strong>subject</strong></a>
-          <a href="http://search.scielo.org" 
-             target="_blank" 
+          <a href="http://search.scielo.org"
+             target="_blank"
              class="btn btn-small btn-primary">
              <strong>form</strong>
           </a>
@@ -24,18 +25,18 @@
       <dt>article brownsing</dt>
       <dd>
         <div class="btn-group">
-          <a href="http://search.scielo.org" 
-             target="_blank" 
+          <a href="http://search.scielo.org"
+             target="_blank"
              class="btn btn-small btn-primary">
              <strong>author</strong>
           </a>
-          <a href="http://search.scielo.org" 
+          <a href="http://search.scielo.org"
              target="_blank"
              class="btn btn-small btn-primary">
              <strong>subject</strong>
           </a>
-          <a href="http://search.scielo.org" 
-             target="_blank" 
+          <a href="http://search.scielo.org"
+             target="_blank"
              class="btn btn-small btn-primary">
              <strong>form</strong>
           </a>
@@ -47,13 +48,13 @@
       <dd>
         <div class="btn-group">
           <a href="/usage" class="btn btn-small btn-primary"><strong>usage</strong></a>
-          <a href="http://statbiblio.scielo.org/stat_biblio/index.php?lang=en" 
-             class="btn btn-small btn-primary" 
+          <a href="http://statbiblio.scielo.org/stat_biblio/index.php?lang=en"
+             class="btn btn-small btn-primary"
              target="_blank">
              <strong>citations</strong>
           </a>
-          <a href="http://statbiblio.scielo.org/stat_biblio/index.php?xml=http://statbiblio.scielo.org/stat_biblio/xml/16.xml&amp;lang=en&amp;state=16" 
-             target="_blank" 
+          <a href="http://statbiblio.scielo.org/stat_biblio/index.php?xml=http://statbiblio.scielo.org/stat_biblio/xml/16.xml&amp;lang=en&amp;state=16"
+             target="_blank"
              class="btn btn-small btn-primary">
              <strong>co-authors</strong>
           </a>
@@ -67,12 +68,13 @@
 {% block body %}
 <h3 style="text-align: center;">Library Collection</h3>
 <h4>Subjects</h4>
-<ul class="unstyled">
-  <li><a href="#AGRICULTURALSCIENCES">AGRICULTURAL SCIENCES</a></li>
-  <li><a href="#HEALTHSCIENCES">HEALTH SCIENCES</a></li>
-  <li><a href="#SOCIALSCIENCES">SOCIAL SCIENCES</a></li>
-</ul>
+
+{% subject_list journals %}
+
 <h4>Subject list of serials</h4>
+
+{% journals_by_subject journals %}
+
 <dl>
  <dt><a name="AGRICULTURALSCIENCES"></a>AGRICULTURAL SCIENCES</dt>
  <dd>
@@ -143,7 +145,7 @@
    <dd>
     <ul>
       <li>
-        <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as - 
+        <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as -
         <a href="#">Scientia Agricola</a>
       </li>
     </ul>
@@ -189,7 +191,7 @@
    <dd>
     <ul>
       <li>
-        <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as - 
+        <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as -
         <a href="#">Scientia Agricola</a>
       </li>
     </ul>
