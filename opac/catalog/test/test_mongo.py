@@ -170,6 +170,41 @@ class MongoManagerTest(TestCase, MockerTestCase):
         # just a placebo.
         self.assertTrue(True)
 
+    def test_indexes_with_optional_params(self):
+        mongo_driver = self.mocker.mock()
+        mongo_conn = self.mocker.mock()
+        mongo_db = self.mocker.mock(pymongo.database.Database)
+        mongo_col = self.mocker.mock()
+
+        mongo_driver.Connection(host=ANY, port=ANY)
+        self.mocker.result(mongo_conn)
+
+        mongo_conn[ANY]
+        self.mocker.result(mongo_db)
+
+        mongo_db.authenticate(ANY, ANY)
+        self.mocker.result(None)
+
+        mongo_db['articles']
+        self.mocker.result(mongo_col)
+
+        mongo_col.ensure_index('acronym', unique=True)
+        self.mocker.result(None)
+
+        self.mocker.replay()
+
+        mongo_uri = r'mongodb://user:pass@localhost:27017/journalmanager'
+        mm = self._makeOne(mongodb_driver=mongo_driver,
+                           mongo_uri=mongo_uri,
+                           mongo_collection='articles',
+                           indexes=[{'attr': 'acronym', 'unique': True}])
+
+        # the main idea is to assert that pymongo's
+        # ensure_index() method is called, and mocker
+        # asserts this to us. The assertion below is
+        # just a placebo.
+        self.assertTrue(True)
+
 
 class ArticleModelTest(TestCase, MockerTestCase):
 
@@ -399,14 +434,14 @@ class JournalModelTest(TestCase, MockerTestCase):
                   },
                 }
 
-        mock_objects.find_one({'id': 1})
+        mock_objects.find_one({'acronym': 'foo'})
         self.mocker.result(journal_microdata)
 
         self.mocker.replay()
 
         Journal.objects = mock_objects
 
-        journal = Journal.get_journal(journal_id=1)
+        journal = Journal.get_journal(journal_id='foo')
 
         self.assertIsInstance(journal, Journal)
         self.assertEqual(journal.id, 1)
@@ -423,14 +458,14 @@ class JournalModelTest(TestCase, MockerTestCase):
             "editor_address_state": "Rome",
             }
 
-        mock_objects.find_one({'id': 1})
+        mock_objects.find_one({'acronym': 'foo'})
         self.mocker.result(address_data)
 
         self.mocker.replay()
 
         Journal.objects = mock_objects
 
-        journal = Journal.get_journal(journal_id=1)
+        journal = Journal.get_journal(journal_id='foo')
 
         address = journal.address
 
@@ -456,29 +491,29 @@ class JournalModelTest(TestCase, MockerTestCase):
             "title": "AAA",
         }
 
-        mock_objects.find_one({'id': 1})
+        mock_objects.find_one({'acronym': 'foo'})
         self.mocker.result(phone_data1)
 
-        mock_objects.find_one({'id': 1})
+        mock_objects.find_one({'acronym': 'foo'})
         self.mocker.result(phone_data2)
 
-        mock_objects.find_one({'id': 1})
+        mock_objects.find_one({'acronym': 'foo'})
         self.mocker.result(phone_data3)
 
         self.mocker.replay()
 
         Journal.objects = mock_objects
-        journal = Journal.get_journal(journal_id=1)
+        journal = Journal.get_journal(journal_id='foo')
         phones = journal.phones
 
         self.assertEqual(phones, ['0039 06 4990 2945', '0039 06 4990 2253'])
 
-        journal = Journal.get_journal(journal_id=1)
+        journal = Journal.get_journal(journal_id='foo')
         phones = journal.phones
 
         self.assertEqual(phones, ['0039 06 4990 2253'])
 
-        journal = Journal.get_journal(journal_id=1)
+        journal = Journal.get_journal(journal_id='foo')
         phones = journal.phones
 
         self.assertEqual(phones, [])
@@ -500,22 +535,22 @@ class JournalModelTest(TestCase, MockerTestCase):
             "eletronic_issn": "XXXX-XXXX"
             }
 
-        mock_objects.find_one({'id': 1})
+        mock_objects.find_one({'acronym': 'foo'})
         self.mocker.result(print_issn)
 
-        mock_objects.find_one({'id': 1})
+        mock_objects.find_one({'acronym': 'foo'})
         self.mocker.result(electronic_issn)
 
         self.mocker.replay()
 
         Journal.objects = mock_objects
 
-        journal = Journal.get_journal(journal_id=1)
+        journal = Journal.get_journal(journal_id='foo')
         issn = journal.issn
 
         self.assertEqual(issn, 'AAAA-AAAA')
 
-        journal = Journal.get_journal(journal_id=1)
+        journal = Journal.get_journal(journal_id='foo')
         issn = journal.issn
 
         self.assertEqual(issn, 'XXXX-XXXX')

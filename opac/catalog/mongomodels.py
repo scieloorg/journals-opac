@@ -1,6 +1,7 @@
 # coding:utf8
 from urlparse import urlparse
 
+from django.core.urlresolvers import reverse
 from django.conf import settings
 import pymongo
 
@@ -81,6 +82,11 @@ class MongoManager(object):
 
     def _ensure_indexes(self, indexes):
         for index in indexes:
+            if isinstance(index, dict):
+                attr = index.pop('attr')
+                self._mongoconn.col.ensure_index(attr, **index)
+                continue
+
             self._mongoconn.col.ensure_index(index)
 
 
@@ -185,8 +191,10 @@ def list_journals_by_study_areas(mongomanager_lib=MongoManager):
 
 
 class Journal(Document):
-    objects = ManagerFactory(collection='journals',
-        indexes=['issue_ref', 'title', 'study_areas', 'id'])
+    objects = ManagerFactory(collection='journals', indexes=[
+        'issue_ref', 'title', 'study_areas', 'id',
+        {'attr': 'acronym', 'unique': True}
+    ])
 
     @classmethod
     def get_journal(cls, journal_id):
@@ -194,12 +202,12 @@ class Journal(Document):
         Return a specific journal
         """
 
-        journal = cls.objects.find_one({'id': int(journal_id)})
+        journal = cls.objects.find_one({'acronym': journal_id})
 
         if journal:
             return cls(**journal)
 
-        raise ValueError('no journal found for id:'.format(journal_id))
+        raise ValueError('no journal found for acronym:'.format(journal_id))
 
     def list_issues(self):
         """
@@ -268,6 +276,9 @@ class Journal(Document):
             issn = self._data['eletronic_issn']
 
         return issn
+
+    def get_absolute_url(self):
+        return reverse('catalog.journal', kwargs={'journal_id': self.acronym})
 
 
 class Issue(Document):
