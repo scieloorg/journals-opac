@@ -1,6 +1,7 @@
 # coding: utf-8
 import abc
 import re
+from unicodedata import normalize
 
 from django.conf import settings
 
@@ -212,6 +213,27 @@ class PCleanup(Pipe):
     def transform(self, data):
         if 'is_trashed' in data:
             del(data['is_trashed'])
+
+        return data
+
+
+def pnormalizejournaltitle_precondition(data):
+    """
+    Asserts that:
+
+    * ``title`` exists
+    """
+    if 'title' not in data:
+        raise UnmetPrecondition('missing item "title"')
+
+
+class PNormalizeJournalTitle(Pipe):
+
+    @precondition(pnormalizejournaltitle_precondition)
+    def transform(self, data):
+        ascii_title = normalize('NFKD', data['title']).encode('ASCII', 'ignore')
+
+        data['_normalized_title'] = ascii_title.decode('ASCII').upper()
 
         return data
 

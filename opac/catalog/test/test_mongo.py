@@ -531,7 +531,7 @@ class JournalModelTest(TestCase, MockerTestCase):
         mock_mongomanager.find({})
         self.mocker.result(mock_mongomanager)
 
-        mock_mongomanager.sort('title', direction=pymongo.ASCENDING)
+        mock_mongomanager.sort('_normalized_title', direction=pymongo.ASCENDING)
         self.mocker.result([{'title': 'Micronucleated lymphocytes in parents of lalala children'}])
 
         self.mocker.replay()
@@ -577,7 +577,7 @@ class JournalModelTest(TestCase, MockerTestCase):
         mock_mongomanager.find({'study_areas': 'Spam'})
         self.mocker.result(mock_mongomanager)
 
-        mock_mongomanager.sort('title', direction=pymongo.ASCENDING)
+        mock_mongomanager.sort('_normalized_title', direction=pymongo.ASCENDING)
         self.mocker.result([{'title': 'Micronucleated lymphocytes in parents of lalala children'}])
         self.mocker.count(3)
 
