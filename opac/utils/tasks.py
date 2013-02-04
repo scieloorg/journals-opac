@@ -1,8 +1,7 @@
-import json
-
 from django.conf import settings
 
 from .sync import datacollector
+from .sync import dataloader
 from .sync import pipes
 
 
@@ -16,6 +15,5 @@ def full_sync():
     data = scielo_api.get_all_journals('saude-publica')
     transformed_data = ppl.run(data)
 
-    with open('/tmp/journals.json', 'wb') as f:
-        for d in transformed_data:
-            f.write(json.dumps(d))
+    marreta = dataloader.Marreta(settings=settings)
+    marreta.rebuild_collection('journals', transformed_data)
