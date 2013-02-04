@@ -7,6 +7,10 @@
 TEST_DISCOVERY_ROOT = BASE_PATH
 TEST_RUNNER = 'utils.runner.DiscoveryRunner'
 
+#
+# MongoDB configuration
+#
+MONGO_URI = 'mongodb://localhost:27017/journalsopac'
 
 #
 # SciELO Manager API configuration
