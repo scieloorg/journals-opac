@@ -458,36 +458,41 @@ class IssueModelTest(TestCase, MockerTestCase):
         mock_objects = self.mocker.mock()
 
         issue_microdata = {
-            'data': {
-                "cover": None,
-                "created": "2010-04-01T01:01:01",
-                "ctrl_vocabulary": "nd",
-                "editorial_standard": "vancouv",
-                "id": 1,
-                "is_marked_up": False,
-                "is_press_release": False,
-                "is_trashed": False,
-                "label": "45 (4)",
-                "number": "4",
-                "order": 4,
-                "publication_end_month": 12,
-                "publication_start_month": 10,
-                "publication_year": 2009,
-                "resource_uri": "/api/v1/issues/1/",
-                "sections": [
+            "issues": [
                 {
-                  "id": 514,
-                  "articles": [
-                    "AISS-JHjashA",
-                  ]
+                    "id": 1,
+                    "data": {
+                        "cover": None,
+                        "created": "2010-04-01T01:01:01",
+                        "ctrl_vocabulary": "nd",
+                        "editorial_standard": "vancouv",
+                        "id": 1,
+                        "is_marked_up": False,
+                        "is_press_release": False,
+                        "is_trashed": False,
+                        "label": "45 (4)",
+                        "number": "4",
+                        "order": 4,
+                        "publication_end_month": 12,
+                        "publication_start_month": 10,
+                        "publication_year": 2009,
+                        "resource_uri": "/api/v1/issues/1/",
+                        "sections": [
+                        {
+                          "id": 514,
+                          "articles": [
+                            "AISS-JHjashA",
+                          ]
+                        }
+                        ],
+                        "suppl_number": None,
+                        "suppl_volume": None,
+                        "total_documents": 17,
+                        "updated": "2012-11-08T10:35:37.193612",
+                        "volume": "45"
+                    }
                 }
-                ],
-                "suppl_number": None,
-                "suppl_volume": None,
-                "total_documents": 17,
-                "updated": "2012-11-08T10:35:37.193612",
-                "volume": "45"
-            }
+            ]
         }
 
         mock_objects.find_one({'id': 1, 'issues.id': 1}, {'issues.data': 1})
@@ -513,37 +518,42 @@ class IssueModelTest(TestCase, MockerTestCase):
         article_mock_objects = self.mocker.mock()
 
         issue_section_microdata = {
-            "data": {
-                "cover": None,
-                "created": "2010-04-01T01:01:01",
-                "ctrl_vocabulary": "nd",
-                "editorial_standard": "vancouv",
-                "id": 1,
-                "is_marked_up": False,
-                "is_press_release": False,
-                "is_trashed": False,
-                "label": "45 (4)",
-                "number": "4",
-                "order": 4,
-                "publication_end_month": 12,
-                "publication_start_month": 10,
-                "publication_year": 2009,
-                "resource_uri": "/api/v1/issues/1/",
-                "sections": [
+            "issues": [
                 {
-                  "id": 514,
-                  "articles": [
-                    "AISS-JHjashA",
-                  ]
+                    "id": 1,
+                    "data": {
+                        "cover": None,
+                        "created": "2010-04-01T01:01:01",
+                        "ctrl_vocabulary": "nd",
+                        "editorial_standard": "vancouv",
+                        "id": 1,
+                        "is_marked_up": False,
+                        "is_press_release": False,
+                        "is_trashed": False,
+                        "label": "45 (4)",
+                        "number": "4",
+                        "order": 4,
+                        "publication_end_month": 12,
+                        "publication_start_month": 10,
+                        "publication_year": 2009,
+                        "resource_uri": "/api/v1/issues/1/",
+                        "sections": [
+                        {
+                          "id": 514,
+                          "articles": [
+                            "AISS-JHjashA",
+                          ]
+                        }
+                        ],
+                        "suppl_number": None,
+                        "suppl_volume": None,
+                        "total_documents": 17,
+                        "updated": "2012-11-08T10:35:37.193612",
+                        "volume": "45"
+                    }
                 }
-                ],
-                "suppl_number": None,
-                "suppl_volume": None,
-                "total_documents": 17,
-                "updated": "2012-11-08T10:35:37.193612",
-                "volume": "45"
-            },
-          "sections": [
+            ],
+            "sections": [
               {
                 "id": 514,
                 "data": {
@@ -558,11 +568,18 @@ class IssueModelTest(TestCase, MockerTestCase):
         }
 
         section_microdata = {
-          "data": {
-              "id": 514,
-              "resource_uri": "/api/v1/sections/514/",
-              "titles": {"en": "WHO Publications"}
-          }
+            "sections": [
+                {
+                  "id": 514,
+                  "data": {
+                      "id": 514,
+                      "resource_uri": "/api/v1/sections/514/",
+                      "titles": {
+                        "en": "WHO Publications"
+                      }
+                  }
+                }
+            ]
         }
 
         article_microdata = {
@@ -606,11 +623,18 @@ class SectionModelTest(TestCase, MockerTestCase):
         mock_objects = self.mocker.mock()
 
         section_microdata = {
-          "data": {
-              "id": 514,
-              "resource_uri": "/api/v1/sections/514/",
-              "titles": {"en": "WHO Publications"}
-            }
+            "sections": [
+                {
+                  "id": 514,
+                  "data": {
+                      "id": 514,
+                      "resource_uri": "/api/v1/sections/514/",
+                      "titles": {
+                        "en": "WHO Publications"
+                      }
+                  }
+                }
+            ]
           }
 
         mock_objects.find_one({'id': 1, 'sections.id': 514}, {'sections.data': 1})
@@ -629,11 +653,18 @@ class SectionModelTest(TestCase, MockerTestCase):
         mock_objects = self.mocker.mock()
 
         section_microdata = {
-            "data": {
-                "id": 514,
-                "resource_uri": "/api/v1/sections/514/",
-                "titles": {"en": "WHO Publications"}
-            }
+            "sections": [
+                {
+                  "id": 514,
+                  "data": {
+                      "id": 514,
+                      "resource_uri": "/api/v1/sections/514/",
+                      "titles": {
+                        "en": "WHO Publications"
+                      }
+                  }
+                }
+            ]
           }
 
         mock_objects.find_one({'id': 1, 'sections.id': 514}, {'sections.data': 1})

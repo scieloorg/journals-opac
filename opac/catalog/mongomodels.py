@@ -214,9 +214,9 @@ class Issue(Document):
         Return a specific issue from a specific journal
         """
 
-        return Issue(**cls.objects.find_one({'id': journal_id,
-                                            'issues.id': issue_id},
-                                            {'issues.data': 1})['data'])
+        return Issue(**cls.objects.find_one({'id': int(journal_id),
+                                            'issues.id': int(issue_id)},
+                                            {'issues.data': 1})['issues'][0]['data'])
 
     def list_sections(self):
         """
@@ -244,4 +244,4 @@ class Section(Document):
         Return a specific section from a specific journal
         """
         return Section(**cls.objects.find_one({'id': journal_id,
-                        'sections.id': section_id}, {'sections.data': 1})['data'])
+                        'sections.id': section_id}, {'sections.data': 1})['sections'][0]['data'])

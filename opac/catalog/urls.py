@@ -11,5 +11,4 @@ urlpatterns = patterns('',
     url(r'^usage/$', direct_to_template, {'template': 'catalog/usage.html'}),
     url(r'^journal/$', direct_to_template, {'template': 'catalog/journal.html'}),
     url(r'^(?P<journal_id>\d+)/issue/(?P<issue_id>\d+)/', views.issue, name='issue.html'),
-
 )
