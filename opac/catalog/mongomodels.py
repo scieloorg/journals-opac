@@ -3,7 +3,7 @@ from urlparse import urlparse
 
 from django.conf import settings
 import pymongo
-
+import twitter
 
 MONGO_URI = getattr(settings, 'MONGO_URI',
     'mongodb://localhost:27017/journalsopac')
@@ -143,6 +143,7 @@ class Article(Document):
         for author in self.contrib_group['author']:
             yield author
 
+
 def list_journals(criteria=None, mongomanager_lib=MongoManager):
     """
     Lists all journals present in a collection
@@ -201,6 +202,8 @@ class Journal(Document):
     objects = ManagerFactory(collection='journals',
         indexes=['issue_ref', 'title', 'study_areas', 'id'])
 
+    _twitter_api = twitter.Api()
+
     @classmethod
     def get_journal(cls, journal_id):
         """
@@ -257,6 +260,23 @@ class Journal(Document):
 
         if address_string.strip():
             return address_string.strip()
+
+    @property
+    def tweets(self):
+        """
+        Retrieve a list of tweets from a specific users
+        defined into the journal metadata.
+        """
+
+        tweets = []
+        if 'twitter_user' in self._data:
+            if self._data['twitter_user'] != None and self._data['twitter_user'].strip():
+                tws = self._twitter_api.GetUserTimeline(self._data['twitter_user'])
+                for tw in tws:
+                    tweets.append({'text': tw.text,
+                                   'created_at': tw.created_at})
+
+        return tweets
 
     @property
     def phones(self):

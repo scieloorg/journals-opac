@@ -642,6 +642,44 @@ class JournalModelTest(TestCase, MockerTestCase):
         j = self._makeOne(**issues_data)
         self.assertEqual(j.issues_count, 0)
 
+    def test_tweets(self):
+        from catalog.mongomodels import Journal
+
+        mock_objects = self.mocker.mock()
+        mock_twitter = self.mocker.mock()
+        mock_tweet = self.mocker.mock()
+
+        twitter_user = {
+            "twitter_user": "redescielo"
+            }
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(twitter_user)
+
+        mock_twitter.GetUserTimeline('redescielo')
+        self.mocker.result([mock_tweet])
+
+        mock_tweet.text
+        self.mocker.result(u'Novo peri\xf3dico na Cole\xe7\xe3o SciELO Brasil!')
+
+        mock_tweet.created_at
+        self.mocker.result(u'Mon Feb 04 13:41:19 +0000 2013')
+
+        self.mocker.replay()
+
+        Journal.objects = mock_objects
+
+        journal = Journal.get_journal(journal_id=1)
+
+        Journal._twitter_api = mock_twitter  # monkeypatch
+
+        tweets = journal.tweets
+
+        self.assertEqual(tweets[0]['text'],
+                        u'Novo peri\xf3dico na Cole\xe7\xe3o SciELO Brasil!')
+        self.assertEqual(tweets[0]['created_at'],
+                        u'Mon Feb 04 13:41:19 +0000 2013')
+
 
 class IssueModelTest(TestCase, MockerTestCase):
 

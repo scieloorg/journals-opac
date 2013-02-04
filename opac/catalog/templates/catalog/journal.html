@@ -23,16 +23,22 @@
     <img src="/static/images/journals/logo/id_journal.gif" />
   </center>
     <h3>Search</h3>
-    <form class="form-inline">
-      <input type="text" class="input-large" placeholder="Enter one or more words">
-      <select  class="input-medium">
+    <form class="form-inline" method="POST" action="http://search.scielo.org/index.php" target="_blank">
+      <input type="hidden" name="site" value="scielo">
+      <input type="hidden" name="col" value="org">
+      <input type="hidden" name="lang" value="en">
+      <input type="hidden" name="where" value="ORG">
+      <input type="hidden" name="sort" value="score+desc">
+      <input type="text" name="q" class="input-large" placeholder="Enter one or more words">
+      <select  class="input-medium" name="index">
         <option value="">All Indexes</option>
-        <option value="">Title</option>
-        <option value="">Author</option>
-        <option value="">Subject</option>
+        <option value="ab">Abstract</option>
+        <option value="au">Author</option>
+        <option value="sponsor">Sponsor</option>
+        <option value="ti">Title</option>
       </select>
-      <select class="input-medium">
-        <option value="0021-2571">This Journal</option>
+      <select class="input-medium" name="filter_chain">
+        <option value="ta_cluster:{{ journal.short_title }}">This Journal</option>
         <option value="">All Collection</option>
       </select>
       <button class="btn btn-small btn-primary">Search</button>
