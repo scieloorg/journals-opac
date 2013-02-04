@@ -10,6 +10,6 @@ urlpatterns = patterns('',
     url(r'^subject/$', views.list_journals_by_subject, name="catalog.list_journals_by_subject"),
     url(r'^usage/$', direct_to_template, {'template': 'catalog/usage.html'}),
     url(r'^journal/$', direct_to_template, {'template': 'catalog/journal.html'}),
-    url(r'^issue/$', direct_to_template, {'template': 'catalog/issue.html'}),
+    url(r'^(?P<journal_id>\d+)/issue/(?P<issue_id>\d+)/', views.issue, name='issue.html'),
 
 )
