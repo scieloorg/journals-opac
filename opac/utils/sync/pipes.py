@@ -57,9 +57,7 @@ class Pipe(object):
         if not api_username or not api_key or not api_uri:
             raise ValueError('missing config to manager api')
 
-        self._manager_api = manager_api_lib(api_uri,
-                                            username=api_username,
-                                            api_key=api_key)
+        self._manager_api = manager_api_lib(settings=settings)
         self._iterable_data = data
 
     def __iter__(self):
