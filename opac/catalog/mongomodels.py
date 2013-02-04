@@ -199,7 +199,7 @@ class Journal(Document):
         if journal:
             return cls(**journal)
 
-        return None
+        raise ValueError('no journal found for id:'.format(journal_id))
 
     def list_issues(self):
         """
@@ -285,7 +285,7 @@ class Issue(Document):
         if issue:
             return cls(**issue)
 
-        return None
+        raise ValueError('no issue found for id:'.format(journal_id))
 
     def list_sections(self):
         """
