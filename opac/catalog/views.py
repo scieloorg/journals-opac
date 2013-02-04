@@ -8,9 +8,11 @@ def list_journals(request):
 
     return render_to_response('catalog/alpha.html', {'journals': journals})
 
-
 def list_journals_by_subject(request):
-    pass
+
+    journals = mongomodels.list_journals_by_study_areas()
+
+    return render_to_response('catalog/subject.html', {'journals': journals})
 
 
 def journal(request, journal_id):
