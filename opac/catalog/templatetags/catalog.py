@@ -21,16 +21,16 @@ def journal_alpha_list(journals):
 register.simple_tag(journal_alpha_list)
 
 
-def journal_subject_list(areas_list):
+def journals_by_subject(journals):
 
     snippet = ''
     last_initial = None
 
-    for areas in areas_list:
+    for area in journals:
         snippet += u'<dl>'
-        snippet += u'<dt>%s</dt>' % areas['area'].upper()
+        snippet += u'<dt>%s</dt>' % area['area'].upper()
         snippet += u'<dd><dl><dd><ul class="unstyled">'
-        for journal in areas['journals']:
+        for journal in area['journals']:
             if last_initial and journal.title[0].lower() != last_initial.lower():
                 snippet += u'<li>&nbsp;</li>'
             last_initial = journal.title[0]
@@ -40,14 +40,14 @@ def journal_subject_list(areas_list):
 
     return snippet
 
-register.simple_tag(journal_subject_list)
+register.simple_tag(journals_by_subject)
 
 
-def subject_list(areas_list):
+def subject_list(journals):
 
     snippet = '<ul class="unstyled">'
 
-    for area in areas_list:
+    for area in journals:
         snippet += '<li><a href="#">%s</a></li>' % area['area']
     snippet += '</ul>'
 

@@ -9,6 +9,6 @@ def list_journals(request):
 
 
 def list_journals_by_subject(request):
-    areas_list = mongomodels.list_journals_by_study_areas()
+    journals = mongomodels.list_journals_by_study_areas()
 
-    return render_to_response('catalog/subject.html', {'areas_list': areas_list})
+    return render_to_response('catalog/subject.html', {'journals': journals})
