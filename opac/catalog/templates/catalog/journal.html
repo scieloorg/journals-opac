@@ -24,7 +24,7 @@
     <form class="form-inline">
       <input type="text" class="input-large" placeholder="Enter one or more words">
       <select  class="input-medium">
-        <option value="0021-2571">All Indexes</option>
+        <option value="">All Indexes</option>
         <option value="">Title</option>
         <option value="">Author</option>
         <option value="">Subject</option>
@@ -37,15 +37,24 @@
     </form>
     <dl>
       <dt>Publication of</dt>
-      <dd>Istituto Superiore di Sanità</dd>
-      <dd><span class="text-info"><em>Print version</em> ISSN </span>0021-2571</dd>
+      <dd>{{ journal.title }}</dd>
+      <dd><span class="text-info"><em>{{ journal.scielo_issn }} version</em> ISSN </span>{{ journal.issn }}</dd>
+      {% if journal.missions.en %}
       <dt>Mission</dt>
-      <dd><span class="text-info">To disseminate information on researches in public health.</sapn><dd>
+      <dd><span class="text-info">{{ journal.missions.en }}</sapn><dd>
+      {% endif %}
       <dt>Address</dt>
       <dd>
-        2013 Instituti Superiore di Sanità<br/>
-        Viale Regina Elena 299<br/>
-        <a href="mailto: annali@iss.it">annali@iss.it</a>
+        {% if journal.editor_name %}
+          {{ journal.editor_name }}</br>
+        {% endif %}
+        {{ journal.address }}<br/>
+        {% for phone in journal.phones %}
+          <strong>phone: </strong> {{ phone }} <br/>
+        {% endfor %}
+        {% if journal.editor_email %}
+          <strong>e-mail: </strong> <a href="mailto: {{ journal.editor_email }}">{{ journal.editor_email }}</a>
+        {% endif %}
       </dd>
     </dl>
 </div>
