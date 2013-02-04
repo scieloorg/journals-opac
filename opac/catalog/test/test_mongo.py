@@ -339,6 +339,187 @@ class JournalModelTest(TestCase, MockerTestCase):
     def test_needed_indexes_are_created(self):
         self.assertTrue(False)
 
+    def test_get_journal_passing_journal_id(self):
+        from catalog.mongomodels import Journal
+
+        mock_objects = self.mocker.mock()
+
+        journal_microdata = {
+                  "contact": None,
+                  "copyrighter": "Istituto Superiore di Sanità",
+                  "cover": None,
+                  "current_ahead_documents": 0,
+                  "editor_address": "Viale Regina Elena 299",
+                  "editor_address_city": "Rome",
+                  "editor_address_country": "Italy",
+                  "editor_address_state": None,
+                  "editor_address_zip": "00161",
+                  "editor_email": "annali@iss.it",
+                  "editor_name": None,
+                  "editor_phone1": "0039 06 4990 2945",
+                  "editor_phone2": "0039 06 4990 2253",
+                  "eletronic_issn": None,
+                  "frequency": "Q",
+                  "id": 1,
+                  "languages": [
+                    "en",
+                    "it"
+                  ],
+                  "logo": None,
+                  "missions": {
+                    "en": "To disseminate information on researches in public health"
+                  },
+                  "other_previous_title": None,
+                  "previous_ahead_documents": 0,
+                  "print_issn": "0021-2571",
+                  "pub_status": "current",
+                  "pub_status_history": [
+                    {
+                      "date": "2010-04-01T00:00:00",
+                      "status": "current"
+                    }
+                  ],
+                  "publication_city": "Roma",
+                  "publisher_country": "IT",
+                  "publisher_name": "Istituto Superiore di Sanità",
+                  "publisher_state": None,
+                  "resource_uri": "/api/v1/journals/1/",
+                  "scielo_issn": "print",
+                  "short_title": "Ann. Ist. Super. Sanità",
+                  "title": "Annali dell'Istituto Superiore di Sanità",
+                  "title_iso": "Ann. Ist. Super. Sanità",
+                  "url_journal": None,
+                  "url_online_submission": None,
+                  "use_license": {
+                    "disclaimer": None,
+                    "id": 1,
+                    "license_code": None,
+                    "reference_url": None,
+                    "resource_uri": "/api/v1/uselicenses/1/"
+                  },
+                }
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(journal_microdata)
+
+        self.mocker.replay()
+
+        Journal.objects = mock_objects
+
+        journal = Journal.get_journal(journal_id=1)
+
+        self.assertIsInstance(journal, Journal)
+        self.assertEqual(journal.id, 1)
+
+    def test_address(self):
+        from catalog.mongomodels import Journal
+
+        mock_objects = self.mocker.mock()
+
+        address_data = {
+            "editor_address": "Viale Regina Elena 299",
+            "editor_address_city": "Rome",
+            "editor_address_country": "Italy",
+            "editor_address_state": "Rome",
+            }
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(address_data)
+
+        self.mocker.replay()
+
+        Journal.objects = mock_objects
+
+        journal = Journal.get_journal(journal_id=1)
+
+        address = journal.address
+
+        formated_address = "Viale Regina Elena 299, Rome, Rome, Italy"
+
+        self.assertEqual(address, formated_address)
+
+    def test_phones(self):
+        from catalog.mongomodels import Journal
+
+        mock_objects = self.mocker.mock()
+
+        phone_data1 = {
+            "editor_phone1": "0039 06 4990 2945",
+            "editor_phone2": "0039 06 4990 2253",
+            }
+
+        phone_data2 = {
+            "editor_phone2": "0039 06 4990 2253",
+            }
+
+        phone_data3 = {
+            "title": "AAA",
+        }
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(phone_data1)
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(phone_data2)
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(phone_data3)
+
+        self.mocker.replay()
+
+        Journal.objects = mock_objects
+        journal = Journal.get_journal(journal_id=1)
+        phones = journal.phones
+
+        self.assertEqual(phones, ['0039 06 4990 2945', '0039 06 4990 2253'])
+
+        journal = Journal.get_journal(journal_id=1)
+        phones = journal.phones
+
+        self.assertEqual(phones, ['0039 06 4990 2253'])
+
+        journal = Journal.get_journal(journal_id=1)
+        phones = journal.phones
+
+        self.assertEqual(phones, [])
+
+    def test_scielo_issn(self):
+        from catalog.mongomodels import Journal
+
+        mock_objects = self.mocker.mock()
+
+        print_issn = {
+            "scielo_issn": "print",
+            "print_issn": "AAAA-AAAA",
+            "eletronic_issn": "XXXX-XXXX"
+            }
+
+        electronic_issn = {
+            "scielo_issn": "electronic",
+            "print_issn": "AAAA-AAAA",
+            "eletronic_issn": "XXXX-XXXX"
+            }
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(print_issn)
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(electronic_issn)
+
+        self.mocker.replay()
+
+        Journal.objects = mock_objects
+
+        journal = Journal.get_journal(journal_id=1)
+        issn = journal.issn
+
+        self.assertEqual(issn, 'AAAA-AAAA')
+
+        journal = Journal.get_journal(journal_id=1)
+        issn = journal.issn
+
+        self.assertEqual(issn, 'XXXX-XXXX')
+
     def test_list_journals(self):
         from catalog.mongomodels import list_journals, Journal
 
