@@ -30,3 +30,7 @@ pip-log.txt
 _build
 _static
 _template
+
+#OPAC
+settings_local.include
+settings_opac.include
