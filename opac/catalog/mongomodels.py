@@ -238,18 +238,25 @@ class Journal(Document):
 
         address = []
         if 'editor_address' in self._data:
-            address.append(self._data['editor_address'])
+            if self._data['editor_address'] != None and self._data['editor_address'].strip():
+                address.append(self._data['editor_address'])
 
         if 'editor_address_city' in self._data:
-            address.append(self._data['editor_address_city'])
+            if self._data['editor_address_city'] != None and self._data['editor_address_city'].strip():
+                address.append(self._data['editor_address_city'])
 
         if 'editor_address_state' in self._data:
-            address.append(self._data['editor_address_state'])
+            if self._data['editor_address_state'] != None and self._data['editor_address_state'].strip():
+                address.append(self._data['editor_address_state'])
 
         if 'editor_address_country' in self._data:
-            address.append(self._data['editor_address_country'])
+            if self._data['editor_address_country'] != None and self._data['editor_address_country'].strip():
+                address.append(self._data['editor_address_country'])
 
-        return ', '.join(address)
+        address_string = ', '.join(address)
+
+        if address_string.strip():
+            return address_string.strip()
 
     @property
     def phones(self):
@@ -260,10 +267,12 @@ class Journal(Document):
         phones = []
 
         if 'editor_phone1' in self._data:
-            phones.append(self._data['editor_phone1'])
+            if self._data['editor_phone1'] != None and len(self._data['editor_phone1'].strip()) > 0:
+                phones.append(self._data['editor_phone1'])
 
         if 'editor_phone2' in self._data:
-            phones.append(self._data['editor_phone2'])
+            if self._data['editor_phone2'] != None and len(self._data['editor_phone2'].strip()) > 0:
+                phones.append(self._data['editor_phone2'])
 
         return phones
 

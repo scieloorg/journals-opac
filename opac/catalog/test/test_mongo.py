@@ -416,27 +416,39 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         mock_objects = self.mocker.mock()
 
-        address_data = {
+        address_data1 = {
             "editor_address": "Viale Regina Elena 299",
             "editor_address_city": "Rome",
             "editor_address_country": "Italy",
             "editor_address_state": "Rome",
             }
 
+        address_data2 = {
+            "editor_address": "",
+            "editor_address_city": None,
+            "editor_address_country": "",
+            "editor_address_state": "",
+            }
+
         mock_objects.find_one({'id': 1})
-        self.mocker.result(address_data)
+        self.mocker.result(address_data1)
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(address_data2)
 
         self.mocker.replay()
 
         Journal.objects = mock_objects
 
         journal = Journal.get_journal(journal_id=1)
-
         address = journal.address
 
-        formated_address = "Viale Regina Elena 299, Rome, Rome, Italy"
+        self.assertEqual(address, "Viale Regina Elena 299, Rome, Rome, Italy")
 
-        self.assertEqual(address, formated_address)
+        journal = Journal.get_journal(journal_id=1)
+        address = journal.address
+
+        self.assertEqual(address, None)
 
     def test_phones(self):
         from catalog.mongomodels import Journal
@@ -456,6 +468,14 @@ class JournalModelTest(TestCase, MockerTestCase):
             "title": "AAA",
         }
 
+        phone_data4 = {
+            "editor_phone2": "",
+            }
+
+        phone_data5 = {
+            "editor_phone1": None,
+            }
+
         mock_objects.find_one({'id': 1})
         self.mocker.result(phone_data1)
 
@@ -464,6 +484,12 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         mock_objects.find_one({'id': 1})
         self.mocker.result(phone_data3)
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(phone_data4)
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(phone_data5)
 
         self.mocker.replay()
 
@@ -477,6 +503,16 @@ class JournalModelTest(TestCase, MockerTestCase):
         phones = journal.phones
 
         self.assertEqual(phones, ['0039 06 4990 2253'])
+
+        journal = Journal.get_journal(journal_id=1)
+        phones = journal.phones
+
+        self.assertEqual(phones, [])
+
+        journal = Journal.get_journal(journal_id=1)
+        phones = journal.phones
+
+        self.assertEqual(phones, [])
 
         journal = Journal.get_journal(journal_id=1)
         phones = journal.phones

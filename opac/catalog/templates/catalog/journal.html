@@ -12,9 +12,11 @@
     <li><i class="icon-play"></i> <a href="#" target="_blank">editorial board</a></li>
     <li><i class="icon-play"></i> <a href="#" target="_blank">instructions to authors</a></li>
     <li><i class="icon-play"></i> <a href="#" target="_blank">subscriptions</a></li>
-    <li><i class="icon-play"></i> <a href="#" target="_blank">statistics</a></li>
+    <li><i class="icon-play"></i> <a href="/journal/{{ journal.id }}/stats/">statistics</a></li>
   </ul>
-  <a href="#"><img src="/static/images/en/submission.png" /></a>
+  {% if journal.url_online_submission %}
+  <a href="{{ journal.url_online_submission }}"><img src="/static/images/en/submission.png" /></a>
+  {% endif %}
 </div>
 <div class="span7" style="border-left: 1px solid; border-right: 1px solid; padding-left: 20px;">
   <center>
@@ -45,10 +47,12 @@
       {% endif %}
       <dt>Address</dt>
       <dd>
-        {% if journal.editor_name %}
-          {{ journal.editor_name }}</br>
+        {% if journal.publisher_name %}
+          {{ journal.publisher_name }}</br>
         {% endif %}
+        {% if journal.address %}
         {{ journal.address }}<br/>
+        {% endif %}
         {% for phone in journal.phones %}
           <strong>phone: </strong> {{ phone }} <br/>
         {% endfor %}
