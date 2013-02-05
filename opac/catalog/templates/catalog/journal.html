@@ -69,25 +69,40 @@
     </dl>
 </div>
 <div class="span3">
-  <h4>Press Releases</h4>
-  <dl>
-    <dt>Articles</dt>
-    <dd>
-      <ul>
-        <li class="muted"><a hrf="#">2012/09 - v42 n.3 First record of Trichodina heterodentata (Ciliophora: Trichodinidae) from Arapaima gigas cultivated in Peru</a></li>
-        <li class="muted"><a hrf="#">2012/06 - v42 n.2 Soil CO2 efflux in central Amazonia: environmental and methodological effects</a></li>
-      </ul>
-    </dd>
-  </dl>
+  <div class="press_releases">
+    <h4>Press Releases</h4>
+    <dl>
+      <dt>Articles</dt>
+      <dd>
+        <ul>
+          <li class="muted"><a hrf="#">2012/09 - v42 n.3 First record of Trichodina heterodentata (Ciliophora: Trichodinidae) from Arapaima gigas cultivated in Peru</a></li>
+          <li class="muted"><a hrf="#">2012/06 - v42 n.2 Soil CO2 efflux in central Amazonia: environmental and methodological effects</a></li>
+        </ul>
+      </dd>
+    </dl>
+    <div class="more">
+      <a href="#" target="_blank">more</a>
+    </div>
+  </div>
   {% if journal.twitter_user %}
-  <h4><img src="/static/images/twitter.png" width="20px"/> Twitter</h4>
-  <ul id="tweets"></ul>
+  <div class="twitter">
+    <h4><img src="/static/images/twitter.png" width="20px"/> Twitter</h4>
+    <ul id="tweets"></ul>
+    <div class="more">
+      <a href="http://www.twitter.com/{{ journal.twitter_user }}" target="_blank">more</a>
+    </div>
+  </div>
   {% endif %}
-  <h4><img src="/static/images/facebook.png" width="20px"/> Facebook</h4>
-  <ul>
-    <li class="muted"><a hrf="#">2012/09 - v42 n.3 First record of Trichodina heterodentata (Ciliophora: Trichodinidae) from Arapaima gigas cultivated in Peru</a></li>
-    <li class="muted"><a hrf="#">2012/06 - v42 n.2 Soil CO2 efflux in central Amazonia: environmental and methodological effects</a></li>
-  </ul>
+  <div class="facebook">
+    <h4><img src="/static/images/facebook.png" width="20px"/> Facebook</h4>
+    <ul>
+      <li class="muted"><a hrf="#">2012/09 - v42 n.3 First record of Trichodina heterodentata (Ciliophora: Trichodinidae) from Arapaima gigas cultivated in Peru</a></li>
+      <li class="muted"><a hrf="#">2012/06 - v42 n.2 Soil CO2 efflux in central Amazonia: environmental and methodological effects</a></li>
+    </ul>
+    <div class="more">
+      <a href="#" target="_blank">more</a>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
@@ -98,9 +113,8 @@
       url: "{% url catalog.ajx_list_journal_tweets journal.id %}",
       success: function (data) {
           for (tweet in data){
-            $("#tweets").append("<li><strong>" + data[tweet]['created_at'] + ":</strong> " + data[tweet]['text'] + "</li>");
+            $("#tweets").append("<li><strong>" + data[tweet]['created_at'] + "</strong><br/>" + data[tweet]['text'] + "</li>");
           }
-        alert(html_str);
       }
     });
   }

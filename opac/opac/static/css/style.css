@@ -26,3 +26,15 @@ h4 {
     font-size: 20px;
     margin-top: 50px;
 }
+
+.twitter .more {
+    text-align: right;
+}
+
+.facebook .more {
+    text-align: right;
+}
+
+.press_releases .more {
+    text-align: right;
+}
