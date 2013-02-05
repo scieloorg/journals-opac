@@ -83,7 +83,7 @@ class JournalTemplateTagTest(TestCase, MockerTestCase):
 
 class IssueTemplateTagTest(TestCase, MockerTestCase):
 
-    def test_issues_list_with_articles(self):
+    def list_articles_by_section(self):
         from catalog.templatetags import catalog
         from catalog.mongomodels import Issue
         from catalog.mongomodels import Section
@@ -201,4 +201,4 @@ class IssueTemplateTagTest(TestCase, MockerTestCase):
 
         sections = issue.list_sections()
 
-        self.assertEqual(catalog.issues_list_with_articles(sections, 'en'), '<dl class="issue_toc"><dt><i class="icon-chevron-right"></i> WHO Publications</dt><dd><ul class="unstyled toc_article"><li>Management of health-care waste in Izmir, Turkey<ul class="inline toc_article_authors"><li><a href="#">Soysal, Ahmet</a>;</li></ul><ul class="inline toc_article_links"><li>abstract: <a href="#">en</a>  | <a href="#">it</a> </li></ul></li></dl>')
+        self.assertEqual(catalog.list_articles_by_section(sections, 'en'), '<dl class="issue_toc"><dt><i class="icon-chevron-right"></i> WHO Publications</dt><dd><ul class="unstyled toc_article"><li>Management of health-care waste in Izmir, Turkey<ul class="inline toc_article_authors"><li><a href="#">Soysal, Ahmet</a>;</li></ul><ul class="inline toc_article_links"><li>abstract: <a href="#">en</a>  | <a href="#">it</a> </li></ul></li></dl>')

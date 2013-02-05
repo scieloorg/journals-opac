@@ -57,7 +57,7 @@ def subject_list(journals):
 register.simple_tag(subject_list)
 
 
-def issues_list_with_articles(sections, language):
+def list_articles_by_section(sections, language):
 
     snippet = u'<dl class="issue_toc">'
 
@@ -75,4 +75,4 @@ def issues_list_with_articles(sections, language):
 
     return snippet
 
-register.simple_tag(issues_list_with_articles)
+register.simple_tag(list_articles_by_section)
