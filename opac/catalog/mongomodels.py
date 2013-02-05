@@ -4,6 +4,9 @@ from urlparse import urlparse
 from django.conf import settings
 import pymongo
 
+import twitter
+from twitter import TwitterError
+
 
 MONGO_URI = getattr(settings, 'MONGO_URI',
     'mongodb://localhost:27017/journalsopac')
@@ -186,9 +189,24 @@ def list_journals_by_study_areas(mongomanager_lib=MongoManager):
     return areas_list
 
 
+def list_press_releases(journal_id, mongomanager_lib=MongoManager):
+    """
+    Lists the last 10 press releases from a specific journal
+    """
+    mm = mongomanager_lib(mongo_collection='journals')
+
+    for issue in mm.find({'journal_id': journal_id,
+        'issues.data.is_press_release': True},
+        {'issues.data': 1})[0]['issues']:
+
+        yield issue
+
+
 class Journal(Document):
     objects = ManagerFactory(collection='journals',
         indexes=['issue_ref', 'title', 'study_areas', 'id'])
+
+    _twitter_api = twitter.Api()
 
     @classmethod
     def get_journal(cls, journal_id):
@@ -227,18 +245,46 @@ class Journal(Document):
 
         address = []
         if 'editor_address' in self._data:
-            address.append(self._data['editor_address'])
+            if self._data['editor_address'] != None and self._data['editor_address'].strip():
+                address.append(self._data['editor_address'])
 
         if 'editor_address_city' in self._data:
-            address.append(self._data['editor_address_city'])
+            if self._data['editor_address_city'] != None and self._data['editor_address_city'].strip():
+                address.append(self._data['editor_address_city'])
 
         if 'editor_address_state' in self._data:
-            address.append(self._data['editor_address_state'])
+            if self._data['editor_address_state'] != None and self._data['editor_address_state'].strip():
+                address.append(self._data['editor_address_state'])
 
         if 'editor_address_country' in self._data:
-            address.append(self._data['editor_address_country'])
+            if self._data['editor_address_country'] != None and self._data['editor_address_country'].strip():
+                address.append(self._data['editor_address_country'])
 
-        return ', '.join(address)
+        address_string = ', '.join(address)
+
+        if address_string.strip():
+            return address_string.strip()
+
+    @property
+    def tweets(self):
+        """
+        Retrieve a list of tweets from a specific users
+        defined into the journal metadata.
+        """
+
+        tweets = []
+        if 'twitter_user' in self._data:
+            if self._data['twitter_user'] != None and self._data['twitter_user'].strip():
+                try:
+                    tws = self._twitter_api.GetUserTimeline(self._data['twitter_user'])
+                except TwitterError:
+                    return None
+
+                for tw in tws:
+                    tweets.append({'text': tw.text,
+                                   'created_at': tw.created_at})
+
+        return tweets
 
     @property
     def phones(self):
@@ -249,10 +295,12 @@ class Journal(Document):
         phones = []
 
         if 'editor_phone1' in self._data:
-            phones.append(self._data['editor_phone1'])
+            if self._data['editor_phone1'] != None and len(self._data['editor_phone1'].strip()) > 0:
+                phones.append(self._data['editor_phone1'])
 
         if 'editor_phone2' in self._data:
-            phones.append(self._data['editor_phone2'])
+            if self._data['editor_phone2'] != None and len(self._data['editor_phone2'].strip()) > 0:
+                phones.append(self._data['editor_phone2'])
 
         return phones
 

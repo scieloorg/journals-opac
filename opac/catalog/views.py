@@ -20,3 +20,10 @@ def journal(request, journal_id):
     journal = mongomodels.Journal.get_journal(journal_id=journal_id)
 
     return render_to_response('catalog/journal.html', {'journal': journal})
+
+
+def journal_stats(request, journal_id):
+
+    journal = mongomodels.Journal.get_journal(journal_id=journal_id)
+
+    return render_to_response('catalog/journal_stats.html', {'journal': journal})
