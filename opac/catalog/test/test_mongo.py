@@ -642,8 +642,9 @@ class JournalModelTest(TestCase, MockerTestCase):
         j = self._makeOne(**issues_data)
         self.assertEqual(j.issues_count, 0)
 
-    def test_tweets(self):
+    def test_tweets_valid_user(self):
         from catalog.mongomodels import Journal
+        from twitter import TwitterError
 
         mock_objects = self.mocker.mock()
         mock_twitter = self.mocker.mock()
@@ -656,7 +657,7 @@ class JournalModelTest(TestCase, MockerTestCase):
         mock_objects.find_one({'id': 1})
         self.mocker.result(twitter_user)
 
-        mock_twitter.GetUserTimeline('redescielo')
+        mock_twitter.GetUserTimeline(ANY)
         self.mocker.result([mock_tweet])
 
         mock_tweet.text
@@ -667,10 +668,9 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         self.mocker.replay()
 
+        # Testing valid twitter user
         Journal.objects = mock_objects
-
         journal = Journal.get_journal(journal_id=1)
-
         Journal._twitter_api = mock_twitter  # monkeypatch
 
         tweets = journal.tweets
@@ -679,6 +679,35 @@ class JournalModelTest(TestCase, MockerTestCase):
                         u'Novo peri\xf3dico na Cole\xe7\xe3o SciELO Brasil!')
         self.assertEqual(tweets[0]['created_at'],
                         u'Mon Feb 04 13:41:19 +0000 2013')
+
+    def test_tweets_invalid_user(self):
+        from catalog.mongomodels import Journal
+        from twitter import TwitterError
+
+        mock_objects = self.mocker.mock()
+        mock_twitter = self.mocker.mock()
+
+        twitter_user = {
+            "twitter_user": "invalid_user"
+            }
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(twitter_user)
+
+        mock_twitter.GetUserTimeline(ANY)
+        self.mocker.throw(TwitterError)
+
+        self.mocker.replay()
+
+        # Testing valid twitter user
+        Journal.objects = mock_objects
+        journal = Journal.get_journal(journal_id=1)
+        Journal._twitter_api = mock_twitter  # monkeypatch
+
+        # Testing invalid twitter user
+        tweets = journal.tweets
+
+        self.assertEqual(tweets, None)
 
 
 class IssueModelTest(TestCase, MockerTestCase):
