@@ -10,6 +10,7 @@ def full_sync():
     ppl = pipes.Pipeline(pipes.PIssue,
                          pipes.PMission,
                          pipes.PSection,
+                         pipes.PNormalizeJournalTitle,
                          pipes.PCleanup)
 
     data = scielo_api.get_all_journals('saude-publica')

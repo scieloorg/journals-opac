@@ -25,7 +25,7 @@ class JournalTemplateTagTest(TestCase, MockerTestCase):
         mock_mongomanager.find({})
         self.mocker.result(mock_mongomanager)
 
-        mock_mongomanager.sort('title', direction=pymongo.ASCENDING)
+        mock_mongomanager.sort('_normalized_title', direction=pymongo.ASCENDING)
         self.mocker.result([{'title': 'Micronucleated'}])
 
         self.mocker.replay()
@@ -51,7 +51,7 @@ class JournalTemplateTagTest(TestCase, MockerTestCase):
         mock_mongomanager.find({'study_areas': 'Zap'})
         self.mocker.result(mock_mongomanager)
 
-        mock_mongomanager.sort('title', direction=pymongo.ASCENDING)
+        mock_mongomanager.sort('_normalized_title', direction=pymongo.ASCENDING)
         self.mocker.result([{'title': 'Micronucleated'}])
         self.mocker.count(1)
 
