@@ -198,10 +198,10 @@ class Journal(Document):
 
         journal = cls.objects.find_one({'id': int(journal_id)})
 
-        if journal:
-            return cls(**journal)
+        if not journal:
+            raise ValueError('no journal found for id:'.format(journal_id))
 
-        raise ValueError('no journal found for id:'.format(journal_id))
+        return cls(**journal)
 
     def list_issues(self):
         """
@@ -281,13 +281,13 @@ class Issue(Document):
         Return a specific issue from a specific journal
         """
 
-        issue = cls.objects.find_one({'id': journal_id,
-                                      'issues.id': issue_id},
-                                      {'issues.data': 1})['data']
-        if issue:
-            return cls(**issue)
+        issue = cls.objects.find_one({'id': int(journal_id),
+                                      'issues.id': int(issue_id)},
+                                      {'issues.data': 1})['issues'][0]['data']
+        if not issue:
+            raise ValueError('no issue found for id:'.format(journal_id))
 
-        raise ValueError('no issue found for id:'.format(journal_id))
+        return cls(**issue)
 
     def list_sections(self):
         """
@@ -314,5 +314,9 @@ class Section(Document):
         """
         Return a specific section from a specific journal
         """
-        return Section(**cls.objects.find_one({'id': journal_id,
-                        'sections.id': section_id}, {'sections.data': 1})['data'])
+        section = cls.objects.find_one({'id': int(journal_id),
+                        'sections.id': int(section_id)}, {'sections.data': 1})['sections'][0]['data']
+        if not section:
+            raise ValueError('no section found for id:'.format(journal_id))
+
+        return Section(**section)
