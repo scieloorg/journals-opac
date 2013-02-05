@@ -551,3 +551,56 @@ class PCleanupTest(mocker.MockerTestCase):
         pcleanup = self._makeOne(data, manager_api_lib=mock_manager_api)
 
         self.assertEqual(pcleanup.transform(data), expected)
+
+
+class PNormalizeJournalTitleTest(mocker.MockerTestCase):
+
+    def _makeOne(self, *args, **kwargs):
+        from utils.sync.pipes import PNormalizeJournalTitle
+        return PNormalizeJournalTitle(*args, **kwargs)
+
+    def test_stripping_accents(self):
+        data = {'title': u'ã'}
+        expected = {'title': u'ã', '_normalized_title': u'A'}
+
+        mock_manager_api = self.mocker.mock()
+
+        mock_manager_api(settings=ANY)
+        self.mocker.result(mock_manager_api)
+
+        self.mocker.replay()
+
+        pnormalizejournaltitle = self._makeOne(data,
+            manager_api_lib=mock_manager_api)
+        self.assertEqual(pnormalizejournaltitle.transform(data), expected)
+
+    def test_non_ascii_chars_are_suppressed(self):
+        data = {'title': u'☂Pão'}
+        expected = {'title': u'☂Pão', '_normalized_title': u'PAO'}
+
+        mock_manager_api = self.mocker.mock()
+
+        mock_manager_api(settings=ANY)
+        self.mocker.result(mock_manager_api)
+
+        self.mocker.replay()
+
+        pnormalizejournaltitle = self._makeOne(data,
+            manager_api_lib=mock_manager_api)
+        self.assertEqual(pnormalizejournaltitle.transform(data), expected)
+
+    def test_journal_title_must_exist_precondition(self):
+        data = {'title': u'Foo'}
+
+        from utils.sync.pipes import pnormalizejournaltitle_precondition
+
+        self.assertIsNone(pnormalizejournaltitle_precondition(data))
+
+    def test_transformation_is_bypassed_if_precondition_fails(self):
+        data = {}
+
+        from utils.sync.pipes import pnormalizejournaltitle_precondition
+        from utils.sync.pipes import UnmetPrecondition
+
+        self.assertRaises(UnmetPrecondition,
+            lambda: pnormalizejournaltitle_precondition(data))
