@@ -159,7 +159,8 @@ def list_journals(criteria=None, mongomanager_lib=MongoManager):
     if not isinstance(criteria, dict):
         raise ValueError('criteria must be dict')
 
-    for result in mm.find(criteria).sort('title', direction=pymongo.ASCENDING):
+    for result in mm.find(criteria).sort('_normalized_title',
+        direction=pymongo.ASCENDING):
         yield Journal(**result)
 
 
