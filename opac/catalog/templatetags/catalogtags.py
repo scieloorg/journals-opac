@@ -1,5 +1,7 @@
 from django import template
 
+from catalog import mongomodels
+
 register = template.Library()
 
 
@@ -12,7 +14,13 @@ def journal_alpha_list(journals):
         if last_initial and journal.title[0].lower() != last_initial.lower():
             snippet += u'<li>&nbsp;</li>'
         last_initial = journal.title[0]
-        snippet += u'<li><a href="%s">%s</a> - %s issues</li>' % (journal.get_absolute_url(), journal.title, unicode(journal.issues_count))
+
+        try:
+            abs_url = journal.get_absolute_url()
+        except mongomodels.DocDoesNotExist:
+            abs_url = u'#'
+
+        snippet += u'<li><a href="%s">%s</a> - %s issues</li>' % (abs_url, journal.title, unicode(journal.issues_count))
 
     snippet += u'</ul>'
 
@@ -34,7 +42,13 @@ def journals_by_subject(journals):
             if last_initial and journal.title[0].lower() != last_initial.lower():
                 snippet += u'<li>&nbsp;</li>'
             last_initial = journal.title[0]
-            snippet += u'<li><a href="%s">%s</a> - %s issues</li>' % (journal.get_absolute_url(), journal.title, journal.issues_count)
+
+            try:
+                abs_url = journal.get_absolute_url()
+            except mongomodels.DocDoesNotExist:
+                abs_url = u'#'
+
+            snippet += u'<li><a href="%s">%s</a> - %s issues</li>' % (abs_url, journal.title, journal.issues_count)
 
         snippet += '</ul></dd></dl></dd></dl>'
 

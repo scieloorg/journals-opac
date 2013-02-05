@@ -16,6 +16,27 @@ class DbOperationsError(Exception):
     """
 
 
+class DocDoesNotExist(Exception):
+    """
+    Equivalent to Django's DoesNotExist. It is raised when operations
+    that needs the objects to be saved are called on unsaved objects.
+    """
+
+
+def ensure_exists(method):
+    """
+    Decorator to be used on methods of Document subclasses, to sign
+    that the method can only be called on saved documents.
+    """
+    def decorator(instance, *args, **kwargs):
+        if not '_id' in instance._data:
+            raise DocDoesNotExist('the document must be saved')
+
+        return method(instance, *args, **kwargs)
+
+    return decorator
+
+
 class MongoConnector(object):
     """
     Connects to MongoDB and makes self.db and self.col
@@ -279,6 +300,7 @@ class Journal(Document):
 
         return issn
 
+    @ensure_exists
     def get_absolute_url(self):
         return reverse('catalog.journal', kwargs={'journal_id': self.acronym})
 

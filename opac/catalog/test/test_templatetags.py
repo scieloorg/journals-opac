@@ -14,7 +14,7 @@ from mocker import (
 class JournalTemplateTagTest(TestCase, MockerTestCase):
 
     def test_journal_alpha_list(self):
-        from catalog.templatetags import catalog
+        from catalog.templatetags import catalogtags
         from catalog.mongomodels import list_journals
 
         mock_mongomanager = self.mocker.mock()
@@ -32,11 +32,11 @@ class JournalTemplateTagTest(TestCase, MockerTestCase):
 
         journals = list_journals(mongomanager_lib=mock_mongomanager)
 
-        self.assertEqual(catalog.journal_alpha_list(journals),
+        self.assertEqual(catalogtags.journal_alpha_list(journals),
             '<ul class="unstyled"><li><a href="#">Micronucleated</a> - 0 issues</li></ul>')
 
     def test_journal_by_subject(self):
-        from catalog.templatetags import catalog
+        from catalog.templatetags import catalogtags
         from catalog.mongomodels import list_journals_by_study_areas
 
         mock_mongomanager = self.mocker.mock()
@@ -59,11 +59,11 @@ class JournalTemplateTagTest(TestCase, MockerTestCase):
 
         journals = list_journals_by_study_areas(mongomanager_lib=mock_mongomanager)
 
-        self.assertEqual(catalog.journals_by_subject(journals),
+        self.assertEqual(catalogtags.journals_by_subject(journals),
             '<dl><dt>ZAP</dt><dd><dl><dd><ul class="unstyled"><li><a href="#">Micronucleated</a> - 0 issues</li></ul></dd></dl></dd></dl>')
 
     def test_subject_list(self):
-        from catalog.templatetags import catalog
+        from catalog.templatetags import catalogtags
         from catalog.mongomodels import list_journals_by_study_areas
 
         mock_mongomanager = self.mocker.mock()
@@ -77,5 +77,5 @@ class JournalTemplateTagTest(TestCase, MockerTestCase):
         self.mocker.replay()
 
         journals = list_journals_by_study_areas(mongomanager_lib=mock_mongomanager)
-        self.assertEqual(catalog.subject_list(journals),
+        self.assertEqual(catalogtags.subject_list(journals),
             '<ul class="unstyled"><li><a href="#">Zap</a></li><li><a href="#">Zaz</a></li><li><a href="#">Spam</a></li></ul>')
