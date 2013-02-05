@@ -189,19 +189,6 @@ def list_journals_by_study_areas(mongomanager_lib=MongoManager):
     return areas_list
 
 
-def list_press_releases(journal_id, mongomanager_lib=MongoManager):
-    """
-    Lists the last 10 press releases from a specific journal
-    """
-    mm = mongomanager_lib(mongo_collection='journals')
-
-    for issue in mm.find({'journal_id': journal_id,
-        'issues.data.is_press_release': True},
-        {'issues.data': 1})[0]['issues']:
-
-        yield issue
-
-
 class Journal(Document):
     objects = ManagerFactory(collection='journals',
         indexes=['issue_ref', 'title', 'study_areas', 'id'])
@@ -273,16 +260,17 @@ class Journal(Document):
         """
 
         tweets = []
-        if 'twitter_user' in self._data:
-            if self._data['twitter_user'] != None and self._data['twitter_user'].strip():
-                try:
-                    tws = self._twitter_api.GetUserTimeline(self._data['twitter_user'])
-                except TwitterError:
-                    return None
+        if self._data.get('twitter_user'):
 
-                for tw in tws:
-                    tweets.append({'text': tw.text,
-                                   'created_at': tw.created_at})
+            try:
+                tws = self._twitter_api.GetUserTimeline(
+                    self._data['twitter_user'], page=0, count=3)
+            except TwitterError:
+                return tweets
+
+            for tw in tws:
+                tweets.append({'text': tw.text,
+                               'created_at': tw.created_at})
 
         return tweets
 
