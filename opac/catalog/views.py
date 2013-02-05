@@ -8,6 +8,7 @@ def list_journals(request):
 
     return render_to_response('catalog/alpha.html', {'journals': journals})
 
+
 def list_journals_by_subject(request):
 
     journals = mongomodels.list_journals_by_study_areas()
@@ -27,3 +28,12 @@ def journal_stats(request, journal_id):
     journal = mongomodels.Journal.get_journal(journal_id=journal_id)
 
     return render_to_response('catalog/journal_stats.html', {'journal': journal})
+
+
+def issue(request, journal_id, issue_id):
+
+    issue = mongomodels.Issue.get_issue(journal_id, issue_id)
+    sections = issue.list_sections()
+
+    return render_to_response('catalog/issue.html', {'sections': sections})
+
