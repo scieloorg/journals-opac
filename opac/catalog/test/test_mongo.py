@@ -451,11 +451,18 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         mock_objects = self.mocker.mock()
 
-        address_data = {
+        address_data1 = {
             "editor_address": "Viale Regina Elena 299",
             "editor_address_city": "Rome",
             "editor_address_country": "Italy",
             "editor_address_state": "Rome",
+            }
+
+        address_data2 = {
+            "editor_address": "",
+            "editor_address_city": None,
+            "editor_address_country": "",
+            "editor_address_state": "",
             }
 
         mock_objects.find_one({'acronym': 'foo'})
@@ -465,13 +472,15 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         Journal.objects = mock_objects
 
-        journal = Journal.get_journal(journal_id='foo')
-
+        journal = Journal.get_journal(journal_id=1)
         address = journal.address
 
-        formated_address = "Viale Regina Elena 299, Rome, Rome, Italy"
+        self.assertEqual(address, "Viale Regina Elena 299, Rome, Rome, Italy")
 
-        self.assertEqual(address, formated_address)
+        journal = Journal.get_journal(journal_id=1)
+        address = journal.address
+
+        self.assertEqual(address, None)
 
     def test_phones(self):
         from catalog.mongomodels import Journal
@@ -490,6 +499,14 @@ class JournalModelTest(TestCase, MockerTestCase):
         phone_data3 = {
             "title": "AAA",
         }
+
+        phone_data4 = {
+            "editor_phone2": "",
+            }
+
+        phone_data5 = {
+            "editor_phone1": None,
+            }
 
         mock_objects.find_one({'acronym': 'foo'})
         self.mocker.result(phone_data1)
@@ -512,6 +529,16 @@ class JournalModelTest(TestCase, MockerTestCase):
         phones = journal.phones
 
         self.assertEqual(phones, ['0039 06 4990 2253'])
+
+        journal = Journal.get_journal(journal_id='foo')
+        phones = journal.phones
+
+        self.assertEqual(phones, [])
+
+        journal = Journal.get_journal(journal_id='foo')
+        phones = journal.phones
+
+        self.assertEqual(phones, [])
 
         journal = Journal.get_journal(journal_id='foo')
         phones = journal.phones
@@ -641,6 +668,73 @@ class JournalModelTest(TestCase, MockerTestCase):
         j = self._makeOne(**issues_data)
         self.assertEqual(j.issues_count, 0)
 
+    def test_tweets_valid_user(self):
+        from catalog.mongomodels import Journal
+        from twitter import TwitterError
+
+        mock_objects = self.mocker.mock()
+        mock_twitter = self.mocker.mock()
+        mock_tweet = self.mocker.mock()
+
+        twitter_user = {
+            "twitter_user": "redescielo"
+            }
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(twitter_user)
+
+        mock_twitter.GetUserTimeline(ANY, page=0, count=3)
+        self.mocker.result([mock_tweet])
+
+        mock_tweet.text
+        self.mocker.result(u'Novo peri\xf3dico na Cole\xe7\xe3o SciELO Brasil!')
+
+        mock_tweet.created_at
+        self.mocker.result(u'Mon Feb 04 13:41:19 +0000 2013')
+
+        self.mocker.replay()
+
+        # Testing valid twitter user
+        Journal.objects = mock_objects
+        journal = Journal.get_journal(journal_id=1)
+        Journal._twitter_api = mock_twitter  # monkeypatch
+
+        tweets = journal.tweets
+
+        self.assertEqual(tweets[0]['text'],
+                        u'Novo peri\xf3dico na Cole\xe7\xe3o SciELO Brasil!')
+        self.assertEqual(tweets[0]['created_at'],
+                        u'Mon Feb 04 13:41:19 +0000 2013')
+
+    def test_tweets_invalid_user(self):
+        from catalog.mongomodels import Journal
+        from twitter import TwitterError
+
+        mock_objects = self.mocker.mock()
+        mock_twitter = self.mocker.mock()
+
+        twitter_user = {
+            "twitter_user": "invalid_user"
+            }
+
+        mock_objects.find_one({'id': 1})
+        self.mocker.result(twitter_user)
+
+        mock_twitter.GetUserTimeline(ANY, page=0, count=3)
+        self.mocker.throw(TwitterError)
+
+        self.mocker.replay()
+
+        # Testing valid twitter user
+        Journal.objects = mock_objects
+        journal = Journal.get_journal(journal_id=1)
+        Journal._twitter_api = mock_twitter  # monkeypatch
+
+        # Testing invalid twitter user
+        tweets = journal.tweets
+
+        self.assertEqual(tweets, [])
+
 
 class IssueModelTest(TestCase, MockerTestCase):
 
@@ -674,36 +768,41 @@ class IssueModelTest(TestCase, MockerTestCase):
         mock_objects = self.mocker.mock()
 
         issue_microdata = {
-            'data': {
-                "cover": None,
-                "created": "2010-04-01T01:01:01",
-                "ctrl_vocabulary": "nd",
-                "editorial_standard": "vancouv",
-                "id": 1,
-                "is_marked_up": False,
-                "is_press_release": False,
-                "is_trashed": False,
-                "label": "45 (4)",
-                "number": "4",
-                "order": 4,
-                "publication_end_month": 12,
-                "publication_start_month": 10,
-                "publication_year": 2009,
-                "resource_uri": "/api/v1/issues/1/",
-                "sections": [
+            "issues": [
                 {
-                  "id": 514,
-                  "articles": [
-                    "AISS-JHjashA",
-                  ]
+                    "id": 1,
+                    "data": {
+                        "cover": None,
+                        "created": "2010-04-01T01:01:01",
+                        "ctrl_vocabulary": "nd",
+                        "editorial_standard": "vancouv",
+                        "id": 1,
+                        "is_marked_up": False,
+                        "is_press_release": False,
+                        "is_trashed": False,
+                        "label": "45 (4)",
+                        "number": "4",
+                        "order": 4,
+                        "publication_end_month": 12,
+                        "publication_start_month": 10,
+                        "publication_year": 2009,
+                        "resource_uri": "/api/v1/issues/1/",
+                        "sections": [
+                        {
+                          "id": 514,
+                          "articles": [
+                            "AISS-JHjashA",
+                          ]
+                        }
+                        ],
+                        "suppl_number": None,
+                        "suppl_volume": None,
+                        "total_documents": 17,
+                        "updated": "2012-11-08T10:35:37.193612",
+                        "volume": "45"
+                    }
                 }
-                ],
-                "suppl_number": None,
-                "suppl_volume": None,
-                "total_documents": 17,
-                "updated": "2012-11-08T10:35:37.193612",
-                "volume": "45"
-            }
+            ]
         }
 
         mock_objects.find_one({'id': 1, 'issues.id': 1}, {'issues.data': 1})
@@ -729,37 +828,42 @@ class IssueModelTest(TestCase, MockerTestCase):
         article_mock_objects = self.mocker.mock()
 
         issue_section_microdata = {
-            "data": {
-                "cover": None,
-                "created": "2010-04-01T01:01:01",
-                "ctrl_vocabulary": "nd",
-                "editorial_standard": "vancouv",
-                "id": 1,
-                "is_marked_up": False,
-                "is_press_release": False,
-                "is_trashed": False,
-                "label": "45 (4)",
-                "number": "4",
-                "order": 4,
-                "publication_end_month": 12,
-                "publication_start_month": 10,
-                "publication_year": 2009,
-                "resource_uri": "/api/v1/issues/1/",
-                "sections": [
+            "issues": [
                 {
-                  "id": 514,
-                  "articles": [
-                    "AISS-JHjashA",
-                  ]
+                    "id": 1,
+                    "data": {
+                        "cover": None,
+                        "created": "2010-04-01T01:01:01",
+                        "ctrl_vocabulary": "nd",
+                        "editorial_standard": "vancouv",
+                        "id": 1,
+                        "is_marked_up": False,
+                        "is_press_release": False,
+                        "is_trashed": False,
+                        "label": "45 (4)",
+                        "number": "4",
+                        "order": 4,
+                        "publication_end_month": 12,
+                        "publication_start_month": 10,
+                        "publication_year": 2009,
+                        "resource_uri": "/api/v1/issues/1/",
+                        "sections": [
+                        {
+                          "id": 514,
+                          "articles": [
+                            "AISS-JHjashA",
+                          ]
+                        }
+                        ],
+                        "suppl_number": None,
+                        "suppl_volume": None,
+                        "total_documents": 17,
+                        "updated": "2012-11-08T10:35:37.193612",
+                        "volume": "45"
+                    }
                 }
-                ],
-                "suppl_number": None,
-                "suppl_volume": None,
-                "total_documents": 17,
-                "updated": "2012-11-08T10:35:37.193612",
-                "volume": "45"
-            },
-          "sections": [
+            ],
+            "sections": [
               {
                 "id": 514,
                 "data": {
@@ -774,11 +878,18 @@ class IssueModelTest(TestCase, MockerTestCase):
         }
 
         section_microdata = {
-          "data": {
-              "id": 514,
-              "resource_uri": "/api/v1/sections/514/",
-              "titles": {"en": "WHO Publications"}
-          }
+            "sections": [
+                {
+                  "id": 514,
+                  "data": {
+                      "id": 514,
+                      "resource_uri": "/api/v1/sections/514/",
+                      "titles": {
+                        "en": "WHO Publications"
+                      }
+                  }
+                }
+            ]
         }
 
         article_microdata = {
@@ -822,11 +933,18 @@ class SectionModelTest(TestCase, MockerTestCase):
         mock_objects = self.mocker.mock()
 
         section_microdata = {
-          "data": {
-              "id": 514,
-              "resource_uri": "/api/v1/sections/514/",
-              "titles": {"en": "WHO Publications"}
-            }
+            "sections": [
+                {
+                  "id": 514,
+                  "data": {
+                      "id": 514,
+                      "resource_uri": "/api/v1/sections/514/",
+                      "titles": {
+                        "en": "WHO Publications"
+                      }
+                  }
+                }
+            ]
           }
 
         mock_objects.find_one({'id': 1, 'sections.id': 514}, {'sections.data': 1})
@@ -845,11 +963,18 @@ class SectionModelTest(TestCase, MockerTestCase):
         mock_objects = self.mocker.mock()
 
         section_microdata = {
-            "data": {
-                "id": 514,
-                "resource_uri": "/api/v1/sections/514/",
-                "titles": {"en": "WHO Publications"}
-            }
+            "sections": [
+                {
+                  "id": 514,
+                  "data": {
+                      "id": 514,
+                      "resource_uri": "/api/v1/sections/514/",
+                      "titles": {
+                        "en": "WHO Publications"
+                      }
+                  }
+                }
+            ]
           }
 
         mock_objects.find_one({'id': 1, 'sections.id': 514}, {'sections.data': 1})

@@ -1,6 +1,8 @@
 {% extends "base_lv1.html" %}
+{% load catalog %}
 
 {% block body %}
+
 <div class="span12">
   <center>
     <h3>Annali dell'Instituto Superiore di Sanità</h3>
@@ -8,346 +10,37 @@
   </center>
   <h4>Table of Contents</h4>
   <h4>Ann. Ist. Super. Sanità vol.48 n.3 Roma Jan.</h4>
+
+  {% list_articles_by_section sections 'en' %}
+
   <dl class="issue_toc">
-    <dt><i class="icon-chevron-right"></i> Editorial</dt>
-    <dd>
-      <ul class="unstyled toc_article">
-        <li>
-          In defence of bioethicists of the third king
-          <ul class="inline toc_article_authors">
-            <li><a href="#">Petrini, Carlo</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </dd>
-    <dt><i class="icon-chevron-right"></i> Alcohol and the elderly. The European project Vintage</dt>
-    <dd>
-      <ul class="unstyled toc_article">
-        <li>
-          Preface
-          <ul class="inline toc_article_authors">
-            <li><a href="#">Petrini, Carlo</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          Alcohol and older people. The European project VINTAGE: good Health Into Older Age. Design, methods and major results
-          <ul class="inline toc_article_authors">
-            <li><a href="#">Scafato, Emanuele</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          Alcohol and older people from a public health perspective
-          <ul class="inline toc_article_authors">
-            <li><a href="#">Galluzzo, Lucia</a>;</li>
-            <li><a href="#">Scafato, Emanuele</a>;</li>
-            <li><a href="#">Martire, Sonia</a>;</li>
-            <li><a href="#">Anderson, Peter</a>;</li>
-            <li><a href="#">Colom, Joan</a>;</li>
-            <li><a href="#">Segura, Lidia</a>;</li>
-            <li><a href="#">McNeill, Andrew</a>;</li>
-            <li><a href="#">Sovinova, Hana</a>;</li>
-            <li><a href="#">Krnel, Sandra Radoš</a>;</li>
-            <li><a href="#">Ahlström, Salme</a>;</li>
-            <li><a href="#">VINTAGE project Working Group</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          Good practices for the prevention of alcohol harmful use amongst the elderly in Europe, the VINTAGE project
-          <ul class="inline toc_article_authors">
-            <li><a href="#">McNeill, Andrew</a>;</li>
-            <li><a href="#">Sovinova, Hana</a>;</li>
-            <li><a href="#">Krnel, Sandra Radoš</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </dd>
-    <dt><i class="icon-chevron-right"></i> Original Articles and Reviews</dt>
-    <dd>
-      <ul class="unstyled toc_article">
-        <li>
-          International scientific consensus on medical plantar pressure measurement devices: technical requirements and performance
-          <ul class="inline toc_article_authors">
-            <li><a href="#">McNeill, Andrew</a>;</li>
-            <li><a href="#">Sovinova, Hana</a>;</li>
-            <li><a href="#">Krnel, Sandra Radoš</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          The Italian Helpdesk under the Regulation (EC) No. 1272/2008 (CLP): three-year activity and experience (2009-2011)
-          <ul class="inline toc_article_authors">
-            <li><a href="#">McNeill, Andrew</a>;</li>
-            <li><a href="#">Sovinova, Hana</a>;</li>
-            <li><a href="#">Krnel, Sandra Radoš</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          Myths of motherhood. The role of culture in the development of postpartum depression
-          <ul class="inline toc_article_authors">
-            <li><a href="#">McNeill, Andrew</a>;</li>
-            <li><a href="#">Sovinova, Hana</a>;</li>
-            <li><a href="#">Krnel, Sandra Radoš</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          Clinical features and lifestyle of patients with amyotrophic lateral sclerosis in Campania: brief overview of an Italian database
-          <ul class="inline toc_article_authors">
-            <li><a href="#">McNeill, Andrew</a>;</li>
-            <li><a href="#">Sovinova, Hana</a>;</li>
-            <li><a href="#">Krnel, Sandra Radoš</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          Longevity and health expectancy in an ageing society: implications for public health in Italy
-          <ul class="inline toc_article_authors">
-            <li><a href="#">McNeill, Andrew</a>;</li>
-            <li><a href="#">Sovinova, Hana</a>;</li>
-            <li><a href="#">Krnel, Sandra Radoš</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          Mesothelioma mortality surveillance and asbestos exposure tracking in Italy
-          <ul class="inline toc_article_authors">
-            <li><a href="#">McNeill, Andrew</a>;</li>
-            <li><a href="#">Sovinova, Hana</a>;</li>
-            <li><a href="#">Krnel, Sandra Radoš</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          Integrating gender medicine into the workplace health and safety policy in the scientific research institutions: a mandatory task
-          <ul class="inline toc_article_authors">
-            <li><a href="#">McNeill, Andrew</a>;</li>
-            <li><a href="#">Sovinova, Hana</a>;</li>
-            <li><a href="#">Krnel, Sandra Radoš</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          The potential role of vitamin D for prevention and treatment of tuberculosis and infectious diseases
-          <ul class="inline toc_article_authors">
-            <li><a href="#">McNeill, Andrew</a>;</li>
-            <li><a href="#">Sovinova, Hana</a>;</li>
-            <li><a href="#">Krnel, Sandra Radoš</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          End-of-life decision making in respiratory failure. The therapeutic choices in chronic respiratory failure in a 7-item questionnaire
-          <ul class="inline toc_article_authors">
-            <li><a href="#">McNeill, Andrew</a>;</li>
-            <li><a href="#">Sovinova, Hana</a>;</li>
-            <li><a href="#">Krnel, Sandra Radoš</a></li>
-          </ul>
-          <ul class="inline toc_article_links">
-            <li>
-              abstract: 
-              <a href="#">English</a> |
-              <a href="#">Italian</a>
-            </li>
-            <li>
-              full text:
-              <a href="#">English</a>
-            </li>
-            <li>
-              pdf:
-              <a href="#">English</a>
-            </li>
-          </ul>
-        </li>
-      </ul>
-    </dd>
+      <dt><i class="icon-chevron-right"></i> Example</dt>
+      <dd>
+        <ul class="unstyled toc_article">
+          <li>
+            In defence of bioethicists of the third king
+            <ul class="inline toc_article_authors">
+              <li><a href="#">Petrini, Carlo</a></li>
+              <li><a href="#">Petrini, Carlo</a></li>
+            </ul>
+            <ul class="inline toc_article_links">
+              <li>
+                abstract:
+                <a href="#">English</a> |
+                <a href="#">Italian</a>
+              </li>
+              <li>
+                full text:
+                <a href="#">English</a>
+              </li>
+              <li>
+                pdf:
+                <a href="#">English</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </dd>
   </dl>
 </div>
 {% endblock %}

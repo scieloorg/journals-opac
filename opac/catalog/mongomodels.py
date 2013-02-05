@@ -5,6 +5,9 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 import pymongo
 
+import twitter
+from twitter import TwitterError
+
 
 MONGO_URI = getattr(settings, 'MONGO_URI',
     'mongodb://localhost:27017/journalsopac')
@@ -227,10 +230,10 @@ class Journal(Document):
 
         journal = cls.objects.find_one({'acronym': journal_id})
 
-        if journal:
-            return cls(**journal)
+        if not journal:
+            raise ValueError('no journal found for id:'.format(journal_id))
 
-        raise ValueError('no journal found for acronym:'.format(journal_id))
+        return cls(**journal)
 
     def list_issues(self):
         """
@@ -255,19 +258,44 @@ class Journal(Document):
         """
 
         address = []
-        if 'editor_address' in self._data:
+        if self._data.get('editor_address'):
             address.append(self._data['editor_address'])
 
-        if 'editor_address_city' in self._data:
+        if self._data.get('editor_address_city'):
             address.append(self._data['editor_address_city'])
 
-        if 'editor_address_state' in self._data:
+        if self._data.get('editor_address_state'):
             address.append(self._data['editor_address_state'])
 
-        if 'editor_address_country' in self._data:
+        if self._data.get('editor_address_country'):
             address.append(self._data['editor_address_country'])
 
-        return ', '.join(address)
+        address_string = ', '.join(address)
+
+        if address_string.strip():
+            return address_string.strip()
+
+    @property
+    def tweets(self):
+        """
+        Retrieve a list of tweets from a specific users
+        defined into the journal metadata.
+        """
+
+        tweets = []
+        if self._data.get('twitter_user'):
+
+            try:
+                tws = self._twitter_api.GetUserTimeline(
+                    self._data['twitter_user'], page=0, count=3)
+            except TwitterError:
+                return tweets
+
+            for tw in tws:
+                tweets.append({'text': tw.text,
+                               'created_at': tw.created_at})
+
+        return tweets
 
     @property
     def phones(self):
@@ -277,10 +305,10 @@ class Journal(Document):
         """
         phones = []
 
-        if 'editor_phone1' in self._data:
+        if self._data.get('editor_phone1'):
             phones.append(self._data['editor_phone1'])
 
-        if 'editor_phone2' in self._data:
+        if self._data.get('editor_phone2'):
             phones.append(self._data['editor_phone2'])
 
         return phones
@@ -315,12 +343,12 @@ class Issue(Document):
         """
 
         issue = cls.objects.find_one({'id': journal_id,
-                                      'issues.id': issue_id},
-                                      {'issues.data': 1})['data']
-        if issue:
-            return cls(**issue)
+                                      'issues.id': int(issue_id)},
+                                      {'issues.data': 1})['issues'][0]['data']
+        if not issue:
+            raise ValueError('no issue found for id:'.format(journal_id))
 
-        raise ValueError('no issue found for id:'.format(journal_id))
+        return cls(**issue)
 
     def list_sections(self):
         """
@@ -347,5 +375,9 @@ class Section(Document):
         """
         Return a specific section from a specific journal
         """
-        return Section(**cls.objects.find_one({'id': journal_id,
-                        'sections.id': section_id}, {'sections.data': 1})['data'])
+        section = cls.objects.find_one({'id': journal_id,
+                        'sections.id': int(section_id)}, {'sections.data': 1})['sections'][0]['data']
+        if not section:
+            raise ValueError('no section found for id:'.format(journal_id))
+
+        return Section(**section)

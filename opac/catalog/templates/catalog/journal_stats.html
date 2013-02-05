@@ -1,0 +1,30 @@
+{% extends "base_lv1.html" %}
+
+{% block body %}
+<h3 style="text-align: center;">{{ journal.title }}</h3>
+
+<h4>Site usage report</h4>
+<ul>
+  <li><a href="http://scielo-log.scielo.br/scielolog/scielolog.php?script=sci_journalstat&amp;lng=en&amp;nrm=iso&amp;app=scielo&amp;server=www.scielo.br" target="_blank">Journals requests</a></li>
+  <li><a href="http://scielo-log.scielo.br/scielolog/scielolog.php?script=sci_journalstatlang&amp;lng=en&amp;nrm=iso&amp;app=scielo&amp;server=www.scielo.br" target="_blank">Articles requests by language</a></li>
+  <li><a href="http://scielo-log.scielo.br/scielolog/scielolog.php?script=sci_statiss&amp;lng=en&amp;nrm=iso&amp;app=scielo&amp;server=www.scielo.br" target="_blank">Issues requests</a></li>
+  <li><a href="http://scielo-log.scielo.br/scielolog/ofigraph20.php?app=scielo&amp;lang=en" target="_blank">Top ten titles</a></li>
+  <li><a href="http://scielo-log.scielo.br/scielolog/ofigraph21.php?app=scielo&amp;lang=en" target="_blank">Articles per month</a></li>
+</ul>
+
+<h4>Co-authors report</h4>
+<ul>
+  <li><a href="http://statbiblio.scielo.org//stat_biblio/index.php?state=16&amp;lng=en&amp;issn={{ journal.issn }}" target="_blank">Co-authors</a></li>
+</ul>
+
+<h4>Journal citation reports</h4>
+<ul>
+  <li><a href="http://statbiblio.scielo.org//stat_biblio/index.php?no=03.xml&amp;state=03&amp;lang=en&amp;issn={{ journal.issn }}" target="_blank">Source data</a></li>
+  <li><a href="http://statbiblio.scielo.org//stat_biblio/index.php?no=04.xml&amp;state=04&amp;lang=en&amp;issn={{ journal.issn }}" target="_blank">Impact factor on a two-year basis</a></li>
+  <li><a href="http://statbiblio.scielo.org//stat_biblio/index.php?no=18.xml&amp;state=18&amp;lang=en&amp;issn={{ journal.issn }}" target="_blank">Impact factor on a three-year basis</a></li>
+  <li><a href="http://statbiblio.scielo.org//stat_biblio/index.php?no=07.xml&amp;state=07&amp;lang=en&amp;issn={{ journal.issn }}" target="_blank">Half-life</a></li>
+  <li><a href="http://statbiblio.scielo.org//stat_biblio/index.php?no=09.xml&amp;state=09&amp;lang=en&amp;issn={{ journal.issn }}" target="_blank">Received citations</a></li>
+  <li><a href="http://statbiblio.scielo.org//stat_biblio/index.php?no=11.xml&amp;state=11&amp;lang=en&amp;issn={{ journal.issn }}" target="_blank">Granted citations</a></li>
+</ul>
+
+{% endblock %}
