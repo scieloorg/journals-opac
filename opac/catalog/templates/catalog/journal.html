@@ -79,16 +79,34 @@
       </ul>
     </dd>
   </dl>
+  {% if journal.twitter_user %}
   <h4><img src="/static/images/twitter.png" width="20px"/> Twitter</h4>
-  <ul>
-    <li class="muted"><a hrf="#">2012/09 - v42 n.3 First record of Trichodina heterodentata (Ciliophora: Trichodinidae) from Arapaima gigas cultivated in Peru</a></li>
-    <li class="muted"><a hrf="#">2012/06 - v42 n.2 Soil CO2 efflux in central Amazonia: environmental and methodological effects</a></li>
-  </ul>
+  <ul id="tweets"></ul>
+  {% endif %}
   <h4><img src="/static/images/facebook.png" width="20px"/> Facebook</h4>
   <ul>
     <li class="muted"><a hrf="#">2012/09 - v42 n.3 First record of Trichodina heterodentata (Ciliophora: Trichodinidae) from Arapaima gigas cultivated in Peru</a></li>
     <li class="muted"><a hrf="#">2012/06 - v42 n.2 Soil CO2 efflux in central Amazonia: environmental and methodological effects</a></li>
   </ul>
 </div>
+{% endblock %}
 
+{% block extra_js %}
+<script type="text/javascript">
+  function qry_tweets() {
+    $.ajax({
+      url: "{% url catalog.ajx_list_journal_tweets journal.id %}",
+      success: function (data) {
+          for (tweet in data){
+            $("#tweets").append("<li><strong>" + data[tweet]['created_at'] + ":</strong> " + data[tweet]['text'] + "</li>");
+          }
+        alert(html_str);
+      }
+    });
+  }
+
+  $(document).ready(function() {
+      qry_tweets();
+  });
+</script>
 {% endblock %}

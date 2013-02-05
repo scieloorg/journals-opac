@@ -273,16 +273,17 @@ class Journal(Document):
         """
 
         tweets = []
-        if 'twitter_user' in self._data:
-            if self._data['twitter_user'] != None and self._data['twitter_user'].strip():
-                try:
-                    tws = self._twitter_api.GetUserTimeline(self._data['twitter_user'])
-                except TwitterError:
-                    return None
+        if self._data.get('twitter_user'):
 
-                for tw in tws:
-                    tweets.append({'text': tw.text,
-                                   'created_at': tw.created_at})
+            try:
+                tws = self._twitter_api.GetUserTimeline(
+                    self._data['twitter_user'], page=0, count=3)
+            except TwitterError:
+                return tweets
+
+            for tw in tws:
+                tweets.append({'text': tw.text,
+                               'created_at': tw.created_at})
 
         return tweets
 

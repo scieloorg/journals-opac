@@ -40,6 +40,7 @@
       {% endblock %}
       </div>
     </div>
+  {% block main_js %}
   <script type="text/javascript" src="/static/js/jquery-1.9.0.min.js"></script>
   <script type="text/javascript" src="/static/css/bootstrap/js/bootstrap.js"></script>
   <script type="text/javascript">
@@ -48,5 +49,7 @@
       $(".tip-bottom").tooltip(options);
     });
   </script>
+  {% endblock %}
+  {% block extra_js %}{% endblock %}
   </body>
 </html>

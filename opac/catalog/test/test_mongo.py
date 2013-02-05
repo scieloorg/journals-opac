@@ -657,7 +657,7 @@ class JournalModelTest(TestCase, MockerTestCase):
         mock_objects.find_one({'id': 1})
         self.mocker.result(twitter_user)
 
-        mock_twitter.GetUserTimeline(ANY)
+        mock_twitter.GetUserTimeline(ANY, page=0, count=3)
         self.mocker.result([mock_tweet])
 
         mock_tweet.text
@@ -694,7 +694,7 @@ class JournalModelTest(TestCase, MockerTestCase):
         mock_objects.find_one({'id': 1})
         self.mocker.result(twitter_user)
 
-        mock_twitter.GetUserTimeline(ANY)
+        mock_twitter.GetUserTimeline(ANY, page=0, count=3)
         self.mocker.throw(TwitterError)
 
         self.mocker.replay()
@@ -707,7 +707,7 @@ class JournalModelTest(TestCase, MockerTestCase):
         # Testing invalid twitter user
         tweets = journal.tweets
 
-        self.assertEqual(tweets, None)
+        self.assertEqual(tweets, [])
 
 
 class IssueModelTest(TestCase, MockerTestCase):
