@@ -189,19 +189,6 @@ def list_journals_by_study_areas(mongomanager_lib=MongoManager):
     return areas_list
 
 
-def list_press_releases(journal_id, mongomanager_lib=MongoManager):
-    """
-    Lists the last 10 press releases from a specific journal
-    """
-    mm = mongomanager_lib(mongo_collection='journals')
-
-    for issue in mm.find({'journal_id': journal_id,
-        'issues.data.is_press_release': True},
-        {'issues.data': 1})[0]['issues']:
-
-        yield issue
-
-
 class Journal(Document):
     objects = ManagerFactory(collection='journals',
         indexes=['issue_ref', 'title', 'study_areas', 'id'])
