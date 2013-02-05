@@ -143,7 +143,6 @@ class Article(Document):
         for author in self.contrib_group['author']:
             yield author
 
-
 def list_journals(criteria=None, mongomanager_lib=MongoManager):
     """
     Lists all journals present in a collection
@@ -187,7 +186,20 @@ def list_journals_by_study_areas(mongomanager_lib=MongoManager):
 
 class Journal(Document):
     objects = ManagerFactory(collection='journals',
-        indexes=['issue_ref', 'title', 'study_areas'])
+        indexes=['issue_ref', 'title', 'study_areas', 'id'])
+
+    @classmethod
+    def get_journal(cls, journal_id):
+        """
+        Return a specific journal
+        """
+
+        journal = cls.objects.find_one({'id': int(journal_id)})
+
+        if journal:
+            return cls(**journal)
+
+        raise ValueError('no journal found for id:'.format(journal_id))
 
     def list_issues(self):
         """
@@ -204,6 +216,59 @@ class Journal(Document):
         except AttributeError:
             return 0
 
+    @property
+    def address(self):
+        """
+        This method retrives a string with the editor address
+        within the journal register.
+        """
+
+        address = []
+        if 'editor_address' in self._data:
+            address.append(self._data['editor_address'])
+
+        if 'editor_address_city' in self._data:
+            address.append(self._data['editor_address_city'])
+
+        if 'editor_address_state' in self._data:
+            address.append(self._data['editor_address_state'])
+
+        if 'editor_address_country' in self._data:
+            address.append(self._data['editor_address_country'])
+
+        return ', '.join(address)
+
+    @property
+    def phones(self):
+        """
+        This method retrives a list of phone numbers
+        within the journal register.
+        """
+        phones = []
+
+        if 'editor_phone1' in self._data:
+            phones.append(self._data['editor_phone1'])
+
+        if 'editor_phone2' in self._data:
+            phones.append(self._data['editor_phone2'])
+
+        return phones
+
+    @property
+    def issn(self):
+        """
+        This method retrieves the issn number according with the
+        value indicated into the field scielo_issn.
+        """
+        issn = None
+
+        if self._data['scielo_issn'] == 'print':
+            issn = self._data['print_issn']
+        else:
+            issn = self._data['eletronic_issn']
+
+        return issn
+
 
 class Issue(Document):
     objects = ManagerFactory(collection='journals', indexes=['issues.id'])
@@ -217,6 +282,8 @@ class Issue(Document):
         return Issue(**cls.objects.find_one({'id': int(journal_id),
                                             'issues.id': int(issue_id)},
                                             {'issues.data': 1})['issues'][0]['data'])
+
+        raise ValueError('no issue found for id:'.format(journal_id))
 
     def list_sections(self):
         """
