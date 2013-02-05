@@ -143,6 +143,7 @@ class Article(Document):
         for author in self.contrib_group['author']:
             yield author
 
+
 def list_journals(criteria=None, mongomanager_lib=MongoManager):
     """
     Lists all journals present in a collection
@@ -279,9 +280,11 @@ class Issue(Document):
         Return a specific issue from a specific journal
         """
 
-        return Issue(**cls.objects.find_one({'id': int(journal_id),
-                                            'issues.id': int(issue_id)},
-                                            {'issues.data': 1})['issues'][0]['data'])
+        issue = cls.objects.find_one({'id': int(journal_id),
+                                      'issues.id': int(issue_id)},
+                                      {'issues.data': 1})['issues'][0]['data']
+        if issue:
+            return cls(**issue)
 
         raise ValueError('no issue found for id:'.format(journal_id))
 
@@ -310,5 +313,9 @@ class Section(Document):
         """
         Return a specific section from a specific journal
         """
-        return Section(**cls.objects.find_one({'id': journal_id,
-                        'sections.id': section_id}, {'sections.data': 1})['sections'][0]['data'])
+        section = cls.objects.find_one({'id': int(journal_id),
+                        'sections.id': int(section_id)}, {'sections.data': 1})['sections'][0]['data']
+        if section:
+            return Section(**section)
+
+        raise ValueError('no section found for id:'.format(journal_id))

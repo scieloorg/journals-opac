@@ -13,7 +13,7 @@ def journal_alpha_list(journals):
         if last_initial and journal.title[0].lower() != last_initial.lower():
             snippet += u'<li>&nbsp;</li>'
         last_initial = journal.title[0]
-        snippet += u'<li><a href="#">%s</a> - %s %s </li>' % (journal.title, unicode(journal.issues_count), _('issues'))
+        snippet += u'<li><a href="#">%s</a> - %s %s</li>' % (journal.title, unicode(journal.issues_count), _('issues'))
 
     snippet += u'</ul>'
 
@@ -57,23 +57,22 @@ def subject_list(journals):
 register.simple_tag(subject_list)
 
 
-def issue_list(sections, language):
+def issues_list_with_articles(sections, language):
 
-    snippet = '<dl class="issue_toc">'
+    snippet = u'<dl class="issue_toc">'
 
     for section in sections:
-        snippet += '<dt><i class="icon-chevron-right"></i> %s</dt>' % section.titles[language]
+        snippet += u'<dt><i class="icon-chevron-right"></i> %s</dt>' % section.titles[language]
         for article in section.articles:
-            snippet += '<dd><ul class="unstyled toc_article"><li>%s' % article.title_group[language]
-            snippet += '<ul class="inline toc_article_authors">'
+            snippet += u'<dd><ul class="unstyled toc_article"><li>%s' % article.title_group[language]
+            snippet += u'<ul class="inline toc_article_authors">'
             for author in article.list_authors():
-                snippet += '<li><a href="#">%s, %s</a>;</li>' % (author['surname'], author['given_names'])
-            snippet += '</ul>'
-            snippet += '<ul class="inline toc_article_links"><li>%s: ' % _('abstract')
-            for key in article.abstract.iterkeys():
-                snippet += '<a href="#">%s</a> ' % key
-    snippet += '</li></ul></li></dl>'
+                snippet += u'<li><a href="#">%s, %s</a>;</li>' % (author['surname'], author['given_names'])
+            snippet += u'</ul>'
+            snippet += u'<ul class="inline toc_article_links"><li>%s: ' % _('abstract')
+            snippet += u' | '.join(['<a href="#">%s</a> ' % key for key in article.abstract.iterkeys()])
+    snippet += u'</li></ul></li></dl>'
 
     return snippet
 
-register.simple_tag(issue_list)
+register.simple_tag(issues_list_with_articles)
