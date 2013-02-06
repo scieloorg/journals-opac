@@ -1,5 +1,9 @@
-from catalog import mongomodels
+import json
+
 from django.shortcuts import render_to_response
+from django.http import HttpResponse
+
+from catalog import mongomodels
 
 
 def list_journals(request):
@@ -37,3 +41,18 @@ def issue(request, journal_id, issue_id):
 
     return render_to_response('catalog/issue.html', {'sections': sections})
 
+
+def ajx_list_journal_tweets(request, journal_id):
+    """
+    Lists the tweets of a given journal.
+    """
+    if not request.is_ajax():
+        return HttpResponse(status=400)
+
+    journal = mongomodels.Journal.get_journal(journal_id=journal_id)
+
+    tweets = journal.tweets
+
+    response_data = json.dumps(tweets)
+
+    return HttpResponse(response_data, mimetype="application/json")
