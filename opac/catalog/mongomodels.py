@@ -1,6 +1,7 @@
 # coding:utf8
 from urlparse import urlparse
 
+from django.core.urlresolvers import reverse
 from django.conf import settings
 import pymongo
 
@@ -16,6 +17,27 @@ class DbOperationsError(Exception):
     """Represents all possible exceptions while interacting with
     MongoDB.
     """
+
+
+class DocDoesNotExist(Exception):
+    """
+    Equivalent to Django's DoesNotExist. It is raised when operations
+    that needs the objects to be saved are called on unsaved objects.
+    """
+
+
+def ensure_exists(method):
+    """
+    Decorator to be used on methods of Document subclasses, to sign
+    that the method can only be called on saved documents.
+    """
+    def decorator(instance, *args, **kwargs):
+        if not '_id' in instance._data:
+            raise DocDoesNotExist('the document must be saved')
+
+        return method(instance, *args, **kwargs)
+
+    return decorator
 
 
 class MongoConnector(object):
@@ -84,6 +106,11 @@ class MongoManager(object):
 
     def _ensure_indexes(self, indexes):
         for index in indexes:
+            if isinstance(index, dict):
+                attr = index.pop('attr')
+                self._mongoconn.col.ensure_index(attr, **index)
+                continue
+
             self._mongoconn.col.ensure_index(index)
 
 
@@ -190,10 +217,10 @@ def list_journals_by_study_areas(mongomanager_lib=MongoManager):
 
 
 class Journal(Document):
-    objects = ManagerFactory(collection='journals',
-        indexes=['issue_ref', 'title', 'study_areas', 'id'])
-
-    _twitter_api = twitter.Api()
+    objects = ManagerFactory(collection='journals', indexes=[
+        'issue_ref', 'title', 'study_areas', 'id',
+        {'attr': 'acronym', 'unique': True}
+    ])
 
     @classmethod
     def get_journal(cls, journal_id):
@@ -201,12 +228,12 @@ class Journal(Document):
         Return a specific journal
         """
 
-        journal = cls.objects.find_one({'id': int(journal_id)})
+        journal = cls.objects.find_one({'acronym': journal_id})
 
-        if journal:
-            return cls(**journal)
+        if not journal:
+            raise ValueError('no journal found for id:'.format(journal_id))
 
-        raise ValueError('no journal found for id:'.format(journal_id))
+        return cls(**journal)
 
     def list_issues(self):
         """
@@ -231,21 +258,17 @@ class Journal(Document):
         """
 
         address = []
-        if 'editor_address' in self._data:
-            if self._data['editor_address'] != None and self._data['editor_address'].strip():
-                address.append(self._data['editor_address'])
+        if self._data.get('editor_address'):
+            address.append(self._data['editor_address'])
 
-        if 'editor_address_city' in self._data:
-            if self._data['editor_address_city'] != None and self._data['editor_address_city'].strip():
-                address.append(self._data['editor_address_city'])
+        if self._data.get('editor_address_city'):
+            address.append(self._data['editor_address_city'])
 
-        if 'editor_address_state' in self._data:
-            if self._data['editor_address_state'] != None and self._data['editor_address_state'].strip():
-                address.append(self._data['editor_address_state'])
+        if self._data.get('editor_address_state'):
+            address.append(self._data['editor_address_state'])
 
-        if 'editor_address_country' in self._data:
-            if self._data['editor_address_country'] != None and self._data['editor_address_country'].strip():
-                address.append(self._data['editor_address_country'])
+        if self._data.get('editor_address_country'):
+            address.append(self._data['editor_address_country'])
 
         address_string = ', '.join(address)
 
@@ -282,13 +305,11 @@ class Journal(Document):
         """
         phones = []
 
-        if 'editor_phone1' in self._data:
-            if self._data['editor_phone1'] != None and len(self._data['editor_phone1'].strip()) > 0:
-                phones.append(self._data['editor_phone1'])
+        if self._data.get('editor_phone1'):
+            phones.append(self._data['editor_phone1'])
 
-        if 'editor_phone2' in self._data:
-            if self._data['editor_phone2'] != None and len(self._data['editor_phone2'].strip()) > 0:
-                phones.append(self._data['editor_phone2'])
+        if self._data.get('editor_phone2'):
+            phones.append(self._data['editor_phone2'])
 
         return phones
 
@@ -307,6 +328,10 @@ class Journal(Document):
 
         return issn
 
+    @ensure_exists
+    def get_absolute_url(self):
+        return reverse('catalog.journal', kwargs={'journal_id': self.acronym})
+
 
 class Issue(Document):
     objects = ManagerFactory(collection='journals', indexes=['issues.id'])
@@ -317,13 +342,13 @@ class Issue(Document):
         Return a specific issue from a specific journal
         """
 
-        issue = cls.objects.find_one({'id': journal_id,
-                                      'issues.id': issue_id},
-                                      {'issues.data': 1})['data']
-        if issue:
-            return cls(**issue)
+        issue = cls.objects.find_one({'acronym': journal_id,
+                                      'issues.id': int(issue_id)},
+                                      {'issues.data': 1})['issues'][0]['data']
+        if not issue:
+            raise ValueError('no issue found for id:'.format(journal_id))
 
-        raise ValueError('no issue found for id:'.format(journal_id))
+        return cls(**issue)
 
     def list_sections(self):
         """
@@ -350,5 +375,9 @@ class Section(Document):
         """
         Return a specific section from a specific journal
         """
-        return Section(**cls.objects.find_one({'id': journal_id,
-                        'sections.id': section_id}, {'sections.data': 1})['data'])
+        section = cls.objects.find_one({'id': journal_id,
+                        'sections.id': int(section_id)}, {'sections.data': 1})['sections'][0]['data']
+        if not section:
+            raise ValueError('no section found for id:'.format(journal_id))
+
+        return Section(**section)
