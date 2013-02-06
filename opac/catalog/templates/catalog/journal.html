@@ -12,7 +12,7 @@
     <li><i class="icon-play"></i> <a href="#" target="_blank">editorial board</a></li>
     <li><i class="icon-play"></i> <a href="#" target="_blank">instructions to authors</a></li>
     <li><i class="icon-play"></i> <a href="#" target="_blank">subscriptions</a></li>
-    <li><i class="icon-play"></i> <a href="/journal/{{ journal.id }}/stats/">statistics</a></li>
+    <li><i class="icon-play"></i> <a href="{% url catalog.journal_stats journal.acronym %}">statistics</a></li>
   </ul>
   {% if journal.url_online_submission %}
   <a href="{{ journal.url_online_submission }}"><img src="/static/images/en/submission.png" /></a>
