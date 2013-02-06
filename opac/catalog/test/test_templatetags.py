@@ -14,7 +14,7 @@ from mocker import (
 class JournalTemplateTagTest(TestCase, MockerTestCase):
 
     def test_journal_alpha_list(self):
-        from catalog.templatetags import catalog
+        from catalog.templatetags import catalogtags
         from catalog.mongomodels import list_journals
 
         mock_mongomanager = self.mocker.mock()
@@ -32,11 +32,11 @@ class JournalTemplateTagTest(TestCase, MockerTestCase):
 
         journals = list_journals(mongomanager_lib=mock_mongomanager)
 
-        self.assertEqual(catalog.journal_alpha_list(journals),
+        self.assertEqual(catalogtags.journal_alpha_list(journals),
             u'<ul class="unstyled"><li><a href="#">Micronucleated</a> - 0 issues</li></ul>')
 
     def test_journal_by_subject(self):
-        from catalog.templatetags import catalog
+        from catalog.templatetags import catalogtags
         from catalog.mongomodels import list_journals_by_study_areas
 
         mock_mongomanager = self.mocker.mock()
@@ -59,11 +59,11 @@ class JournalTemplateTagTest(TestCase, MockerTestCase):
 
         journals = list_journals_by_study_areas(mongomanager_lib=mock_mongomanager)
 
-        self.assertEqual(catalog.journals_by_subject(journals),
+        self.assertEqual(catalogtags.journals_by_subject(journals),
             u'<dl><dt>ZAP</dt><dd><dl><dd><ul class="unstyled"><li><a href="#">Micronucleated</a> - 0 issues</li></ul></dd></dl></dd></dl>')
 
     def test_subject_list(self):
-        from catalog.templatetags import catalog
+        from catalog.templatetags import catalogtags
         from catalog.mongomodels import list_journals_by_study_areas
 
         mock_mongomanager = self.mocker.mock()
@@ -77,14 +77,14 @@ class JournalTemplateTagTest(TestCase, MockerTestCase):
         self.mocker.replay()
 
         journals = list_journals_by_study_areas(mongomanager_lib=mock_mongomanager)
-        self.assertEqual(catalog.subject_list(journals),
+        self.assertEqual(catalogtags.subject_list(journals),
             u'<ul class="unstyled"><li><a href="#">Zap</a></li><li><a href="#">Zaz</a></li><li><a href="#">Spam</a></li></ul>')
 
 
 class IssueTemplateTagTest(TestCase, MockerTestCase):
 
     def list_articles_by_section(self):
-        from catalog.templatetags import catalog
+        from catalog.templatetags import catalogtags
         from catalog.mongomodels import Issue
         from catalog.mongomodels import Section
         from catalog.mongomodels import Article
@@ -201,4 +201,4 @@ class IssueTemplateTagTest(TestCase, MockerTestCase):
 
         sections = issue.list_sections()
 
-        self.assertEqual(catalog.list_articles_by_section(sections, 'en'), '<dl class="issue_toc"><dt><i class="icon-chevron-right"></i> WHO Publications</dt><dd><ul class="unstyled toc_article"><li>Management of health-care waste in Izmir, Turkey<ul class="inline toc_article_authors"><li><a href="#">Soysal, Ahmet</a>;</li></ul><ul class="inline toc_article_links"><li>abstract: <a href="#">en</a>  | <a href="#">it</a> </li></ul></li></dl>')
+        self.assertEqual(catalogtags.list_articles_by_section(sections, 'en'), '<dl class="issue_toc"><dt><i class="icon-chevron-right"></i> WHO Publications</dt><dd><ul class="unstyled toc_article"><li>Management of health-care waste in Izmir, Turkey<ul class="inline toc_article_authors"><li><a href="#">Soysal, Ahmet</a>;</li></ul><ul class="inline toc_article_links"><li>abstract: <a href="#">en</a>  | <a href="#">it</a> </li></ul></li></dl>')
