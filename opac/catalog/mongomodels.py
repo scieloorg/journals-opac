@@ -342,7 +342,7 @@ class Issue(Document):
         Return a specific issue from a specific journal
         """
 
-        issue = cls.objects.find_one({'id': journal_id,
+        issue = cls.objects.find_one({'acronym': journal_id,
                                       'issues.id': int(issue_id)},
                                       {'issues.data': 1})['issues'][0]['data']
         if not issue:

@@ -451,14 +451,31 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         mock_objects = self.mocker.mock()
 
-        address_data1 = {
+        address_data = {
             "editor_address": "Viale Regina Elena 299",
             "editor_address_city": "Rome",
             "editor_address_country": "Italy",
             "editor_address_state": "Rome",
             }
 
-        address_data2 = {
+        mock_objects.find_one({'acronym': 'foo'})
+        self.mocker.result(address_data)
+
+        self.mocker.replay()
+
+        Journal.objects = mock_objects
+
+        journal = Journal.get_journal(journal_id='foo')
+        address = journal.address
+
+        self.assertEqual(address, "Viale Regina Elena 299, Rome, Rome, Italy")
+
+    def test_address_with_missing_data(self):
+        from catalog.mongomodels import Journal
+
+        mock_objects = self.mocker.mock()
+
+        address_data = {
             "editor_address": "",
             "editor_address_city": None,
             "editor_address_country": "",
@@ -472,50 +489,23 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         Journal.objects = mock_objects
 
-        journal = Journal.get_journal(journal_id=1)
-        address = journal.address
-
-        self.assertEqual(address, "Viale Regina Elena 299, Rome, Rome, Italy")
-
-        journal = Journal.get_journal(journal_id=1)
+        journal = Journal.get_journal(journal_id='foo')
         address = journal.address
 
         self.assertEqual(address, None)
 
-    def test_phones(self):
+    def test_phones_with_many_entries(self):
         from catalog.mongomodels import Journal
 
         mock_objects = self.mocker.mock()
 
-        phone_data1 = {
+        phone_data = {
             "editor_phone1": "0039 06 4990 2945",
             "editor_phone2": "0039 06 4990 2253",
             }
 
-        phone_data2 = {
-            "editor_phone2": "0039 06 4990 2253",
-            }
-
-        phone_data3 = {
-            "title": "AAA",
-        }
-
-        phone_data4 = {
-            "editor_phone2": "",
-            }
-
-        phone_data5 = {
-            "editor_phone1": None,
-            }
-
         mock_objects.find_one({'acronym': 'foo'})
-        self.mocker.result(phone_data1)
-
-        mock_objects.find_one({'acronym': 'foo'})
-        self.mocker.result(phone_data2)
-
-        mock_objects.find_one({'acronym': 'foo'})
-        self.mocker.result(phone_data3)
+        self.mocker.result(phone_data)
 
         self.mocker.replay()
 
@@ -525,21 +515,81 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         self.assertEqual(phones, ['0039 06 4990 2945', '0039 06 4990 2253'])
 
+    def test_phones_with_one_entry(self):
+        from catalog.mongomodels import Journal
+
+        mock_objects = self.mocker.mock()
+
+        phone_data = {
+            "editor_phone2": "0039 06 4990 2253",
+            }
+
+        mock_objects.find_one({'acronym': 'foo'})
+        self.mocker.result(phone_data)
+
+        self.mocker.replay()
+
+        Journal.objects = mock_objects
         journal = Journal.get_journal(journal_id='foo')
         phones = journal.phones
 
         self.assertEqual(phones, ['0039 06 4990 2253'])
 
+    def test_phones_with_zero_entries(self):
+        from catalog.mongomodels import Journal
+
+        mock_objects = self.mocker.mock()
+
+        phone_data = {
+            "title": "AAA",
+        }
+
+        mock_objects.find_one({'acronym': 'foo'})
+        self.mocker.result(phone_data)
+
+        self.mocker.replay()
+
+        Journal.objects = mock_objects
         journal = Journal.get_journal(journal_id='foo')
         phones = journal.phones
 
         self.assertEqual(phones, [])
 
+    def test_phones_with_missing_data(self):
+        from catalog.mongomodels import Journal
+
+        mock_objects = self.mocker.mock()
+
+        phone_data = {
+            "editor_phone2": "",
+            }
+
+        mock_objects.find_one({'acronym': 'foo'})
+        self.mocker.result(phone_data)
+
+        self.mocker.replay()
+
+        Journal.objects = mock_objects
         journal = Journal.get_journal(journal_id='foo')
         phones = journal.phones
 
         self.assertEqual(phones, [])
 
+    def test_phones_with_none_value(self):
+        from catalog.mongomodels import Journal
+
+        mock_objects = self.mocker.mock()
+
+        phone_data = {
+            "editor_phone1": None,
+            }
+
+        mock_objects.find_one({'acronym': 'foo'})
+        self.mocker.result(phone_data)
+
+        self.mocker.replay()
+
+        Journal.objects = mock_objects
         journal = Journal.get_journal(journal_id='foo')
         phones = journal.phones
 
@@ -680,7 +730,7 @@ class JournalModelTest(TestCase, MockerTestCase):
             "twitter_user": "redescielo"
             }
 
-        mock_objects.find_one({'id': 1})
+        mock_objects.find_one({'acronym': 'foo'})
         self.mocker.result(twitter_user)
 
         mock_twitter.GetUserTimeline(ANY, page=0, count=3)
@@ -696,7 +746,7 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         # Testing valid twitter user
         Journal.objects = mock_objects
-        journal = Journal.get_journal(journal_id=1)
+        journal = Journal.get_journal(journal_id='foo')
         Journal._twitter_api = mock_twitter  # monkeypatch
 
         tweets = journal.tweets
@@ -717,7 +767,7 @@ class JournalModelTest(TestCase, MockerTestCase):
             "twitter_user": "invalid_user"
             }
 
-        mock_objects.find_one({'id': 1})
+        mock_objects.find_one({'acronym': 'foo'})
         self.mocker.result(twitter_user)
 
         mock_twitter.GetUserTimeline(ANY, page=0, count=3)
@@ -727,7 +777,7 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         # Testing valid twitter user
         Journal.objects = mock_objects
-        journal = Journal.get_journal(journal_id=1)
+        journal = Journal.get_journal(journal_id='foo')
         Journal._twitter_api = mock_twitter  # monkeypatch
 
         # Testing invalid twitter user
@@ -805,14 +855,14 @@ class IssueModelTest(TestCase, MockerTestCase):
             ]
         }
 
-        mock_objects.find_one({'id': 1, 'issues.id': 1}, {'issues.data': 1})
+        mock_objects.find_one({'acronym': 'foo', 'issues.id': 1}, {'issues.data': 1})
         self.mocker.result(issue_microdata)
 
         self.mocker.replay()
 
         Issue.objects = mock_objects
 
-        issue = Issue.get_issue(journal_id=1, issue_id=1)
+        issue = Issue.get_issue(journal_id='foo', issue_id=1)
 
         self.assertIsInstance(issue, Issue)
         self.assertEqual(issue.total_documents, 17)
@@ -897,7 +947,7 @@ class IssueModelTest(TestCase, MockerTestCase):
             'title': 'Micronucleated lymphocytes in parents of lalala children'
         }
 
-        issue_mock_objects.find_one({'id': 1, 'issues.id': 1}, {'issues.data': 1})
+        issue_mock_objects.find_one({'acronym': 'foo', 'issues.id': 1}, {'issues.data': 1})
         self.mocker.result(issue_section_microdata)
 
         section_mock_objects.find_one({'id': 1, 'sections.id': 514}, {'sections.data': 1})
@@ -912,7 +962,7 @@ class IssueModelTest(TestCase, MockerTestCase):
         Section.objects = section_mock_objects
         Article.objects = article_mock_objects
 
-        issue = Issue.get_issue(journal_id=1, issue_id=1)
+        issue = Issue.get_issue(journal_id='foo', issue_id=1)
 
         sections = issue.list_sections()
 
