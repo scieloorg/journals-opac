@@ -34,6 +34,10 @@ def journal_stats(request, journal_id):
     return render_to_response('catalog/journal_stats.html', {'journal': journal})
 
 
+def issues(request, journal_id):
+    return render_to_response('catalog/issues.html')
+
+
 def issue(request, journal_id, issue_id):
 
     issue = mongomodels.Issue.get_issue(journal_id, issue_id)

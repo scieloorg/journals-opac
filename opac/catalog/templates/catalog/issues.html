@@ -1,0 +1,46 @@
+{% extends "base_lv1.html" %}
+{% load i18n %}
+{% load catalogtags %}
+
+{% block body %}
+
+<div class="span12">
+  <center>
+    <h3>Annali dell'Instituto Superiore di Sanità</h3>
+    <h5>print version ISSN 0021-2571</h5>
+  </center>
+
+  <div class="span12">
+    <p><small>Former Title:</small></p>
+    <p class="text-info">Revista brasileira de pesquisas médicas e biológicas</p>
+
+    Available issues*
+  </div>
+
+  <div class="span12">
+    <table class="table_issue">
+      <thead>
+        <tr>
+          <th>{% trans 'Year' %}</th>
+          <th>{% trans 'Volume' %}</th>
+          <th>{% trans 'Numbers' %}</th>
+        </tr>
+      </thead>
+          <tr>
+            <th>2013</th>
+            <th>45</th>
+            <td>
+              <div class="table_issue_div">
+                <ul class="table_issue_ul">
+                  <li class="ui-state-default"><a href="#">1</a></li>
+                  <li class="ui-state-default"><a href="#">2</a></li>
+                </ul>
+              </div>
+              </td>
+          </tr>
+    </table>
+  </div>
+
+</div>
+
+{% endblock %}
