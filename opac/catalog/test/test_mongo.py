@@ -10,6 +10,8 @@ from mocker import (
     KWARGS,
 )
 
+from catalog.mongomodels import Journal
+
 
 class MongoManagerTest(TestCase, MockerTestCase):
 
@@ -303,8 +305,20 @@ class ArticleModelTest(TestCase, MockerTestCase):
 
 class JournalModelTest(TestCase, MockerTestCase):
 
+    def setUp(self):
+        """
+        Backup the original ``objects`` object ref.
+        """
+        self._original_objects = Journal.objects
+
+    def tearDown(self):
+        """
+        Restore to the original ``objects`` object ref.
+        """
+        Journal.objects = self._original_objects
+
     def _makeOne(self, *args, **kwargs):
-        from catalog.mongomodels import Journal
+
         return Journal(*args, **kwargs)
 
     def test_simple_attr_access(self):
@@ -375,8 +389,6 @@ class JournalModelTest(TestCase, MockerTestCase):
         self.assertTrue(False)
 
     def test_get_journal_passing_journal_id(self):
-        from catalog.mongomodels import Journal
-
         mock_objects = self.mocker.mock()
 
         journal_microdata = {
