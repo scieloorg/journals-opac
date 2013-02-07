@@ -231,7 +231,7 @@ class PNormalizeJournalTitle(Pipe):
 
     @precondition(pnormalizejournaltitle_precondition)
     def transform(self, data):
-        ascii_title = normalize('NFKD', data['title']).encode('ASCII', 'ignore')
+        ascii_title = normalize('NFKD', unicode(data['title'])).encode('ASCII', 'ignore')
 
         data['_normalized_title'] = ascii_title.decode('ASCII').upper()
 
