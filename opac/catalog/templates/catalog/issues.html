@@ -26,19 +26,25 @@
           <th>{% trans 'Numbers' %}</th>
         </tr>
       </thead>
-          <tr>
-            <th>2013</th>
-            <th>45</th>
+        <tr>
+          {% for issue in issues %}
+            <th>{{issue.publication_year}}</th>
+            <th>{{issue.volume}}</th>
             <td>
               <div class="table_issue_div">
                 <ul class="table_issue_ul">
-                  <li class="table_issue_li"><a href="#">1</a></li>
-                  <li class="table_issue_li"><a href="#">2</a></li>
+                  <li class="table_issue_li"><a href="#">{{issue.number}}</a></li>
                 </ul>
               </div>
               </td>
-          </tr>
+          {% endfor %}
+        </tr>
     </table>
+  </div>
+
+  <div class="span12">
+    *Journal's history in SciELO Brazil collection
+    Apr  1997: Admitted to SciELO Brazil collection
   </div>
 
 </div>

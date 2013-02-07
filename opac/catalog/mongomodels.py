@@ -3,6 +3,7 @@ from urlparse import urlparse
 
 from django.core.urlresolvers import reverse
 from django.conf import settings
+from collections import OrderedDict
 import pymongo
 
 import twitter
@@ -240,8 +241,30 @@ class Journal(Document):
         Iterates on all issues of the journal
         """
 
-        for issue in self.issues:
+        for issue in sorted(self.issues, key=lambda x: x['data']['publication_year'], reverse=True):
             yield Issue(**issue['data'])
+
+    def list_issues_by_year(self):
+        """
+        Iterates on all issues and return a list of issues group by year and volume
+
+        Example:
+            issues = OrderedDict(
+                '2009':  {'45': [issue_object, issue_object, issue_object, ]})
+        """
+
+        grid = OrderedDict()
+
+        for issue in self.list_issues():
+            year_node = grid.setdefault(issue.publication_year, {})
+            volume_node = year_node.setdefault(issue.volume, [])
+            volume_node.append(issue)
+
+        for year, volume in grid.items():
+            for vol, issues in volume.items():
+                issues.sort(key=lambda x: x.order)
+
+        return grid
 
     @property
     def issues_count(self):
@@ -376,7 +399,8 @@ class Section(Document):
         Return a specific section from a specific journal
         """
         section = cls.objects.find_one({'id': journal_id,
-                        'sections.id': int(section_id)}, {'sections.data': 1})['sections'][0]['data']
+                        'sections.id': int(section_id)},
+                        {'sections.data': 1})['sections'][0]['data']
         if not section:
             raise ValueError('no section found for id:'.format(journal_id))
 

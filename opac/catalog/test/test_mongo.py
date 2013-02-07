@@ -446,6 +446,98 @@ class JournalModelTest(TestCase, MockerTestCase):
         self.assertIsInstance(journal, Journal)
         self.assertEqual(journal.id, 1)
 
+    def test_list_issue_by_year_must_return_a_lazy_object(self):
+        from catalog.mongomodels import Journal
+
+        mock_objects = self.mocker.mock()
+
+        journal_microdata = {
+            "issues": [
+                    {
+                        "id": 1,
+                        "data": {
+                            "id": 1,
+                            "label": "45 (4)",
+                            "number": "4",
+                            "publication_year": 2009,
+                            "volume": "45",
+                            "order": 1
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "data": {
+                            "id": 2,
+                            "label": "45 (5)",
+                            "number": "5",
+                            "publication_year": 2009,
+                            "volume": "45",
+                            "order": 2
+                        }
+                    },
+                    {
+                        "id": 4,
+                        "data": {
+                            "id": 4,
+                            "label": "47 (1)",
+                            "number": "1",
+                            "publication_year": 2009,
+                            "volume": "47",
+                            "order": 3
+                        }
+                    },
+                    {
+                        "id": 3,
+                        "data": {
+                            "id": 3,
+                            "label": "46 (1)",
+                            "number": "1",
+                            "publication_year": 2010,
+                            "volume": "46",
+                            "order": 4
+                        }
+                    },
+                    {
+                        "id": 5,
+                        "data": {
+                            "id": 5,
+                            "label": "45 (10)",
+                            "number": "10",
+                            "publication_year": 2009,
+                            "volume": "45",
+                            "order": 5
+                        }
+                    },
+                    {
+                        "id": 6,
+                        "data": {
+                            "id": 6,
+                            "label": "45 (3)",
+                            "number": "3",
+                            "publication_year": 2010,
+                            "volume": "45",
+                            "order": 6
+                        }
+                    },
+                ]
+            }
+
+        mock_objects.find_one({'acronym': 'foo'})
+        self.mocker.result(journal_microdata)
+
+        self.mocker.replay()
+
+        Journal.objects = mock_objects
+
+        journal = Journal.get_journal('foo')
+
+        issues = journal.list_issues_by_year()
+
+        self.assertTrue(hasattr(issues, 'next'))
+        issue = issues.next()
+        self.assertTrue(isinstance(issue, dict))
+        self.assertEqual(issue['2010'], {'45': [4, 5]})
+
     def test_address(self):
         from catalog.mongomodels import Journal
 
