@@ -700,6 +700,25 @@ class JournalModelTest(TestCase, MockerTestCase):
             for j in area['journals']:
                 self.assertTrue(isinstance(j, Journal))
 
+    def test_non_string_study_areas_are_ignored_on_list_journals_by_study_areas(self):
+        from catalog.mongomodels import list_journals_by_study_areas
+
+        mock_mongomanager = self.mocker.mock()
+
+        mock_mongomanager(mongo_collection='journals')
+        self.mocker.result(mock_mongomanager)
+        self.mocker.count(1)
+
+        mock_mongomanager.distinct('study_areas')
+        self.mocker.result([None, 'Zaz', 'Spam'])
+
+        self.mocker.replay()
+
+        areas = list_journals_by_study_areas(mongomanager_lib=mock_mongomanager)
+
+        for area in areas:
+            self.assertIn(area['area'], ['Zaz', 'Spam'])
+
     def test_issues_count_when_all_needed_data_exists(self):
         issues_data = {"issues": [{'id': 1}]}
 

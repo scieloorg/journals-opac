@@ -206,6 +206,11 @@ def list_journals_by_study_areas(mongomanager_lib=MongoManager):
 
     areas_list = []
     for area in areas:
+        # try to avoid None values that may have scaped from previous
+        # cleanups.
+        if not isinstance(area, basestring):
+            continue
+
         item = {
             'area': area,
             'journals': list_journals(criteria={'study_areas': area},
