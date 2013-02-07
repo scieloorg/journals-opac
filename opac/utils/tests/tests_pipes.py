@@ -604,3 +604,18 @@ class PNormalizeJournalTitleTest(mocker.MockerTestCase):
 
         self.assertRaises(UnmetPrecondition,
             lambda: pnormalizejournaltitle_precondition(data))
+
+    def test_title_must_be_casted_to_unicode_if_str(self):
+        data = {'title': 'spam'}
+        expected = {'title': u'spam', '_normalized_title': u'SPAM'}
+
+        mock_manager_api = self.mocker.mock()
+
+        mock_manager_api(settings=ANY)
+        self.mocker.result(mock_manager_api)
+
+        self.mocker.replay()
+
+        pnormalizejournaltitle = self._makeOne(data,
+            manager_api_lib=mock_manager_api)
+        self.assertEqual(pnormalizejournaltitle.transform(data), expected)
