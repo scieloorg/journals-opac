@@ -49,7 +49,10 @@ def ajx_list_journal_tweets(request, journal_id):
     if not request.is_ajax():
         return HttpResponse(status=400)
 
-    journal = mongomodels.Journal.get_journal(journal_id=journal_id)
+    try:
+        journal = mongomodels.Journal.get_journal(journal_id=journal_id)
+    except ValueError:
+        return HttpResponse(status=400)
 
     tweets = journal.tweets
 
