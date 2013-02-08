@@ -243,15 +243,15 @@ class Journal(Document):
 
     def list_issues(self):
         """
-        Iterates on all issues of the journal
+        Iterates on all issues of the journal order by publication_year
         """
 
         for issue in sorted(self.issues, key=lambda x: x['data']['publication_year'], reverse=True):
             yield Issue(**issue['data'])
 
-    def list_issues_by_year(self):
+    def list_issues_as_grid(self):
         """
-        Iterates on all issues and return a list of issues group by year and volume
+        Return a list of issues group by year
 
         Example:
             issues = OrderedDict(

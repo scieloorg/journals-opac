@@ -26,19 +26,25 @@
           <th>{% trans 'Numbers' %}</th>
         </tr>
       </thead>
-        <tr>
-          {% for issue in issues %}
-            <th>{{issue.publication_year}}</th>
-            <th>{{issue.volume}}</th>
-            <td>
-              <div class="table_issue_div">
-                <ul class="table_issue_ul">
-                  <li class="table_issue_li"><a href="#">{{issue.number}}</a></li>
-                </ul>
-              </div>
-              </td>
+      <tbody>
+        {% for year, vols in issues.items %}
+          {% for vol, nums in vols.items %}
+          <tr>
+            <th>{{ year }}</th>
+            <th>{{ vol|default:'-' }}</th>
+            {% for num in nums %}
+              {% if num.suppl_number %}
+                <td><a href="#">{% trans 'suppl.' %}</a></td>
+              {% elif num.suppl_volume %}
+                <td><a href="#">{% trans 'suppl.' %} {{ num.suppl_volume }}</a></td>
+              {% elif not num.is_press_release %}
+                <td><a href="#">{{ num.number }}</a></td>
+              {% endif %}
+            {% endfor %}
+          </tr>
           {% endfor %}
-        </tr>
+        {% endfor %}
+      <tbody>
     </table>
   </div>
 

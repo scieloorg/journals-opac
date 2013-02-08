@@ -37,7 +37,7 @@ def journal_stats(request, journal_id):
 def issues(request, journal_id):
 
     journal = mongomodels.Journal.get_journal(journal_id)
-    issues = journal.list_issues()
+    issues = journal.list_issues_as_grid()
 
     return render_to_response('catalog/issues.html', {'issues': issues})
 

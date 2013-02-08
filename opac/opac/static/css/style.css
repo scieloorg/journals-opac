@@ -41,38 +41,24 @@ h4 {
 
 /*Issue Grid Style*/
 
+.table_issue td {
+    background-color: #F0F0F0;
+    text-align: center;
+    border: solid 5px #FFFFFF;
+    padding: 2px;
+    width: 80px;
+    height: 30px;
+
+}
+
 .table_issue th {
-    background-color: #B0B0B0;
+    background-color: #E0E0E0;
     text-align: center;
     font-weight: bold;
     border: solid 5px #FFFFFF;
     padding: 2px;
     width: 80px;
     height: 30px;
+
 }
 
-.table_issue_ul {
-    list-style-type: none;
-    margin: -6px 0 0;
-    padding: 0;
-    width: 100%;
-}
-
-.table_issue_ul li {
-    float:left;
-    width: 40px;
-    padding: 10px;
-    display:block;
-    font-size: 10pt;
-    text-align: center;
-    margin: 5px 0px 0px 5px;
-    border: 0px solid #CCCCCC;
-    line-height: 0.8em;
-    background-color: #E6E6E6;
-    border: 1px solid #D3D3D3;
-}
-
-.table_issue_div{
-    float: left;
-    width: 900px;
-}

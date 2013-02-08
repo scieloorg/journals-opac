@@ -340,6 +340,7 @@ class JournalModelTest(TestCase, MockerTestCase):
 
     def test_list_issues_must_return_a_lazy_object(self):
         issues_data = {
+            "id": 1,
             "issues": [
                 {
                 'id': 1,
@@ -383,6 +384,85 @@ class JournalModelTest(TestCase, MockerTestCase):
         self.assertTrue(hasattr(issues, 'next'))
         issue = issues.next()
         self.assertEqual(issue.editorial_standard, 'vancouv')
+
+    def test_list_issues_must_return_a_reverse_list_order_by_year(self):
+        from modelfactories import JournalFactory
+
+        journal_microdata = [
+                    {
+                        "id": 1,
+                        "data": {
+                            "id": 1,
+                            "label": "45 (4)",
+                            "number": "4",
+                            "publication_year": 2009,
+                            "volume": "45",
+                            "order": 1
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "data": {
+                            "id": 2,
+                            "label": "45 (5)",
+                            "number": "5",
+                            "publication_year": 2009,
+                            "volume": "45",
+                            "order": 2
+                        }
+                    },
+                    {
+                        "id": 4,
+                        "data": {
+                            "id": 4,
+                            "label": "47 (1)",
+                            "number": "1",
+                            "publication_year": 2009,
+                            "volume": "47",
+                            "order": 3
+                        }
+                    },
+                    {
+                        "id": 3,
+                        "data": {
+                            "id": 3,
+                            "label": "46 (1)",
+                            "number": "1",
+                            "publication_year": 2010,
+                            "volume": "46",
+                            "order": 4
+                        }
+                    },
+                    {
+                        "id": 5,
+                        "data": {
+                            "id": 5,
+                            "label": "45 (10)",
+                            "number": "10",
+                            "publication_year": 2009,
+                            "volume": "45",
+                            "order": 5
+                        }
+                    },
+                    {
+                        "id": 6,
+                        "data": {
+                            "id": 6,
+                            "label": "45 (3)",
+                            "number": "3",
+                            "publication_year": 2010,
+                            "volume": "45",
+                            "order": 6
+                        }
+                    },
+                ]
+
+        journal = JournalFactory.build(issues=journal_microdata)
+
+        previous_year = 9999
+        for issue in journal.list_issues():
+            self.assertLessEqual(issue.publication_year, previous_year)
+            previous_year = issue.publication_year
 
     @unittest.expectedFailure
     def test_needed_indexes_are_created(self):
@@ -459,12 +539,9 @@ class JournalModelTest(TestCase, MockerTestCase):
         self.assertEqual(journal.id, 1)
 
     def test_list_issue_by_year_must_return_a_lazy_object(self):
-        from catalog.mongomodels import Journal
+        from modelfactories import JournalFactory
 
-        mock_objects = self.mocker.mock()
-
-        journal_microdata = {
-            "issues": [
+        journal_microdata = [
                     {
                         "id": 1,
                         "data": {
@@ -532,23 +609,13 @@ class JournalModelTest(TestCase, MockerTestCase):
                         }
                     },
                 ]
-            }
 
-        mock_objects.find_one({'acronym': 'foo'})
-        self.mocker.result(journal_microdata)
+        journal = JournalFactory.build(issues=journal_microdata)
 
-        self.mocker.replay()
+        issues = journal.list_issues_as_grid()
 
-        Journal.objects = mock_objects
-
-        journal = Journal.get_journal('foo')
-
-        issues = journal.list_issues_by_year()
-
-        self.assertTrue(hasattr(issues, 'next'))
-        issue = issues.next()
-        self.assertTrue(isinstance(issue, dict))
-        self.assertEqual(issue['2010'], {'45': [4, 5]})
+        self.assertIn(2010, issues)
+        self.assertTrue(len(issues) == 2)
 
     def test_address(self):
         from .modelfactories import JournalFactory
