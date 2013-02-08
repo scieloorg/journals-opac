@@ -680,6 +680,13 @@ class JournalModelTest(TestCase, MockerTestCase):
         j = self._makeOne(**issues_data)
         self.assertEqual(j.issues_count, 0)
 
+    def test_journal_twitter_api_class_atribute(self):
+        from catalog.mongomodels import Journal
+
+        self.assertEqual(
+            hasattr(Journal, '_twitter_api'),
+            True)
+
     def test_tweets_valid_user(self):
         from .modelfactories import JournalFactory
         from catalog import mongomodels
