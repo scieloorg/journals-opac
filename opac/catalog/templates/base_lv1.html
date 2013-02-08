@@ -10,7 +10,7 @@
       <dt>journal navigation</dt>
       <dd>
         <div class="btn-group">
-          <a href="/journal/{{ journal.id }}" 
+          <a href="/journal/{{ journal.acronym }}" 
              class="btn btn-small btn-primary tip-bottom" 
              rel="tooltip" 
              data-placement="bottom" 
@@ -25,12 +25,12 @@
              rel="tooltip" 
              data-placement="bottom" 
              data-original-title="previous issue"><strong>previous</strong></a>
-          <a href="/issue" 
+          <a href="/issue/{{ journal.acronym }}/{{ journal.current_issue }}" 
              class="btn btn-small btn-primary tip-bottom" 
              rel="tooltip" 
              data-placement="bottom" 
              data-original-title="current issue"><strong>current</strong></a>
-          <a href="/issue/{{ journal.current_issue }}/" 
+          <a href="/issue/{{ journal.acronym }}/{{ journal.current_issue }}" 
              class="btn btn-small btn-primary tip-bottom" 
              rel="tooltip" 
              data-placement="bottom" 

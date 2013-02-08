@@ -349,7 +349,7 @@ class Journal(Document):
 
         last = max(self.list_issues(), key=lambda x: x.order)
 
-        return last
+        return last.id
 
 
 class Navigation(object):

@@ -352,7 +352,7 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         j = self._makeOne(**issues_data)
 
-        self.assertEqual(j.current_issue.id, 3)
+        self.assertEqual(j.current_issue, 3)
 
     def test_simple_attr_access(self):
         journal_microdata = {
