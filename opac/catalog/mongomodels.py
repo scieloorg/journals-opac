@@ -227,6 +227,8 @@ class Journal(Document):
         {'attr': 'acronym', 'unique': True}
     ])
 
+    _twitter_api = twitter.Api()
+
     @classmethod
     def get_journal(cls, journal_id):
         """
