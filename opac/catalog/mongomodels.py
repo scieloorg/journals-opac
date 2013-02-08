@@ -1,5 +1,6 @@
 # coding:utf8
 from urlparse import urlparse
+from collections import OrderedDict
 
 from django.core.urlresolvers import reverse
 from django.conf import settings
@@ -339,6 +340,58 @@ class Journal(Document):
     def get_absolute_url(self):
         return reverse('catalog.journal', kwargs={'journal_id': self.acronym})
 
+    @property
+    def current_issue(self):
+        """
+        This method retrives a link to the current issue from a
+        given journal.
+        """
+
+        last = max(self.list_issues(), key=lambda x: x.order)
+
+        return last
+
+
+class Navigation(object):
+
+    def __init__(self, journal):
+
+        self._issues = dict((issue['data']['order'], issue['data']['id']) for issue in journal.issues)
+
+    def get_next(self, current_order):
+        """
+        This method retrieves the next issue id according to the
+        order sequence. If there is a gap in the issues sequence,
+        for legacy compliance, the script will attempt a 100 different
+        order numbers before delivery "None".
+        """
+        for i in range(1, 100):
+            match = current_order + i
+            next = self._issues.get(match)
+            if next:
+                return next
+
+        return None
+
+    def get_previous(self, current_order):
+        """
+        This method retrieves the previous issue id according to the
+        order sequence. If there is a gap in the issues sequence,
+        for legacy compliance, the script will attempt a 100 different
+        order numbers before delivery "None".
+        """
+        for i in range(1, 100):
+            match = current_order - i
+
+            if match == 0:
+                break
+
+            previous = self._issues.get(match)
+            if previous:
+                return previous
+
+        return None
+
 
 class Issue(Document):
     objects = ManagerFactory(collection='journals', indexes=['issues.id'])
@@ -351,11 +404,35 @@ class Issue(Document):
 
         issue = cls.objects.find_one({'acronym': journal_id,
                                       'issues.id': int(issue_id)},
-                                      {'issues.data': 1})['issues'][0]['data']
+                                      {'issues.data': 1, 'acronym': 1})['issues'][0]['data']
         if not issue:
             raise ValueError('no issue found for id:'.format(journal_id))
 
         return cls(**issue)
+
+    @property
+    def previous_issue(self):
+        """
+        This method retrives an id to the previous issue from a
+        given journal.
+        """
+        journal = Journal.get_journal(journal_id=self._data['acronym'])
+
+        nav = Navigation(journal)
+
+        return nav.previous_issue(self)
+
+    @property
+    def next_issue(self):
+        """
+        This method retrives an id to the previous issue from a
+        given journal.
+        """
+        journal = Journal.get_journal(journal_id=self._data['acronym'])
+
+        nav = Navigation(journal)
+
+        return nav.next_issue()
 
     def list_sections(self):
         """

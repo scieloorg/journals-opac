@@ -1,5 +1,6 @@
 # coding: utf8
 import unittest
+from collections import OrderedDict
 
 from django.test import TestCase
 import pymongo
@@ -320,6 +321,38 @@ class JournalModelTest(TestCase, MockerTestCase):
     def _makeOne(self, *args, **kwargs):
 
         return Journal(*args, **kwargs)
+
+    def test_current_issue(self):
+
+        issues_data = {
+            "issues": [
+                {
+                'id': 2,
+                'data': {
+                    "created": "2010-04-01T01:01:01",
+                    "id": 2,
+                    "label": "45 (5)",
+                    "order": 5,
+                    "total_documents": 3,
+                    "updated": "2012-11-08T10:35:37.193612",
+                    }
+                },
+                {
+                'id': 3,
+                'data': {
+                    "id": 3,
+                    "label": "45 (6)",
+                    "order": 6,
+                    "total_documents": 3,
+                    "updated": "2012-11-08T10:35:37.193612",
+                    }
+                }
+            ],
+        }
+
+        j = self._makeOne(**issues_data)
+
+        self.assertEqual(j.current_issue.id, 3)
 
     def test_simple_attr_access(self):
         journal_microdata = {
@@ -750,7 +783,150 @@ class JournalModelTest(TestCase, MockerTestCase):
         self.assertEqual(tweets, [])
 
 
-class IssueModelTest(TestCase, MockerTestCase):
+class NavigationTest(MockerTestCase):
+
+    def test_instatiation(self):
+        from .modelfactories import JournalFactory
+        from catalog.mongomodels import Navigation
+
+        issues = [
+            {
+                u'id': 4,
+                u'data':
+                {
+                    u'total_documents': 3,
+                    u'order': 1,
+                    u'id': 4,
+                },
+            },
+            {
+                u'id': 6,
+                u'data':
+                {
+                    u'total_documents': 3,
+                    u'order': 3,
+                    u'id': 6,
+                },
+            },
+            {
+                u'id': 5,
+                u'data':
+                {
+                    u'total_documents': 3,
+                    u'order': 2,
+                    u'id': 5,
+                },
+            }
+        ]
+
+        journal = JournalFactory.build(issues=issues)
+
+        nav = Navigation(journal)
+
+        self.assertEqual(OrderedDict([(1, 4), (2, 5), (3, 6)]), nav._issues)
+
+    def test_get_next_issue_id(self):
+        from .modelfactories import JournalFactory
+        from catalog.mongomodels import Navigation
+
+        issues = [
+            {
+                u'id': 4,
+                u'data':
+                {
+                    u'order': 1,
+                    u'id': 4,
+                },
+            },
+            {
+                u'id': 6,
+                u'data':
+                {
+                    u'order': 3,
+                    u'id': 6,
+                },
+            }
+        ]
+
+        journal = JournalFactory.build(issues=issues)
+
+        nav = Navigation(journal).get_next(1)
+
+        self.assertEqual(nav, 6)
+
+    def test_get_previous_issue_id(self):
+        from .modelfactories import JournalFactory
+        from catalog.mongomodels import Navigation
+
+        issues = [
+            {
+                u'id': 4,
+                u'data':
+                {
+                    u'order': 1,
+                    u'id': 4,
+                },
+            },
+            {
+                u'id': 6,
+                u'data':
+                {
+                    u'order': 3,
+                    u'id': 6,
+                },
+            }
+        ]
+
+        journal = JournalFactory.build(issues=issues)
+
+        nav = Navigation(journal).get_previous(3)
+
+        self.assertEqual(nav, 4)
+
+    def test_get_invalid_previous_issue_id_attemping_100_times(self):
+        from .modelfactories import JournalFactory
+        from catalog.mongomodels import Navigation
+
+        issues = [
+            {
+                u'id': 4,
+                u'data':
+                {
+                    u'order': 1,
+                    u'id': 4,
+                },
+            },
+        ]
+
+        journal = JournalFactory.build(issues=issues)
+
+        nav = Navigation(journal).get_previous(101)
+
+        self.assertEqual(nav, None)
+
+    def test_get_invalid_previous_issue_id_reaching_boundary_0(self):
+        from .modelfactories import JournalFactory
+        from catalog.mongomodels import Navigation
+
+        issues = [
+            {
+                u'id': 4,
+                u'data':
+                {
+                    u'order': 100,
+                    u'id': 4,
+                },
+            },
+        ]
+
+        journal = JournalFactory.build(issues=issues)
+
+        nav = Navigation(journal).get_previous(10)
+
+        self.assertEqual(nav, None)
+
+
+class IssueModelTest(MockerTestCase):
 
     def _makeOne(self, *args, **kwargs):
         from catalog.mongomodels import Issue
@@ -819,7 +995,7 @@ class IssueModelTest(TestCase, MockerTestCase):
             ]
         }
 
-        mock_objects.find_one({'acronym': 'foo', 'issues.id': 1}, {'issues.data': 1})
+        mock_objects.find_one({'acronym': 'foo', 'issues.id': 1}, {'issues.data': 1, 'acronym': 1})
         self.mocker.result(issue_microdata)
 
         self.mocker.replay()
@@ -911,7 +1087,8 @@ class IssueModelTest(TestCase, MockerTestCase):
             'title': 'Micronucleated lymphocytes in parents of lalala children'
         }
 
-        issue_mock_objects.find_one({'acronym': 'foo', 'issues.id': 1}, {'issues.data': 1})
+        issue_mock_objects.find_one({'acronym': 'foo', 'issues.id': 1},
+                                    {'issues.data': 1, 'acronym': 1})
         self.mocker.result(issue_section_microdata)
 
         section_mock_objects.find_one({'id': 1, 'sections.id': 514}, {'sections.data': 1})
