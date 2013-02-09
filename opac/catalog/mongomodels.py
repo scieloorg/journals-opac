@@ -1,6 +1,5 @@
 # coding:utf8
 from urlparse import urlparse
-from collections import OrderedDict
 
 from django.core.urlresolvers import reverse
 from django.conf import settings
