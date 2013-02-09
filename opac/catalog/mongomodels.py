@@ -358,7 +358,7 @@ class Navigation(object):
 
         self._issues = dict((issue['data']['order'], issue['data']['id']) for issue in journal.issues)
 
-    def get_next(self, current_order):
+    def next_issue(self, current_order):
         """
         This method retrieves the next issue id according to the
         order sequence. If there is a gap in the issues sequence,
@@ -373,7 +373,7 @@ class Navigation(object):
 
         return None
 
-    def get_previous(self, current_order):
+    def previous_issue(self, current_order):
         """
         This method retrieves the previous issue id according to the
         order sequence. If there is a gap in the issues sequence,
@@ -404,11 +404,23 @@ class Issue(Document):
 
         issue = cls.objects.find_one({'acronym': journal_id,
                                       'issues.id': int(issue_id)},
-                                      {'issues.data': 1, 'acronym': 1})['issues'][0]['data']
+                                      {'issues.data': 1})['issues'][0]['data']
         if not issue:
             raise ValueError('no issue found for id:'.format(journal_id))
 
+        issue['acronym'] = journal_id
+
         return cls(**issue)
+
+    @property
+    def journal(self):
+        """
+        This method retrieves the journal related to issue instance.
+        """
+
+        journal = Journal.get_journal(journal_id=self._data['acronym'])
+
+        return journal
 
     @property
     def previous_issue(self):
@@ -420,7 +432,7 @@ class Issue(Document):
 
         nav = Navigation(journal)
 
-        return nav.previous_issue(self)
+        return nav.previous_issue(self._data['order'])
 
     @property
     def next_issue(self):
@@ -432,7 +444,7 @@ class Issue(Document):
 
         nav = Navigation(journal)
 
-        return nav.next_issue()
+        return nav.next_issue(self._data['order'])
 
     def list_sections(self):
         """
@@ -459,6 +471,7 @@ class Section(Document):
         """
         Return a specific section from a specific journal
         """
+
         section = cls.objects.find_one({'id': journal_id,
                         'sections.id': int(section_id)}, {'sections.data': 1})['sections'][0]['data']
         if not section:

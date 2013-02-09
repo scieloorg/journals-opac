@@ -850,7 +850,7 @@ class NavigationTest(MockerTestCase):
 
         journal = JournalFactory.build(issues=issues)
 
-        nav = Navigation(journal).get_next(1)
+        nav = Navigation(journal).next_issue(1)
 
         self.assertEqual(nav, 6)
 
@@ -879,7 +879,7 @@ class NavigationTest(MockerTestCase):
 
         journal = JournalFactory.build(issues=issues)
 
-        nav = Navigation(journal).get_previous(3)
+        nav = Navigation(journal).previous_issue(3)
 
         self.assertEqual(nav, 4)
 
@@ -900,7 +900,7 @@ class NavigationTest(MockerTestCase):
 
         journal = JournalFactory.build(issues=issues)
 
-        nav = Navigation(journal).get_previous(101)
+        nav = Navigation(journal).previous_issue(101)
 
         self.assertEqual(nav, None)
 
@@ -921,7 +921,7 @@ class NavigationTest(MockerTestCase):
 
         journal = JournalFactory.build(issues=issues)
 
-        nav = Navigation(journal).get_previous(10)
+        nav = Navigation(journal).previous_issue(10)
 
         self.assertEqual(nav, None)
 
@@ -995,7 +995,7 @@ class IssueModelTest(MockerTestCase):
             ]
         }
 
-        mock_objects.find_one({'acronym': 'foo', 'issues.id': 1}, {'issues.data': 1, 'acronym': 1})
+        mock_objects.find_one({'acronym': 'foo', 'issues.id': 1}, {'issues.data': 1})
         self.mocker.result(issue_microdata)
 
         self.mocker.replay()
@@ -1018,6 +1018,7 @@ class IssueModelTest(MockerTestCase):
         article_mock_objects = self.mocker.mock()
 
         issue_section_microdata = {
+            "acronym": "foo",
             "issues": [
                 {
                     "id": 1,
@@ -1087,8 +1088,7 @@ class IssueModelTest(MockerTestCase):
             'title': 'Micronucleated lymphocytes in parents of lalala children'
         }
 
-        issue_mock_objects.find_one({'acronym': 'foo', 'issues.id': 1},
-                                    {'issues.data': 1, 'acronym': 1})
+        issue_mock_objects.find_one({'acronym': 'foo', 'issues.id': 1}, {'issues.data': 1})
         self.mocker.result(issue_section_microdata)
 
         section_mock_objects.find_one({'id': 1, 'sections.id': 514}, {'sections.data': 1})
