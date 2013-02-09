@@ -1,0 +1,58 @@
+{% extends "base_lv1.html" %}
+{% load i18n %}
+{% load catalogtags %}
+
+{% block body %}
+
+<div class="span12">
+  <center>
+    <h3>Annali dell'Instituto Superiore di Sanità</h3>
+    <h5>print version ISSN 0021-2571</h5>
+  </center>
+
+  <div class="span12">
+    <p><small>Former Title:</small></p>
+    <p class="text-info">Revista brasileira de pesquisas médicas e biológicas</p>
+
+    Available issues*
+  </div>
+
+  <div class="span12">
+    <table class="table_issue">
+      <thead>
+        <tr>
+          <th>{% trans 'Year' %}</th>
+          <th>{% trans 'Volume' %}</th>
+          <th>{% trans 'Numbers' %}</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for year, vols in issues.items %}
+          {% for vol, nums in vols.items %}
+          <tr>
+            <th>{{ year }}</th>
+            <th>{{ vol|default:'-' }}</th>
+            {% for num in nums %}
+              {% if num.suppl_number %}
+                <td><a href="#">{% trans 'suppl.' %}</a></td>
+              {% elif num.suppl_volume %}
+                <td><a href="#">{% trans 'suppl.' %} {{ num.suppl_volume }}</a></td>
+              {% elif not num.is_press_release %}
+                <td><a href="#">{{ num.number }}</a></td>
+              {% endif %}
+            {% endfor %}
+          </tr>
+          {% endfor %}
+        {% endfor %}
+      <tbody>
+    </table>
+  </div>
+
+  <div class="span12">
+    *Journal's history in SciELO Brazil collection
+    Apr  1997: Admitted to SciELO Brazil collection
+  </div>
+
+</div>
+
+{% endblock %}
