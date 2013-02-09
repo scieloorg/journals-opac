@@ -37,9 +37,13 @@ def journal_stats(request, journal_id):
 def issue(request, journal_id, issue_id):
 
     issue = mongomodels.Issue.get_issue(journal_id, issue_id)
+    journal = issue.journal
     sections = issue.list_sections()
 
-    return render_to_response('catalog/issue.html', {'sections': sections})
+    return render_to_response('catalog/issue.html', {'sections': sections,
+                                                     'issue': issue,
+                                                     'journal': journal,
+                                                    })
 
 
 def ajx_list_journal_tweets(request, journal_id):

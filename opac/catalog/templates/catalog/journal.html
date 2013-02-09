@@ -46,7 +46,9 @@
     <dl>
       <dt>Publication of</dt>
       <dd>{{ journal.title }}</dd>
-      <dd><span class="text-info"><em>{{ journal.scielo_issn }} version</em> ISSN </span>{{ journal.issn }}</dd>
+      <dd>
+        <span class="text-info"><em>{{ journal.scielo_issn }} version</em> ISSN </span>{{ journal.issn }}
+      </dd>
       {% if journal.missions.en %}
       <dt>Mission</dt>
       <dd><span class="text-info">{{ journal.missions.en }}</sapn><dd>
