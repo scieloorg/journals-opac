@@ -5,11 +5,11 @@
 
 <div class="span12">
   <center>
-    <h3>Annali dell'Instituto Superiore di Sanità</h3>
-    <h5>print version ISSN 0021-2571</h5>
+    <h3>{{ journal.title }}</h3>
+    <h5>{{ journal.scielo_issn }} version ISSN {{ journal.issn }}</h5>
   </center>
   <h4>Table of Contents</h4>
-  <h4>Ann. Ist. Super. Sanità vol.48 n.3 Roma Jan.</h4>
+  <h4>{{ journal.short_title }} vol.48 n.3 {{ journal.publication_city }} Jan.</h4>
 
   {% list_articles_by_section sections 'en' %}
 
@@ -48,16 +48,29 @@
 {% block journal_footer %}
 <hr/>
 <blockquote class="span4">
-  <strong>Annali dell'Instituto Superiore di Sanità</strong>
-  <small>print version ISSN 0021-2571</small>
+  <strong>{{ journal.title }}</strong>
+  <small>{{ journal.scielo_issn }} version ISSN {{ journal.issn }}</small>
   <strong>Mission</strong>
-  <small>To disseminate information on researches in public health.</small>
+  <small>{{ journal.missions.en }}</small>
 </blockquote>
 <blockquote class="span3">
-  <strong>Address</strong><br/>
-  2013 Instituti Superiore di Sanità<br/>
-  Viale Regina Elena 299<br/>
-  <a href="mailto: annali@iss.it">annali@iss.it</a>
+    <dl>
+      <dt>Address</dt>
+      <dd>
+        {% if journal.publisher_name %}
+          {{ journal.publisher_name }}</br>
+        {% endif %}
+        {% if journal.address %}
+        {{ journal.address }}<br/>
+        {% endif %}
+        {% for phone in journal.phones %}
+          <strong>phone: </strong> {{ phone }} <br/>
+        {% endfor %}
+        {% if journal.editor_email %}
+          <strong>e-mail: </strong> <a href="mailto: {{ journal.editor_email }}">{{ journal.editor_email }}</a>
+        {% endif %}
+      </dd>
+    </dl>
 </blockquote>
 <blockquote class="span4">
   <strong>Links</strong><br/>
