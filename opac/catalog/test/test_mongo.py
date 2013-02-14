@@ -335,6 +335,7 @@ class JournalModelTest(TestCase, MockerTestCase):
                     "order": 5,
                     "total_documents": 3,
                     "updated": "2012-11-08T10:35:37.193612",
+                    "publication_year": 2005,
                     }
                 },
                 {
@@ -345,6 +346,7 @@ class JournalModelTest(TestCase, MockerTestCase):
                     "order": 6,
                     "total_documents": 3,
                     "updated": "2012-11-08T10:35:37.193612",
+                    "publication_year": 2005,
                     }
                 }
             ],
