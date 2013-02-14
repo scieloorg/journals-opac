@@ -12,6 +12,7 @@ urlpatterns = patterns('',
     url(r'^stats/$', direct_to_template, {'template': 'catalog/collection_stats.html'}),
 
     # Issue Templates
+    url(r'^issues/(?P<journal_id>\w+)/', views.issues, name='catalog.show_issues'),
     url(r'^issue/(?P<journal_id>\w+)/(?P<issue_id>\d+)/', views.issue, name='catalog.show_issue'),
 
     # Journal Templates
