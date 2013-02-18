@@ -1,9 +1,9 @@
 # coding: utf8
 import unittest
-from collections import OrderedDict
 
 from django.test import TestCase
 import pymongo
+
 from mocker import (
     MockerTestCase,
     ANY,
@@ -942,149 +942,6 @@ class JournalModelTest(TestCase, MockerTestCase):
         tweets = journal.tweets
 
         self.assertEqual(tweets, [])
-
-
-class NavigationTest(MockerTestCase):
-
-    def test_instatiation(self):
-        from .modelfactories import JournalFactory
-        from catalog.mongomodels import Navigation
-
-        issues = [
-            {
-                u'id': 4,
-                u'data':
-                {
-                    u'total_documents': 3,
-                    u'order': 1,
-                    u'id': 4,
-                },
-            },
-            {
-                u'id': 6,
-                u'data':
-                {
-                    u'total_documents': 3,
-                    u'order': 3,
-                    u'id': 6,
-                },
-            },
-            {
-                u'id': 5,
-                u'data':
-                {
-                    u'total_documents': 3,
-                    u'order': 2,
-                    u'id': 5,
-                },
-            }
-        ]
-
-        journal = JournalFactory.build(issues=issues)
-
-        nav = Navigation(journal)
-
-        self.assertEqual(OrderedDict([(1, 4), (2, 5), (3, 6)]), nav._issues)
-
-    def test_get_next_issue_id(self):
-        from .modelfactories import JournalFactory
-        from catalog.mongomodels import Navigation
-
-        issues = [
-            {
-                u'id': 4,
-                u'data':
-                {
-                    u'order': 1,
-                    u'id': 4,
-                },
-            },
-            {
-                u'id': 6,
-                u'data':
-                {
-                    u'order': 3,
-                    u'id': 6,
-                },
-            }
-        ]
-
-        journal = JournalFactory.build(issues=issues)
-
-        nav = Navigation(journal).next_issue(1)
-
-        self.assertEqual(nav, 6)
-
-    def test_get_previous_issue_id(self):
-        from .modelfactories import JournalFactory
-        from catalog.mongomodels import Navigation
-
-        issues = [
-            {
-                u'id': 4,
-                u'data':
-                {
-                    u'order': 1,
-                    u'id': 4,
-                },
-            },
-            {
-                u'id': 6,
-                u'data':
-                {
-                    u'order': 3,
-                    u'id': 6,
-                },
-            }
-        ]
-
-        journal = JournalFactory.build(issues=issues)
-
-        nav = Navigation(journal).previous_issue(3)
-
-        self.assertEqual(nav, 4)
-
-    def test_get_invalid_previous_issue_id_attemping_100_times(self):
-        from .modelfactories import JournalFactory
-        from catalog.mongomodels import Navigation
-
-        issues = [
-            {
-                u'id': 4,
-                u'data':
-                {
-                    u'order': 1,
-                    u'id': 4,
-                },
-            },
-        ]
-
-        journal = JournalFactory.build(issues=issues)
-
-        nav = Navigation(journal).previous_issue(101)
-
-        self.assertEqual(nav, None)
-
-    def test_get_invalid_previous_issue_id_reaching_boundary_0(self):
-        from .modelfactories import JournalFactory
-        from catalog.mongomodels import Navigation
-
-        issues = [
-            {
-                u'id': 4,
-                u'data':
-                {
-                    u'order': 100,
-                    u'id': 4,
-                },
-            },
-        ]
-
-        journal = JournalFactory.build(issues=issues)
-
-        nav = Navigation(journal).previous_issue(10)
-
-        self.assertEqual(nav, None)
 
 
 class IssueModelTest(MockerTestCase):
