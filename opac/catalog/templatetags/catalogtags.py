@@ -83,9 +83,12 @@ def list_articles_by_section(sections, language):
             for author in article.list_authors():
                 snippet += u'<li><a href="#">%s, %s</a>;</li>' % (author['surname'], author['given_names'])
             snippet += u'</ul>'
+
             snippet += u'<ul class="inline toc_article_links"><li>%s: ' % _('abstract')
             snippet += u' | '.join(['<a href="#">%s</a> ' % key for key in article.abstract.iterkeys()])
-    snippet += u'</li></ul></li></dl>'
+            snippet += u'</li></ul></li></dd>'
+
+    snippet += u'</dl>'
 
     return snippet
 

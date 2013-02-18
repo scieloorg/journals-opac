@@ -424,9 +424,9 @@ class Issue(Document):
         Return a specific issue from a specific journal
         """
 
-        issue = cls.objects.find_one({'acronym': journal_id,
-                                      'issues.id': int(issue_id)},
-                                      {'issues.data': 1})['issues'][0]['data']
+        issue = cls.objects.find_one({'acronym': journal_id},
+                                     {'issues': {'$elemMatch': {'id': int(issue_id)}}})['issues'][0]['data']
+
         if not issue:
             raise ValueError('no issue found for id:'.format(journal_id))
 
@@ -473,15 +473,15 @@ class Issue(Document):
         Return a list of sections and their related articles
         """
 
-        articles_list = []
-
         for issue_section in self.sections:
             journal_section = Section.get_section(self.id, issue_section['id'])
 
+            articles_list = []
             for article_id in issue_section['articles']:
                 articles_list.append(Article.get_article(article_id))
 
             journal_section.articles = articles_list
+
             yield journal_section
 
 
