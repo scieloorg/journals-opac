@@ -14,7 +14,9 @@ def full_sync():
                          pipes.PNormalizeJournalTitle,
                          pipes.PCleanup)
 
-    data = scielo_api.get_all_journals('saude-publica')
+    journals_to_sync = [c.name_slug for c in models.CollectionMeta.objects.members()]
+
+    data = scielo_api.get_all_journals(*journals_to_sync)
     transformed_data = ppl.run(data)
 
     marreta = dataloader.Marreta(settings=settings)

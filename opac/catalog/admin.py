@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django.contrib import admin
+from django.contrib import messages
 from django.conf.urls import patterns
 from django.core import urlresolvers
 from django.http import HttpResponseRedirect
@@ -17,13 +18,24 @@ class CollectionMetaAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super(CollectionMetaAdmin, self).get_urls()
         new_urls = patterns('',
-            (r'^sync_collectionsmeta/$', self.sync_collectionsmeta)
+            (r'^sync_collectionsmeta/$', self.sync_collectionsmeta),
+            (r'^sync_catalog/$', self.sync_catalog),
         )
 
         return new_urls + urls
 
     def sync_collectionsmeta(self, request):
         tasks.sync_collections_meta()
+
+        messages.info(request, 'The list of collections is now up-to-date.')
+        return HttpResponseRedirect(
+            urlresolvers.reverse('admin:catalog_collectionmeta_changelist')
+        )
+
+    def sync_catalog(self, request):
+        tasks.full_sync()
+
+        messages.info(request, 'The catalog is being built. It may take some time, please be patient.')
 
         return HttpResponseRedirect(
             urlresolvers.reverse('admin:catalog_collectionmeta_changelist')

@@ -1,6 +1,7 @@
 # coding: utf-8
 import logging
 import time
+import itertools
 
 from django.conf import settings
 import slumber
@@ -105,15 +106,19 @@ class SciELOManagerAPI(object):
             else:
                 offset += ITEMS_PER_REQUEST
 
-    def get_all_journals(self, collection):
+    def get_all_journals(self, *collections):
         """
-        Get all journals of a given collection
+        Get all journals from the given collections
 
-        ``collection`` is a string of a valid name_slug. A complete
-        list os collections is available at
-        http://manager.scielo.org/api/v1/collections/
+        ``collections`` is an arbitrary number of string values
+        of valid name_slug attributes. A complete list os collections is
+        available at http://manager.scielo.org/api/v1/collections/
         """
-        return self.iter_docs('journals', collection)
+        journals = [self.iter_docs('journals', c) for c in collections]
+        return itertools.chain(*journals)
 
     def get_all_collections(self):
+        """
+        Get all collections available at SciELO Manager.
+        """
         return self.iter_docs('collections')
