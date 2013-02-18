@@ -15,6 +15,16 @@ class NavigationTest(MockerTestCase):
         from .modelfactories import JournalFactory
         from catalog.utils import Navigation
 
+        current_issue = {
+                u'id': 4,
+                u'data':
+                {
+                    u'total_documents': 3,
+                    u'order': 1,
+                    u'id': 4,
+                },
+            }
+
         issues = [
             {
                 u'id': 4,
@@ -47,7 +57,7 @@ class NavigationTest(MockerTestCase):
 
         journal = JournalFactory.build(issues=issues)
 
-        nav = Navigation(journal)
+        nav = Navigation(journal, current_issue)
 
         self.assertEqual(OrderedDict([(1, 4), (2, 5), (3, 6)]), nav._issues)
 
@@ -55,6 +65,11 @@ class NavigationTest(MockerTestCase):
         from .modelfactories import JournalFactory
         from catalog.utils import Navigation
 
+        current_issue = {
+                    u'order': 1,
+                    u'id': 4,
+                }
+
         issues = [
             {
                 u'id': 4,
@@ -76,14 +91,19 @@ class NavigationTest(MockerTestCase):
 
         journal = JournalFactory.build(issues=issues)
 
-        nav = Navigation(journal).next_issue(1)
+        nav = Navigation(journal, current_issue).next_issue()
 
-        self.assertEqual(nav, 6)
+        self.assertEqual(nav, '/issue/AISS/6')
 
     def test_get_previous_issue_id(self):
         from .modelfactories import JournalFactory
         from catalog.utils import Navigation
 
+        current_issue = {
+                u'order': 3,
+                u'id': 6,
+            }
+
         issues = [
             {
                 u'id': 4,
@@ -105,13 +125,15 @@ class NavigationTest(MockerTestCase):
 
         journal = JournalFactory.build(issues=issues)
 
-        nav = Navigation(journal).previous_issue(3)
+        nav = Navigation(journal, current_issue).previous_issue()
 
-        self.assertEqual(nav, 4)
+        self.assertEqual(nav, '/issue/AISS/4')
 
     def test_get_invalid_previous_issue_id_attemping_100_times(self):
         from .modelfactories import JournalFactory
         from catalog.utils import Navigation
+
+        current_issue = {u'id': 20, u'order': 101}
 
         issues = [
             {
@@ -126,11 +148,15 @@ class NavigationTest(MockerTestCase):
 
         journal = JournalFactory.build(issues=issues)
 
-        self.assertRaises(ValueError, Navigation(journal).previous_issue, (101))
+        nav = Navigation(journal, current_issue).previous_issue()
+
+        self.assertEqual(None, nav)
 
     def test_get_invalid_previous_issue_id_reaching_boundary_0(self):
         from .modelfactories import JournalFactory
         from catalog.utils import Navigation
+
+        current_issue = {u'id': 20, u'order': 10}
 
         issues = [
             {
@@ -145,4 +171,6 @@ class NavigationTest(MockerTestCase):
 
         journal = JournalFactory.build(issues=issues)
 
-        self.assertRaises(ValueError, Navigation(journal).previous_issue, (10))
+        nav = Navigation(journal, current_issue).previous_issue()
+
+        self.assertEqual(None, nav)

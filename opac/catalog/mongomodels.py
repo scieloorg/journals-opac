@@ -403,30 +403,6 @@ class Issue(Document):
 
         return journal
 
-    @property
-    def previous_issue(self):
-        """
-        This method retrives an id to the previous issue from a
-        given journal.
-        """
-        journal = Journal.get_journal(journal_id=self._data['acronym'])
-
-        nav = Navigation(journal)
-
-        return nav.previous_issue(self._data['order'])
-
-    @property
-    def next_issue(self):
-        """
-        This method retrives an id to the previous issue from a
-        given journal.
-        """
-        journal = Journal.get_journal(journal_id=self._data['acronym'])
-
-        nav = Navigation(journal)
-
-        return nav.next_issue(self._data['order'])
-
     def list_sections(self):
         """
         Return a list of sections and their related articles
