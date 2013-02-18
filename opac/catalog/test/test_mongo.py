@@ -335,6 +335,7 @@ class JournalModelTest(TestCase, MockerTestCase):
                     "order": 5,
                     "total_documents": 3,
                     "updated": "2012-11-08T10:35:37.193612",
+                    "publication_year": 2005,
                     }
                 },
                 {
@@ -345,6 +346,7 @@ class JournalModelTest(TestCase, MockerTestCase):
                     "order": 6,
                     "total_documents": 3,
                     "updated": "2012-11-08T10:35:37.193612",
+                    "publication_year": 2005,
                     }
                 }
             ],
@@ -373,6 +375,7 @@ class JournalModelTest(TestCase, MockerTestCase):
 
     def test_list_issues_must_return_a_lazy_object(self):
         issues_data = {
+            "id": 1,
             "issues": [
                 {
                 'id': 1,
@@ -416,6 +419,85 @@ class JournalModelTest(TestCase, MockerTestCase):
         self.assertTrue(hasattr(issues, 'next'))
         issue = issues.next()
         self.assertEqual(issue.editorial_standard, 'vancouv')
+
+    def test_list_issues_must_return_a_reverse_list_order_by_year(self):
+        from modelfactories import JournalFactory
+
+        journal_microdata = [
+                    {
+                        "id": 1,
+                        "data": {
+                            "id": 1,
+                            "label": "45 (4)",
+                            "number": "4",
+                            "publication_year": 2009,
+                            "volume": "45",
+                            "order": 1
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "data": {
+                            "id": 2,
+                            "label": "45 (5)",
+                            "number": "5",
+                            "publication_year": 2009,
+                            "volume": "45",
+                            "order": 2
+                        }
+                    },
+                    {
+                        "id": 4,
+                        "data": {
+                            "id": 4,
+                            "label": "47 (1)",
+                            "number": "1",
+                            "publication_year": 2009,
+                            "volume": "47",
+                            "order": 3
+                        }
+                    },
+                    {
+                        "id": 3,
+                        "data": {
+                            "id": 3,
+                            "label": "46 (1)",
+                            "number": "1",
+                            "publication_year": 2010,
+                            "volume": "46",
+                            "order": 4
+                        }
+                    },
+                    {
+                        "id": 5,
+                        "data": {
+                            "id": 5,
+                            "label": "45 (10)",
+                            "number": "10",
+                            "publication_year": 2009,
+                            "volume": "45",
+                            "order": 5
+                        }
+                    },
+                    {
+                        "id": 6,
+                        "data": {
+                            "id": 6,
+                            "label": "45 (3)",
+                            "number": "3",
+                            "publication_year": 2010,
+                            "volume": "45",
+                            "order": 6
+                        }
+                    },
+                ]
+
+        journal = JournalFactory.build(issues=journal_microdata)
+
+        previous_year = 9999
+        for issue in journal.list_issues():
+            self.assertLessEqual(issue.publication_year, previous_year)
+            previous_year = issue.publication_year
 
     @unittest.expectedFailure
     def test_needed_indexes_are_created(self):
@@ -490,6 +572,85 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         self.assertIsInstance(journal, Journal)
         self.assertEqual(journal.id, 1)
+
+    def test_list_issue_by_year_must_return_a_lazy_object(self):
+        from modelfactories import JournalFactory
+
+        journal_microdata = [
+                    {
+                        "id": 1,
+                        "data": {
+                            "id": 1,
+                            "label": "45 (4)",
+                            "number": "4",
+                            "publication_year": 2009,
+                            "volume": "45",
+                            "order": 1
+                        }
+                    },
+                    {
+                        "id": 2,
+                        "data": {
+                            "id": 2,
+                            "label": "45 (5)",
+                            "number": "5",
+                            "publication_year": 2009,
+                            "volume": "45",
+                            "order": 2
+                        }
+                    },
+                    {
+                        "id": 4,
+                        "data": {
+                            "id": 4,
+                            "label": "47 (1)",
+                            "number": "1",
+                            "publication_year": 2009,
+                            "volume": "47",
+                            "order": 3
+                        }
+                    },
+                    {
+                        "id": 3,
+                        "data": {
+                            "id": 3,
+                            "label": "46 (1)",
+                            "number": "1",
+                            "publication_year": 2010,
+                            "volume": "46",
+                            "order": 4
+                        }
+                    },
+                    {
+                        "id": 5,
+                        "data": {
+                            "id": 5,
+                            "label": "45 (10)",
+                            "number": "10",
+                            "publication_year": 2009,
+                            "volume": "45",
+                            "order": 5
+                        }
+                    },
+                    {
+                        "id": 6,
+                        "data": {
+                            "id": 6,
+                            "label": "45 (3)",
+                            "number": "3",
+                            "publication_year": 2010,
+                            "volume": "45",
+                            "order": 6
+                        }
+                    },
+                ]
+
+        journal = JournalFactory.build(issues=journal_microdata)
+
+        issues = journal.list_issues_as_grid()
+
+        self.assertIn(2010, issues)
+        self.assertTrue(len(issues) == 2)
 
     def test_address(self):
         from .modelfactories import JournalFactory

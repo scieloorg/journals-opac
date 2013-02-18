@@ -38,3 +38,27 @@ h4 {
 .press_releases .more {
     text-align: right;
 }
+
+/*Issue Grid Style*/
+
+.table_issue td {
+    background-color: #F0F0F0;
+    text-align: center;
+    border: solid 5px #FFFFFF;
+    padding: 2px;
+    width: 80px;
+    height: 30px;
+
+}
+
+.table_issue th {
+    background-color: #E0E0E0;
+    text-align: center;
+    font-weight: bold;
+    border: solid 5px #FFFFFF;
+    padding: 2px;
+    width: 80px;
+    height: 30px;
+
+}
+
