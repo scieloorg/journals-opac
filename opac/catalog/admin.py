@@ -6,7 +6,8 @@ from django.core import urlresolvers
 from django.http import HttpResponseRedirect
 
 from . import models
-from utils import tasks
+from utils.tasks import full_sync
+from utils.tasks import sync_collections_meta
 
 
 class CollectionMetaAdmin(admin.ModelAdmin):
@@ -25,7 +26,7 @@ class CollectionMetaAdmin(admin.ModelAdmin):
         return new_urls + urls
 
     def sync_collectionsmeta(self, request):
-        tasks.sync_collections_meta()
+        sync_collections_meta()
 
         messages.info(request, 'The list of collections is now up-to-date.')
         return HttpResponseRedirect(
@@ -33,7 +34,7 @@ class CollectionMetaAdmin(admin.ModelAdmin):
         )
 
     def sync_catalog(self, request):
-        tasks.full_sync()
+        full_sync.delay()
 
         messages.info(request, 'The catalog is being built. It may take some time, please be patient.')
 

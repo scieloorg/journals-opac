@@ -1,4 +1,5 @@
 from django.conf import settings
+from celery import task
 
 from .sync import datacollector
 from .sync import dataloader
@@ -6,6 +7,7 @@ from .sync import pipes
 from catalog import models
 
 
+@task(name='utils.tasks.full_sync')
 def full_sync():
     scielo_api = datacollector.SciELOManagerAPI(settings=settings)
     ppl = pipes.Pipeline(pipes.PIssue,
