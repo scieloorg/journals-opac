@@ -12,18 +12,13 @@ from mocker import (
 class NavigationTest(MockerTestCase):
 
     def test_instatiation(self):
-        from .modelfactories import JournalFactory
+        from .modelfactories import JournalFactory, IssueFactory
         from catalog.utils import Navigation
 
         current_issue = {
-                u'id': 4,
-                u'data':
-                {
-                    u'total_documents': 3,
-                    u'order': 1,
-                    u'id': 4,
-                },
-            }
+                            u'id': 4,
+                            u'order': 1,
+                        }
 
         issues = [
             {
@@ -56,19 +51,20 @@ class NavigationTest(MockerTestCase):
         ]
 
         journal = JournalFactory.build(issues=issues)
+        issue = IssueFactory.build(**current_issue)
 
-        nav = Navigation(journal, current_issue)
+        nav = Navigation(journal, issue)
 
         self.assertEqual(OrderedDict([(1, 4), (2, 5), (3, 6)]), nav._issues)
 
     def test_get_next_issue_id(self):
-        from .modelfactories import JournalFactory
+        from .modelfactories import JournalFactory, IssueFactory
         from catalog.utils import Navigation
 
         current_issue = {
-                    u'order': 1,
-                    u'id': 4,
-                }
+                            u'order': 1,
+                            u'id': 4,
+                        }
 
         issues = [
             {
@@ -90,19 +86,20 @@ class NavigationTest(MockerTestCase):
         ]
 
         journal = JournalFactory.build(issues=issues)
+        issue = IssueFactory.build(**current_issue)
 
-        nav = Navigation(journal, current_issue).next_issue()
+        nav = Navigation(journal, issue).next_issue
 
-        self.assertEqual(nav, '/issue/AISS/6')
+        self.assertEqual(nav, '/issue/AISS/6/')
 
     def test_get_previous_issue_id(self):
-        from .modelfactories import JournalFactory
+        from .modelfactories import JournalFactory, IssueFactory
         from catalog.utils import Navigation
 
         current_issue = {
-                u'order': 3,
-                u'id': 6,
-            }
+                            u'order': 3,
+                            u'id': 6,
+                        }
 
         issues = [
             {
@@ -124,16 +121,20 @@ class NavigationTest(MockerTestCase):
         ]
 
         journal = JournalFactory.build(issues=issues)
+        issue = IssueFactory.build(**current_issue)
 
-        nav = Navigation(journal, current_issue).previous_issue()
+        nav = Navigation(journal, issue).previous_issue
 
-        self.assertEqual(nav, '/issue/AISS/4')
+        self.assertEqual(nav, '/issue/AISS/4/')
 
     def test_get_invalid_previous_issue_id_attemping_100_times(self):
-        from .modelfactories import JournalFactory
+        from .modelfactories import JournalFactory, IssueFactory
         from catalog.utils import Navigation
 
-        current_issue = {u'id': 20, u'order': 101}
+        current_issue = {
+                            u'order': 101,
+                            u'id': 20,
+                        }
 
         issues = [
             {
@@ -147,16 +148,20 @@ class NavigationTest(MockerTestCase):
         ]
 
         journal = JournalFactory.build(issues=issues)
+        issue = IssueFactory.build(**current_issue)
 
-        nav = Navigation(journal, current_issue).previous_issue()
+        nav = Navigation(journal, issue).previous_issue
 
         self.assertEqual(None, nav)
 
     def test_get_invalid_previous_issue_id_reaching_boundary_0(self):
-        from .modelfactories import JournalFactory
+        from .modelfactories import JournalFactory, IssueFactory
         from catalog.utils import Navigation
 
-        current_issue = {u'id': 20, u'order': 10}
+        current_issue = {
+                            u'order': 10,
+                            u'id': 20,
+                        }
 
         issues = [
             {
@@ -170,7 +175,8 @@ class NavigationTest(MockerTestCase):
         ]
 
         journal = JournalFactory.build(issues=issues)
+        issue = IssueFactory.build(**current_issue)
 
-        nav = Navigation(journal, current_issue).previous_issue()
+        nav = Navigation(journal, issue).previous_issue
 
         self.assertEqual(None, nav)

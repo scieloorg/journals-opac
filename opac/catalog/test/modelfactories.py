@@ -5,6 +5,10 @@ import factory
 from catalog import mongomodels
 
 
+class IssueFactory(factory.Factory):
+    FACTORY_FOR = mongomodels.Issue
+
+
 class JournalFactory(factory.Factory):
     FACTORY_FOR = mongomodels.Journal
 
