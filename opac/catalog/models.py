@@ -18,6 +18,9 @@ class CollectionMeta(models.Model):
         verbose_name = u'Collection Meta'
         verbose_name_plural = u'Collections Meta'
 
+    def __unicode__(self):
+        return self.name
+
 
 class JournalMeta(models.Model):
     """

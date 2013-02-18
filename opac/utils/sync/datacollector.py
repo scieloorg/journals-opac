@@ -69,7 +69,7 @@ class SciELOManagerAPI(object):
             else:
                 err_count = 0
 
-    def iter_docs(self, endpoint, collection):
+    def iter_docs(self, endpoint, collection=None):
         """
         Iterates over all documents of a given endpoint and collection.
 
@@ -86,11 +86,12 @@ class SciELOManagerAPI(object):
         offset = 0
         limit = ITEMS_PER_REQUEST
 
+        qry_params = {'offset': offset, 'limit': limit}
+        if collection:
+            qry_params.update({'collection': collection})
+
         while True:
-            doc = self.fetch_data(endpoint,
-                                   offset=offset,
-                                   limit=limit,
-                                   collection=collection)
+            doc = self.fetch_data(endpoint, **qry_params)
 
             for obj in doc['objects']:
                 # we are interested only in non-trashed items.
@@ -113,3 +114,6 @@ class SciELOManagerAPI(object):
         http://manager.scielo.org/api/v1/collections/
         """
         return self.iter_docs('journals', collection)
+
+    def get_all_collections(self):
+        return self.iter_docs('collections')
