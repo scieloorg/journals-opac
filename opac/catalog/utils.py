@@ -14,10 +14,12 @@ class Navigation(object):
         This method retrives a link to the current issue from a
         given journal.
         """
-        current_issue = self._journal.current_issue
+
+        current = max(self._issues, key=lambda x: x)
+
         return '/issue/{0}/{1}/'.format(
                                     self._journal._data.get('acronym'),
-                                    current_issue
+                                    self._issues[current]
                                     )
 
     @property

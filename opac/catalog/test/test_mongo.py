@@ -322,40 +322,6 @@ class JournalModelTest(TestCase, MockerTestCase):
 
         return Journal(*args, **kwargs)
 
-    def test_current_issue(self):
-
-        issues_data = {
-            "issues": [
-                {
-                'id': 2,
-                'data': {
-                    "created": "2010-04-01T01:01:01",
-                    "id": 2,
-                    "label": "45 (5)",
-                    "order": 5,
-                    "total_documents": 3,
-                    "updated": "2012-11-08T10:35:37.193612",
-                    "publication_year": 2005,
-                    }
-                },
-                {
-                'id': 3,
-                'data': {
-                    "id": 3,
-                    "label": "45 (6)",
-                    "order": 6,
-                    "total_documents": 3,
-                    "updated": "2012-11-08T10:35:37.193612",
-                    "publication_year": 2005,
-                    }
-                }
-            ],
-        }
-
-        j = self._makeOne(**issues_data)
-
-        self.assertEqual(j.current_issue, 3)
-
     def test_simple_attr_access(self):
         journal_microdata = {
             'title': 'Micronucleated lymphocytes in parents of lalala children'

@@ -57,6 +57,48 @@ class NavigationTest(MockerTestCase):
 
         self.assertEqual(OrderedDict([(1, 4), (2, 5), (3, 6)]), nav._issues)
 
+    def test_current_issue(self):
+        from .modelfactories import JournalFactory, IssueFactory
+        from catalog.utils import Navigation
+
+        current_issue = {
+                            u'order': 1,
+                            u'id': 4,
+                        }
+
+        issues = [
+                {
+                'id': 2,
+                'data': {
+                    "created": "2010-04-01T01:01:01",
+                    "id": 2,
+                    "label": "45 (5)",
+                    "order": 5,
+                    "total_documents": 3,
+                    "updated": "2012-11-08T10:35:37.193612",
+                    "publication_year": 2005,
+                    }
+                },
+                {
+                'id': 3,
+                'data': {
+                    "id": 3,
+                    "label": "45 (6)",
+                    "order": 6,
+                    "total_documents": 3,
+                    "updated": "2012-11-08T10:35:37.193612",
+                    "publication_year": 2005,
+                    }
+                }
+            ]
+
+        journal = JournalFactory.build(issues=issues)
+        issue = IssueFactory.build(**current_issue)
+
+        nav = Navigation(journal, issue).current_issue
+
+        self.assertEqual(nav, '/issue/AISS/3/')
+
     def test_get_next_issue_id(self):
         from .modelfactories import JournalFactory, IssueFactory
         from catalog.utils import Navigation

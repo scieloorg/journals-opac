@@ -362,17 +362,6 @@ class Journal(Document):
     def get_absolute_url(self):
         return reverse('catalog.journal', kwargs={'journal_id': self.acronym})
 
-    @property
-    def current_issue(self):
-        """
-        This method retrives a link to the current issue from a
-        given journal.
-        """
-
-        last = max(self.list_issues(), key=lambda x: x.order)
-
-        return last.id
-
 
 class Issue(Document):
     objects = ManagerFactory(collection='journals', indexes=['issues.id'])
