@@ -494,9 +494,9 @@ class Section(Document):
         Return a specific section from a specific journal
         """
 
-        section = cls.objects.find_one({'id': journal_id,
-                        'sections.id': int(section_id)},
-                        {'sections.data': 1})['sections'][0]['data']
+        section = cls.objects.find_one({'id': journal_id},
+                                       {'sections': {'$elemMatch': {'id': int(section_id)}}})['sections'][0]['data']
+
         if not section:
             raise ValueError('no section found for id:'.format(journal_id))
 
