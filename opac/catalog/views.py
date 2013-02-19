@@ -4,6 +4,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponse
 
 from catalog import mongomodels
+from catalog.utils import Navigation
 
 
 def list_journals(request):
@@ -24,7 +25,12 @@ def journal(request, journal_id):
 
     journal = mongomodels.Journal.get_journal(journal_id=journal_id)
 
-    return render_to_response('catalog/journal.html', {'journal': journal})
+    navigation = Navigation(journal)
+
+    return render_to_response('catalog/journal.html', {
+                                            'journal': journal,
+                                            'navigation': navigation
+                                        })
 
 
 def journal_stats(request, journal_id):
@@ -48,8 +54,11 @@ def issue(request, journal_id, issue_id):
     journal = issue.journal
     sections = issue.list_sections()
 
+    navigation = Navigation(journal, issue)
+
     return render_to_response('catalog/issue.html', {'sections': sections,
                                                      'issue': issue,
+                                                     'navigation': navigation,
                                                      'journal': journal,
                                                     })
 
