@@ -3,17 +3,13 @@
 
 {% block body %}
 <div class="span2">
-  <h6>Updated on<br/> May 15, 2012</h6>
+  <h6>{% trans 'Updated at' %}<br/> May 15, 2012</h6>
   <ul class="unstyled">
-    <li><a href="#" target="_blank">portuguese</a></li>
-    <li><a href="#" target="_blank">spanish</a></li>
-  </ul>
-  <ul class="unstyled">
-    <li><i class="icon-play"></i> <a href="#" target="_blank">about journal</a></li>
-    <li><i class="icon-play"></i> <a href="#" target="_blank">editorial board</a></li>
-    <li><i class="icon-play"></i> <a href="#" target="_blank">instructions to authors</a></li>
-    <li><i class="icon-play"></i> <a href="#" target="_blank">subscriptions</a></li>
-    <li><i class="icon-play"></i> <a href="{% url catalog.journal_stats journal.acronym %}">statistics</a></li>
+    <li><i class="icon-play"></i> <a href="#" target="_blank">{% trans 'about journal' %}</a></li>
+    <li><i class="icon-play"></i> <a href="#" target="_blank">{% trans 'editorial board' %}</a></li>
+    <li><i class="icon-play"></i> <a href="#" target="_blank">{% trans 'instructions to authors' %}</a></li>
+    <li><i class="icon-play"></i> <a href="#" target="_blank">{% trans 'subscriptions' %}</a></li>
+    <li><i class="icon-play"></i> <a href="{% url catalog.journal_stats journal.acronym %}">{% trans 'statistics' %}</a></li>
   </ul>
   {% if journal.url_online_submission %}
   <a href="{{ journal.url_online_submission }}"><img src="/static/images/en/submission.png" /></a>
@@ -23,38 +19,38 @@
   <center>
     <img src="/static/images/journals/logo/id_journal.gif" />
   </center>
-    <h3>Search</h3>
+    <h3>{% trans 'Search' %}</h3>
     <form class="form-inline" method="POST" action="http://search.scielo.org/index.php" target="_blank">
       <input type="hidden" name="site" value="scielo">
       <input type="hidden" name="col" value="org">
       <input type="hidden" name="lang" value="en">
       <input type="hidden" name="where" value="ORG">
       <input type="hidden" name="sort" value="score+desc">
-      <input type="text" name="q" class="input-large" placeholder="Enter one or more words">
+      <input type="text" name="q" class="input-large" placeholder="{% trans 'enter one or more words' %}">
       <select  class="input-medium" name="index">
-        <option value="">All Indexes</option>
-        <option value="ab">Abstract</option>
-        <option value="au">Author</option>
-        <option value="sponsor">Sponsor</option>
-        <option value="ti">Title</option>
+        <option value="">{% trans 'All Indexes' %}</option>
+        <option value="ab">{% trans 'abstract' %}</option>
+        <option value="au">{% trans 'author' %}</option>
+        <option value="sponsor">{% trans 'sponsor' %}</option>
+        <option value="ti">{% trans 'title' %}</option>
       </select>
       <select class="input-medium" name="filter_chain">
-        <option value="ta_cluster:{{ journal.short_title }}">This Journal</option>
-        <option value="">All Collection</option>
+        <option value="ta_cluster:{{ journal.short_title }}">{% trans 'this Journal' %}</option>
+        <option value="">{% trans 'all Collection' %}</option>
       </select>
-      <button class="btn btn-small btn-primary">Search</button>
+      <button class="btn btn-small btn-primary">{% trans 'search' %}</button>
     </form>
     <dl>
-      <dt>Publication of</dt>
+      <dt>{% trans 'Publication of' %}</dt>
       <dd>{{ journal.title }}</dd>
       <dd>
         <span class="text-info"><em>{{ journal.scielo_issn }} version</em> ISSN </span>{{ journal.issn }}
       </dd>
       {% if journal.missions.en %}
-      <dt>Mission</dt>
+      <dt>{% trans 'Mission' %}</dt>
       <dd><span class="text-info">{{ journal.missions.en }}</sapn><dd>
       {% endif %}
-      <dt>Address</dt>
+      <dt>{% trans 'Address' %}</dt>
       <dd>
         {% if journal.publisher_name %}
           {{ journal.publisher_name }}</br>
@@ -63,19 +59,19 @@
         {{ journal.address }}<br/>
         {% endif %}
         {% for phone in journal.phones %}
-          <strong>phone: </strong> {{ phone }} <br/>
+          <strong>{% trans 'phone' %}: </strong> {{ phone }} <br/>
         {% endfor %}
         {% if journal.editor_email %}
-          <strong>e-mail: </strong> <a href="mailto: {{ journal.editor_email }}">{{ journal.editor_email }}</a>
+          <strong>{% trans 'e-mail' %}: </strong> <a href="mailto: {{ journal.editor_email }}">{{ journal.editor_email }}</a>
         {% endif %}
       </dd>
     </dl>
 </div>
 <div class="span3">
   <div class="press_releases">
-    <h4>Press Releases</h4>
+    <h4>{% trans 'Press Releases' %}</h4>
     <dl>
-      <dt>Articles</dt>
+      <dt>{% trans 'Articles' %}</dt>
       <dd>
         <ul>
           <li class="muted"><a hrf="#">2012/09 - v42 n.3 First record of Trichodina heterodentata (Ciliophora: Trichodinidae) from Arapaima gigas cultivated in Peru</a></li>
@@ -84,7 +80,7 @@
       </dd>
     </dl>
     <div class="more">
-      <a href="#" target="_blank">more</a>
+      <a href="#" target="_blank">{% trans 'more' %}</a>
     </div>
   </div>
   {% if journal.twitter_user %}
@@ -92,7 +88,7 @@
     <h4><img src="/static/images/twitter.png" width="20px"/> Twitter</h4>
     <ul id="tweets"></ul>
     <div class="more">
-      <a href="http://www.twitter.com/{{ journal.twitter_user }}" target="_blank">more</a>
+      <a href="http://www.twitter.com/{{ journal.twitter_user }}" target="_blank">{% trans 'more' %}</a>
     </div>
   </div>
   {% endif %}
@@ -103,7 +99,7 @@
       <li class="muted"><a hrf="#">2012/06 - v42 n.2 Soil CO2 efflux in central Amazonia: environmental and methodological effects</a></li>
     </ul>
     <div class="more">
-      <a href="#" target="_blank">more</a>
+      <a href="#" target="_blank">{% trans 'more' %}</a>
     </div>
   </div>
 </div>
