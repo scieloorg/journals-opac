@@ -22,6 +22,16 @@ class Navigation(object):
         self._journal = journal
 
     @property
+    def ahead(self):
+
+        ahead = self._journal._data.get('current_ahead_documents')
+
+        if ahead > 0:
+            return '/ahead/{0}/'.format(self._journal._data.get('acronym'))
+        else:
+            return None
+
+    @property
     def current_issue(self):
         """
         This method retrives a link to the current issue from a
