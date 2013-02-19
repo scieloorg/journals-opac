@@ -1,3 +1,4 @@
+# encoding: utf-8
 # Django settings for opac project.
 import os
 
@@ -30,7 +31,7 @@ TIME_ZONE = 'America/Chicago'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'en'
 
 SITE_ID = 1
 
@@ -97,6 +98,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -156,8 +158,8 @@ LOGGING = {
 
 MANAGED_LANGUAGES_CHOICES = (
     (u'en', u'English'),
-    (u'es', u'Espanol'),
-    (u'pt-BR', u'Portugues'),
+    (u'es', u'Español'),
+    (u'pt-BR', u'Português'),
 )
 TARGET_LANGUAGES = MANAGED_LANGUAGES_CHOICES[1:]
 
