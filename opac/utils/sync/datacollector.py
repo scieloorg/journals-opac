@@ -117,6 +117,16 @@ class SciELOManagerAPI(object):
         journals = [self.iter_docs('journals', c) for c in collections]
         return itertools.chain(*journals)
 
+    def get_journals(self, *journals):
+        """
+        Get all the given journals
+
+        ``journals`` is an arbitrary number of string values
+        of resource_ids.
+        """
+        for j in journals:
+            yield self.fetch_data('journals', resource_id=j)
+
     def get_all_collections(self):
         """
         Get all collections available at SciELO Manager.

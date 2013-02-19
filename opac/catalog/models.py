@@ -1,7 +1,7 @@
 from django.db import models
 
 
-class CollectionMetaManager(models.Manager):
+class CustomMetaManager(models.Manager):
     def members(self):
         qset = self.get_query_set().filter(is_member=True)
 
@@ -16,7 +16,7 @@ class CollectionMeta(models.Model):
     The entity selected as a member of the catalog must
     have the attribute ``is_member`` set to True.
     """
-    objects = CollectionMetaManager()
+    objects = CustomMetaManager()
 
     is_member = models.BooleanField(default=False)
     resource_uri = models.CharField(max_length=128)
@@ -39,6 +39,8 @@ class JournalMeta(models.Model):
     The entity selected as a member of the catalog must
     have the attribute ``is_member`` set to True.
     """
+    objects = CustomMetaManager()
+
     is_member = models.BooleanField(default=False)
     resource_uri = models.CharField(max_length=128)
     name = models.CharField(max_length=128)
@@ -47,3 +49,6 @@ class JournalMeta(models.Model):
     class Meta:
         verbose_name = u'Journal Meta'
         verbose_name_plural = u'Journals Meta'
+
+    def __unicode__(self):
+        return self.name
