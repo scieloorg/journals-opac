@@ -1,0 +1,108 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# 
+# Translators:
+#  <fabiobatalha@gmail.com>, 2013.
+msgid ""
+msgstr ""
+"Project-Id-Version: Journals Opac\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-02-19 08:07-0600\n"
+"PO-Revision-Date: 2013-02-19 14:31+0000\n"
+"Last-Translator: fabiobatalha <fabiobatalha@gmail.com>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Language: es\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: catalog/templates/catalog/index.html:8
+msgid "Journals Evaluation"
+msgstr "Evaluación de Revistas"
+
+#: catalog/templates/catalog/index.html:9
+#: catalog/templates/catalog/index.html:82
+msgid "help"
+msgstr "Ayuda"
+
+#: catalog/templates/catalog/index.html:10
+#: catalog/templates/catalog/index.html:64
+msgid "about this site"
+msgstr "sobre el sitio"
+
+#: catalog/templates/catalog/index.html:11
+msgid "SciELO Team"
+msgstr "equipo SciELO"
+
+#: catalog/templates/catalog/index.html:21
+msgid "serial browsing"
+msgstr "búsqueda de fascículos"
+
+#: catalog/templates/catalog/index.html:23
+msgid "alphabetic list"
+msgstr "lista alfabética"
+
+#: catalog/templates/catalog/index.html:24
+msgid "subject list"
+msgstr "lista de temas"
+
+#: catalog/templates/catalog/index.html:25
+#: catalog/templates/catalog/index.html:33
+msgid "search form"
+msgstr "formulário de búsqueda"
+
+#: catalog/templates/catalog/index.html:29
+msgid "article browsing"
+msgstr "búsqueda de artículos"
+
+#: catalog/templates/catalog/index.html:31
+msgid "author index"
+msgstr "índice de autores"
+
+#: catalog/templates/catalog/index.html:32
+msgid "subject index"
+msgstr "índice de temas"
+
+#: catalog/templates/catalog/index.html:37
+msgid "reports"
+msgstr "reportes"
+
+#: catalog/templates/catalog/index.html:39
+msgid "site usage"
+msgstr "uso del sítio"
+
+#: catalog/templates/catalog/index.html:40
+msgid "journal citation"
+msgstr "citaciones de revistas"
+
+#: catalog/templates/catalog/index.html:41
+msgid "co-authors"
+msgstr "co-autoria"
+
+#: catalog/templates/catalog/issues.html:24
+msgid "Year"
+msgstr "Ano"
+
+#: catalog/templates/catalog/issues.html:25
+msgid "Volume"
+msgstr "Volumen"
+
+#: catalog/templates/catalog/issues.html:26
+msgid "Numbers"
+msgstr "Números"
+
+#: catalog/templates/catalog/issues.html:37
+#: catalog/templates/catalog/issues.html:39
+msgid "suppl."
+msgstr "supl."
+
+#: catalog/templatetags/catalogtags.py:24
+#: catalog/templatetags/catalogtags.py:52
+msgid "issues"
+msgstr "fasciculos"
+
+#: catalog/templatetags/catalogtags.py:87
+msgid "abstract"
+msgstr "resumen"

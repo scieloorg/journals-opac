@@ -1,0 +1,449 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2013-02-19 13:50-0600\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: catalog/templates/base_lv1.html:11
+msgid "journal navigation"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:18
+msgid "journal home"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:18
+msgid "home"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:24
+msgid "all issues from this journal"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:24
+msgid "all"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:31 catalog/templates/base_lv1.html.py:37
+msgid "previous issue"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:31 catalog/templates/base_lv1.html.py:37
+msgid "previous"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:44
+msgid "current issue"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:44
+msgid "current"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:51 catalog/templates/base_lv1.html.py:56
+msgid "next issue"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:51 catalog/templates/base_lv1.html.py:56
+msgid "next"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:62
+msgid "journal articles search"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:68 catalog/templates/catalog/alpha.html:38
+#: catalog/templates/catalog/collection_stats.html:37
+#: catalog/templates/catalog/journal.html:33
+#: catalog/templates/catalog/subject.html:38
+msgid "author"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:73 catalog/templates/base_lv1.html.py:99
+#: catalog/templates/catalog/alpha.html:21
+#: catalog/templates/catalog/alpha.html:43
+#: catalog/templates/catalog/collection_stats.html:20
+#: catalog/templates/catalog/collection_stats.html:42
+#: catalog/templates/catalog/subject.html:21
+#: catalog/templates/catalog/subject.html:43
+msgid "subject"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:78 catalog/templates/catalog/alpha.html:26
+#: catalog/templates/catalog/alpha.html:48
+#: catalog/templates/catalog/collection_stats.html:25
+#: catalog/templates/catalog/collection_stats.html:47
+#: catalog/templates/catalog/subject.html:26
+#: catalog/templates/catalog/subject.html:48
+msgid "form"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:84
+msgid "Collection"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:91
+msgid "alphabetic collection journals list"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:92 catalog/templates/catalog/alpha.html:17
+#: catalog/templates/catalog/collection_stats.html:16
+#: catalog/templates/catalog/subject.html:17
+msgid "alpha"
+msgstr ""
+
+#: catalog/templates/base_lv1.html:98
+msgid "collection journals list by subject"
+msgstr ""
+
+#: catalog/templates/catalog/alpha.html:12
+#: catalog/templates/catalog/collection_stats.html:11
+#: catalog/templates/catalog/subject.html:12
+msgid "serial brownsing"
+msgstr ""
+
+#: catalog/templates/catalog/alpha.html:32
+#: catalog/templates/catalog/collection_stats.html:31
+#: catalog/templates/catalog/subject.html:32
+msgid "article brownsing"
+msgstr ""
+
+#: catalog/templates/catalog/alpha.html:54
+#: catalog/templates/catalog/collection_stats.html:53
+#: catalog/templates/catalog/index.html:33
+#: catalog/templates/catalog/subject.html:54
+msgid "reports"
+msgstr ""
+
+#: catalog/templates/catalog/alpha.html:59
+#: catalog/templates/catalog/collection_stats.html:58
+#: catalog/templates/catalog/subject.html:59
+msgid "usage"
+msgstr ""
+
+#: catalog/templates/catalog/alpha.html:64
+#: catalog/templates/catalog/collection_stats.html:63
+#: catalog/templates/catalog/subject.html:64
+msgid "citations"
+msgstr ""
+
+#: catalog/templates/catalog/alpha.html:69
+#: catalog/templates/catalog/collection_stats.html:68
+#: catalog/templates/catalog/index.html:37
+#: catalog/templates/catalog/subject.html:69
+msgid "co-authors"
+msgstr ""
+
+#: catalog/templates/catalog/alpha.html:80
+#: catalog/templates/catalog/collection_stats.html:78
+#: catalog/templates/catalog/subject.html:79
+msgid "Library Collection"
+msgstr ""
+
+#: catalog/templates/catalog/alpha.html:83
+msgid "Alphabetic list"
+msgstr ""
+
+#: catalog/templates/catalog/alpha.html:83
+#: catalog/templates/catalog/alpha.html:85
+#: catalog/templates/catalog/alpha.html:91
+msgid "serial(s) listed"
+msgstr ""
+
+#: catalog/templates/catalog/alpha.html:85
+msgid "Current titles"
+msgstr ""
+
+#: catalog/templates/catalog/alpha.html:91
+msgid "Non-current titles"
+msgstr ""
+
+#: catalog/templates/catalog/collection_stats.html:79
+msgid "Library site usage report"
+msgstr ""
+
+#: catalog/templates/catalog/collection_stats.html:81
+#: catalog/templates/catalog/journal_stats.html:9
+msgid "Journals requests"
+msgstr ""
+
+#: catalog/templates/catalog/collection_stats.html:82
+#: catalog/templates/catalog/journal_stats.html:10
+msgid "Articles requests by language"
+msgstr ""
+
+#: catalog/templates/catalog/collection_stats.html:83
+#: catalog/templates/catalog/journal_stats.html:11
+msgid "Issues requests"
+msgstr ""
+
+#: catalog/templates/catalog/collection_stats.html:84
+#: catalog/templates/catalog/journal_stats.html:12
+msgid "Top ten titles"
+msgstr ""
+
+#: catalog/templates/catalog/collection_stats.html:85
+#: catalog/templates/catalog/journal_stats.html:13
+msgid "Articles per month"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:8
+msgid "Journals Evaluation"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:9
+#: catalog/templates/catalog/index.html:78
+msgid "help"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:10
+#: catalog/templates/catalog/index.html:60
+msgid "about this site"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:11
+msgid "SciELO Team"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:17
+msgid "serial browsing"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:19
+msgid "alphabetic list"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:20
+msgid "subject list"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:21
+#: catalog/templates/catalog/index.html:29
+msgid "search form"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:25
+msgid "article browsing"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:27
+msgid "author index"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:28
+msgid "subject index"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:35
+msgid "site usage"
+msgstr ""
+
+#: catalog/templates/catalog/index.html:36
+msgid "journal citation"
+msgstr ""
+
+#: catalog/templates/catalog/issue.html:58
+#: catalog/templates/catalog/journal.html:53
+msgid "Address"
+msgstr ""
+
+#: catalog/templates/catalog/issue.html:67
+#: catalog/templates/catalog/journal.html:62
+msgid "phone"
+msgstr ""
+
+#: catalog/templates/catalog/issue.html:70
+#: catalog/templates/catalog/journal.html:65
+msgid "e-mail"
+msgstr ""
+
+#: catalog/templates/catalog/issue.html:76
+msgid "Links"
+msgstr ""
+
+#: catalog/templates/catalog/issue.html:78
+#: catalog/templates/catalog/journal.html:8
+msgid "about journal"
+msgstr ""
+
+#: catalog/templates/catalog/issue.html:79
+#: catalog/templates/catalog/journal.html:9
+msgid "editorial board"
+msgstr ""
+
+#: catalog/templates/catalog/issue.html:80
+#: catalog/templates/catalog/journal.html:10
+msgid "instructions to authors"
+msgstr ""
+
+#: catalog/templates/catalog/issue.html:81
+#: catalog/templates/catalog/journal.html:11
+msgid "subscriptions"
+msgstr ""
+
+#: catalog/templates/catalog/issue.html:82
+#: catalog/templates/catalog/journal.html:12
+msgid "statistics"
+msgstr ""
+
+#: catalog/templates/catalog/issues.html:14
+msgid "Former Title"
+msgstr ""
+
+#: catalog/templates/catalog/issues.html:17
+msgid "Available issues"
+msgstr ""
+
+#: catalog/templates/catalog/issues.html:24
+msgid "Year"
+msgstr ""
+
+#: catalog/templates/catalog/issues.html:25
+msgid "Volume"
+msgstr ""
+
+#: catalog/templates/catalog/issues.html:26
+msgid "Numbers"
+msgstr ""
+
+#: catalog/templates/catalog/issues.html:37
+#: catalog/templates/catalog/issues.html:39
+msgid "suppl."
+msgstr ""
+
+#: catalog/templates/catalog/issues.html:52
+msgid "Journal's history at this collection"
+msgstr ""
+
+#: catalog/templates/catalog/issues.html:53
+msgid "Admitted to this collection"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:6
+msgid "Updated at"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:22
+msgid "Search"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:29
+msgid "enter one or more words"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:31
+msgid "All Indexes"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:32
+#: catalog/templatetags/catalogtags.py:87
+msgid "abstract"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:34
+msgid "sponsor"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:35
+msgid "title"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:38
+msgid "this Journal"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:39
+msgid "all Collection"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:41
+msgid "search"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:44
+msgid "Publication of"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:50
+msgid "Mission"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:72
+msgid "Press Releases"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:74
+msgid "Articles"
+msgstr ""
+
+#: catalog/templates/catalog/journal.html:83
+#: catalog/templates/catalog/journal.html:91
+#: catalog/templates/catalog/journal.html:102
+msgid "more"
+msgstr ""
+
+#: catalog/templates/catalog/journal_stats.html:7
+msgid "Site usage report"
+msgstr ""
+
+#: catalog/templates/catalog/journal_stats.html:16
+msgid "Co-authors report"
+msgstr ""
+
+#: catalog/templates/catalog/journal_stats.html:18
+msgid "Co-authors"
+msgstr ""
+
+#: catalog/templates/catalog/journal_stats.html:21
+msgid "Journal citation reports"
+msgstr ""
+
+#: catalog/templates/catalog/journal_stats.html:23
+msgid "Source data"
+msgstr ""
+
+#: catalog/templates/catalog/journal_stats.html:24
+msgid "Impact factor on a two-year basis"
+msgstr ""
+
+#: catalog/templates/catalog/journal_stats.html:25
+msgid "Impact factor on a three-year basis"
+msgstr ""
+
+#: catalog/templates/catalog/journal_stats.html:26
+msgid "Half-life"
+msgstr ""
+
+#: catalog/templates/catalog/journal_stats.html:27
+msgid "Received citations"
+msgstr ""
+
+#: catalog/templates/catalog/journal_stats.html:28
+msgid "Granted citations"
+msgstr ""
+
+#: catalog/templates/catalog/subject.html:80
+msgid "Subjects"
+msgstr ""
+
+#: catalog/templates/catalog/subject.html:84
+msgid "Subject list of serials"
+msgstr ""
+
+#: catalog/templatetags/catalogtags.py:24
+#: catalog/templatetags/catalogtags.py:52
+msgid "issues"
+msgstr ""

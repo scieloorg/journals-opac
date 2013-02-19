@@ -1,4 +1,4 @@
-# coding:utf8
+# encoding: utf-8
 from urlparse import urlparse
 
 from django.core.urlresolvers import reverse
@@ -362,58 +362,6 @@ class Journal(Document):
     def get_absolute_url(self):
         return reverse('catalog.journal', kwargs={'journal_id': self.acronym})
 
-    @property
-    def current_issue(self):
-        """
-        This method retrives a link to the current issue from a
-        given journal.
-        """
-
-        last = max(self.list_issues(), key=lambda x: x.order)
-
-        return last.id
-
-
-class Navigation(object):
-
-    def __init__(self, journal):
-
-        self._issues = dict((issue['data']['order'], issue['data']['id']) for issue in journal.issues)
-
-    def next_issue(self, current_order):
-        """
-        This method retrieves the next issue id according to the
-        order sequence. If there is a gap in the issues sequence,
-        for legacy compliance, the script will attempt a 100 different
-        order numbers before delivery "None".
-        """
-        for i in range(1, 100):
-            match = current_order + i
-            next = self._issues.get(match)
-            if next:
-                return next
-
-        return None
-
-    def previous_issue(self, current_order):
-        """
-        This method retrieves the previous issue id according to the
-        order sequence. If there is a gap in the issues sequence,
-        for legacy compliance, the script will attempt a 100 different
-        order numbers before delivery "None".
-        """
-        for i in range(1, 100):
-            match = current_order - i
-
-            if match == 0:
-                break
-
-            previous = self._issues.get(match)
-            if previous:
-                return previous
-
-        return None
-
 
 class Issue(Document):
     objects = ManagerFactory(collection='journals', indexes=['issues.id'])
@@ -424,9 +372,9 @@ class Issue(Document):
         Return a specific issue from a specific journal
         """
 
-        issue = cls.objects.find_one({'acronym': journal_id,
-                                      'issues.id': int(issue_id)},
-                                      {'issues.data': 1})['issues'][0]['data']
+        issue = cls.objects.find_one({'acronym': journal_id},
+                                     {'issues': {'$elemMatch': {'id': int(issue_id)}}})['issues'][0]['data']
+
         if not issue:
             raise ValueError('no issue found for id:'.format(journal_id))
 
@@ -444,44 +392,20 @@ class Issue(Document):
 
         return journal
 
-    @property
-    def previous_issue(self):
-        """
-        This method retrives an id to the previous issue from a
-        given journal.
-        """
-        journal = Journal.get_journal(journal_id=self._data['acronym'])
-
-        nav = Navigation(journal)
-
-        return nav.previous_issue(self._data['order'])
-
-    @property
-    def next_issue(self):
-        """
-        This method retrives an id to the previous issue from a
-        given journal.
-        """
-        journal = Journal.get_journal(journal_id=self._data['acronym'])
-
-        nav = Navigation(journal)
-
-        return nav.next_issue(self._data['order'])
-
     def list_sections(self):
         """
         Return a list of sections and their related articles
         """
 
-        articles_list = []
-
         for issue_section in self.sections:
             journal_section = Section.get_section(self.id, issue_section['id'])
 
+            articles_list = []
             for article_id in issue_section['articles']:
                 articles_list.append(Article.get_article(article_id))
 
             journal_section.articles = articles_list
+
             yield journal_section
 
 
@@ -494,9 +418,9 @@ class Section(Document):
         Return a specific section from a specific journal
         """
 
-        section = cls.objects.find_one({'id': journal_id,
-                        'sections.id': int(section_id)},
-                        {'sections.data': 1})['sections'][0]['data']
+        section = cls.objects.find_one({'id': journal_id},
+                                       {'sections': {'$elemMatch': {'id': int(section_id)}}})['sections'][0]['data']
+
         if not section:
             raise ValueError('no section found for id:'.format(journal_id))
 
