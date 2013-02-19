@@ -25,9 +25,7 @@ def journal(request, journal_id):
 
     journal = mongomodels.Journal.get_journal(journal_id=journal_id)
 
-    issue = mongomodels.Issue.get_issue(journal_id, journal.current_issue)
-
-    navigation = Navigation(journal, issue)
+    navigation = Navigation(journal)
 
     return render_to_response('catalog/journal.html', {
                                             'journal': journal,

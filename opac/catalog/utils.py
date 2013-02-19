@@ -1,11 +1,24 @@
+from catalog import mongomodels
+
+
 class Navigation(object):
 
-    def __init__(self, journal, issue):
+    def __init__(self, journal, issue=None):
 
-        self._issues = dict((issue['data']['order'],
-                             issue['data']['id']) for issue in journal.issues)
+        self._issues = dict((iss['data']['order'],
+                             iss['data']['id']) for iss in journal.issues)
 
-        self._issue = issue
+        current = max(self._issues, key=lambda x: x)
+        self._current = self._issues[current]
+
+        if issue:
+            self._issue = issue
+        else:
+            self._issue = mongomodels.Issue.get_issue(
+                                        journal._data.get('acronym'),
+                                        self._current
+                                        )
+
         self._journal = journal
 
     @property
@@ -15,12 +28,10 @@ class Navigation(object):
         given journal.
         """
 
-        current = max(self._issues, key=lambda x: x)
-
         return '/issue/{0}/{1}/'.format(
-                                    self._journal._data.get('acronym'),
-                                    self._issues[current]
-                                    )
+                                        self._journal._data.get('acronym'),
+                                        self._current
+                                        )
 
     @property
     def next_issue(self):
@@ -32,6 +43,7 @@ class Navigation(object):
         """
         for i in range(1, 100):
             match = self._issue._data.get('order') + i
+
             next = self._issues.get(match)
             if next:
                 return '/issue/{0}/{1}/'.format(
