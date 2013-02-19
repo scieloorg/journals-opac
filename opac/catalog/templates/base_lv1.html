@@ -22,23 +22,38 @@
              data-placement="bottom" 
              data-original-title="all issues from this journal"><strong>all</strong></a>
 
-          <a href="/issue/{{ journal.acronym }}/{{ issue.previous_issue }}" 
-             class="btn btn-small btn-primary tip-bottom disabled" 
-             rel="tooltip" 
-             data-placement="bottom" 
-             data-original-title="previous issue"><strong>previous</strong></a>
+          {% if navigation.previous_issue %}
+            <a href="{{ navigation.previous_issue }}" 
+               class="btn btn-small btn-primary tip-bottom" 
+               rel="tooltip" 
+               data-placement="bottom" 
+               data-original-title="previous issue"><strong>previous</strong></a>
+          {% else %}
+            <div
+               class="btn btn-small btn-primary tip-bottom disabled" 
+               rel="tooltip" 
+               data-placement="bottom" 
+               data-original-title="previous issue"><strong>previous</strong></div>
+          {% endif %}
 
-          <a href="/issue/{{ journal.acronym }}/{{ journal.current_issue }}" 
+          <a href="{{ navigation.current_issue }}" 
              class="btn btn-small btn-primary tip-bottom" 
              rel="tooltip" 
              data-placement="bottom" 
              data-original-title="current issue"><strong>current</strong></a>
 
-          <a href="/issue/{{ journal.acronym }}/{{ issue.next_issue }}" 
-             class="btn btn-small btn-primary tip-bottom" 
-             rel="tooltip" 
-             data-placement="bottom" 
-             data-original-title="next issue"><strong>next</strong></a>
+          {% if navigation.next_issue %}
+            <a href="{{ navigation.next_issue }}" 
+               class="btn btn-small btn-primary tip-bottom" 
+               rel="tooltip" 
+               data-placement="bottom" 
+               data-original-title="next issue"><strong>next</strong></a>
+          {% else %}
+            <div 
+               class="btn btn-small btn-primary tip-bottom disabled" 
+               data-placement="bottom" 
+               data-original-title="next issue"><strong>next</strong></div>
+          {% endif %}
         </div>
       </dd>
     </dl>
