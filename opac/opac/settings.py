@@ -31,7 +31,7 @@ TIME_ZONE = 'America/Chicago'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
-LANGUAGE_CODE = 'en'
+LANGUAGE_CODE = 'en-us'
 
 SITE_ID = 1
 
@@ -93,12 +93,12 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.locale.LocaleMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -156,12 +156,11 @@ LOGGING = {
     }
 }
 
-MANAGED_LANGUAGES_CHOICES = (
-    (u'en', u'English'),
-    (u'es', u'Español'),
-    (u'pt-BR', u'Português'),
-)
-TARGET_LANGUAGES = MANAGED_LANGUAGES_CHOICES[1:]
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.csrf',
+    )
 
 execfile(os.path.join(os.path.abspath(os.path.dirname(__file__)),
     'settings_opac.include'))
