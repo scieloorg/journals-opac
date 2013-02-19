@@ -1,3 +1,4 @@
+# encoding: utf-8
 # Django settings for opac project.
 import os
 
@@ -92,8 +93,9 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
-    'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -154,12 +156,11 @@ LOGGING = {
     }
 }
 
-MANAGED_LANGUAGES_CHOICES = (
-    (u'en', u'English'),
-    (u'es', u'Espanol'),
-    (u'pt-BR', u'Portugues'),
-)
-TARGET_LANGUAGES = MANAGED_LANGUAGES_CHOICES[1:]
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.csrf',
+    )
 
 execfile(os.path.join(os.path.abspath(os.path.dirname(__file__)),
     'settings_opac.include'))

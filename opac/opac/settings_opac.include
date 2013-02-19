@@ -1,3 +1,5 @@
+# encoding: utf-8
+
 # this file contains permanent settings, specific to the
 # opac project.
 
@@ -26,3 +28,13 @@ try:
         'settings_local.include'))
 except IOError:
     exit('Missing configuration file: "settings_local.include"')
+
+LANGUAGES = (
+    (u'en', u'English'),
+    (u'es', u'Español'),
+    (u'pt-br', u'Português'),
+)
+
+LOCALE_PATHS = (
+    os.path.join(BASE_PATH, 'locale'),
+    )
