@@ -1,4 +1,4 @@
-# coding: utf8
+# encoding: utf-8
 import unittest
 from collections import OrderedDict
 

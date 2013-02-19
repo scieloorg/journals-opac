@@ -1,4 +1,4 @@
-# coding:utf8
+# encoding: utf-8
 from urlparse import urlparse
 
 from django.core.urlresolvers import reverse
