@@ -154,5 +154,12 @@ LOGGING = {
     }
 }
 
+MANAGED_LANGUAGES_CHOICES = (
+    (u'en', u'English'),
+    (u'es', u'Espanol'),
+    (u'pt-BR', u'Portugues'),
+)
+TARGET_LANGUAGES = MANAGED_LANGUAGES_CHOICES[1:]
+
 execfile(os.path.join(os.path.abspath(os.path.dirname(__file__)),
     'settings_opac.include'))
