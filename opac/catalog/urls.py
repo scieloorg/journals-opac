@@ -22,4 +22,7 @@ urlpatterns = patterns('',
     # Ajax
     url(r'^ajx/ajx1/(?P<journal_id>\w+)/$', views.ajx_list_journal_tweets,
         name='catalog.ajx_list_journal_tweets'),
+
+    # i18n
+    (r'^i18n/', include('django.conf.urls.i18n')),
 )
