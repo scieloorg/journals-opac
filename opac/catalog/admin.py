@@ -15,6 +15,22 @@ class CollectionMetaAdmin(admin.ModelAdmin):
     list_filter = ('is_member', )
     ordering = ('name', )
     readonly_fields = ('name', 'name_slug', 'resource_uri',)
+    actions = ['make_collections_as_members', 'make_collections_not_as_members']
+
+    def make_collections_as_members(self, request, queryset):
+        queryset.update(is_member=True)
+    make_collections_as_members.short_description = 'Mark selected as members of the catalog'
+
+    def make_collections_not_as_members(self, request, queryset):
+        queryset.update(is_member=False)
+    make_collections_not_as_members.short_description = 'Mark selected NOT as members of the catalog'
+
+    def get_actions(self, request):
+        actions = super(CollectionMetaAdmin, self).get_actions(request)
+        if 'delete_selected' in actions:
+            del actions['delete_selected']
+
+        return actions
 
     def get_urls(self):
         urls = super(CollectionMetaAdmin, self).get_urls()

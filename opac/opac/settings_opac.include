@@ -15,7 +15,7 @@ MONGO_URI = 'mongodb://localhost:27017/journalsopac'
 #
 # Celery configuration
 #
-BROKER_URL = 'django://'
+BROKER_URL = MONGO_URI
 
 #
 # SciELO Manager API configuration

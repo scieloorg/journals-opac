@@ -124,7 +124,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
-    'kombu.transport.django',
+    # 'kombu.transport.django',
     'south',
     'djcelery',
     'catalog',
