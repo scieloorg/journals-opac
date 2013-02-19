@@ -1,10 +1,11 @@
 Journals OPAC (Catálogo Online de revistas da coleção SciELO)
 ==============================================================
 
+
 See more information about this project in http://docs.scielo.org
 
-[![Build Status](https://travis-ci.org/scieloorg/journals-opac.png?branch=master)](https://travis-ci.org/scieloorg/journals-opac)
-[See Build details](http://travis-ci.org/#!/scieloorg/journals-opac)
+.. image:: https://secure.travis-ci.org/scieloorg/journals-opac.png?branch=master
+`See Build details <http://travis-ci.org/#!/scieloorg/journals-opac>`_
 
 **Current internationalization status**
 
