@@ -6,6 +6,11 @@ See more information about this project in http://docs.scielo.org
 [![Build Status](https://travis-ci.org/scieloorg/journals-opac.png?branch=master)](https://travis-ci.org/scieloorg/journals-opac)
 [See Build details](http://travis-ci.org/#!/scieloorg/journals-opac)
 
+**Current internationalization status**
+
+.. image:: https://www.transifex.com/projects/p/journals-opac/resource/english/chart/image_png
+`Help with translations <https://www.transifex.com/projects/p/journal-opac/resource/english/>`_
+
 Use License
 ===========
 
