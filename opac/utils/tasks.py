@@ -9,9 +9,9 @@ from .sync import pipes
 from catalog import models
 
 
-def _what_to_sync():
+def _what_to_sync(managerapi_dep=datacollector.SciELOManagerAPI):
     """
-    Returns an iterator containing all data that must be synced
+    Returns an iterator containing all journals that must be synced
     to build the catalog.
 
     If the collection is marked as member, and has some
@@ -19,7 +19,7 @@ def _what_to_sync():
     only these journals must be synchronized. Else,
     sync all its journals.
     """
-    scielo_api = datacollector.SciELOManagerAPI(settings=settings)
+    scielo_api = managerapi_dep(settings=settings)
     collections = models.CollectionMeta.objects.members()
 
     full_collections = []
@@ -64,12 +64,12 @@ def build_catalog():
     marreta.rebuild_collection('journals', transformed_data)
 
 
-def sync_collections_meta():
+def sync_collections_meta(managerapi_dep=datacollector.SciELOManagerAPI):
     """
     Fetches the metadata about available Collections in order for the
     user to configure the catalog instance.
     """
-    scielo_api = datacollector.SciELOManagerAPI(settings=settings)
+    scielo_api = managerapi_dep(settings=settings)
     data = scielo_api.get_all_collections()
 
     for col in data:
@@ -80,12 +80,12 @@ def sync_collections_meta():
         )
 
 
-def sync_journals_meta():
+def sync_journals_meta(managerapi_dep=datacollector.SciELOManagerAPI):
     """
     Fetches the metadata about Journals bound to Collections marked as
     members in order for the user to configure the catalog instance.
     """
-    scielo_api = datacollector.SciELOManagerAPI(settings=settings)
+    scielo_api = managerapi_dep(settings=settings)
 
     collections = [c.name_slug for c in models.CollectionMeta.objects.members()]
 
