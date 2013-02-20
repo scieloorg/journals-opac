@@ -11,14 +11,9 @@ from mocker import (
 
 class NavigationTest(MockerTestCase):
 
-    def test_instatiation(self):
+    def test_instatiation_with_issue(self):
         from .modelfactories import JournalFactory, IssueFactory
         from catalog.utils import Navigation
-
-        current_issue = {
-                            u'id': 4,
-                            u'order': 1,
-                        }
 
         issues = [
             {
@@ -51,11 +46,62 @@ class NavigationTest(MockerTestCase):
         ]
 
         journal = JournalFactory.build(issues=issues)
-        issue = IssueFactory.build(**current_issue)
+        issue = IssueFactory.build()
 
-        nav = Navigation(journal, issue)
+        nav = Navigation(journal, issue=issue)
 
-        self.assertEqual(OrderedDict([(1, 4), (2, 5), (3, 6)]), nav._issues)
+        self.assertEqual(nav._issues, OrderedDict([(1, 4), (2, 5), (3, 6)]))
+        self.assertEqual(nav._current, 6)
+        self.assertEqual(nav._issue, issue)
+
+    def test_instatiation_without_issue(self):
+        from .modelfactories import JournalFactory, IssueFactory
+        from catalog.utils import Navigation
+
+        mock_issue = self.mocker.mock()
+
+        issues = [
+            {
+                u'id': 4,
+                u'data':
+                {
+                    u'total_documents': 3,
+                    u'order': 1,
+                    u'id': 4,
+                },
+            },
+            {
+                u'id': 6,
+                u'data':
+                {
+                    u'total_documents': 3,
+                    u'order': 3,
+                    u'id': 6,
+                },
+            },
+            {
+                u'id': 5,
+                u'data':
+                {
+                    u'total_documents': 3,
+                    u'order': 2,
+                    u'id': 5,
+                },
+            }
+        ]
+
+        issue = IssueFactory.build()
+        mock_issue.get_issue(ANY, ANY)
+        self.mocker.result(issue)
+        self.mocker.replay()
+
+        journal = JournalFactory.build(issues=issues)
+
+        nav = Navigation(journal, issue_lib=mock_issue)
+
+        self.assertEqual(nav._issues, OrderedDict([(1, 4), (2, 5), (3, 6)]))
+        self.assertEqual(nav._current, 6)
+        self.assertEqual(nav._issue, issue)
 
     def test_journal_with_ahead(self):
         from .modelfactories import JournalFactory, IssueFactory
@@ -79,7 +125,7 @@ class NavigationTest(MockerTestCase):
         journal = JournalFactory.build()
         issue = IssueFactory()
 
-        nav = Navigation(journal, issue).ahead
+        nav = Navigation(journal, issue=issue).ahead
 
         self.assertEqual(nav, None)
 
@@ -121,7 +167,7 @@ class NavigationTest(MockerTestCase):
         journal = JournalFactory.build(issues=issues)
         issue = IssueFactory.build(**current_issue)
 
-        nav = Navigation(journal, issue).current_issue
+        nav = Navigation(journal, issue=issue).current_issue
 
         self.assertEqual(nav, '/issue/AISS/3/')
 
@@ -156,7 +202,7 @@ class NavigationTest(MockerTestCase):
         journal = JournalFactory.build(issues=issues)
         issue = IssueFactory.build(**current_issue)
 
-        nav = Navigation(journal, issue).next_issue
+        nav = Navigation(journal, issue=issue).next_issue
 
         self.assertEqual(nav, '/issue/AISS/6/')
 
@@ -191,7 +237,7 @@ class NavigationTest(MockerTestCase):
         journal = JournalFactory.build(issues=issues)
         issue = IssueFactory.build(**current_issue)
 
-        nav = Navigation(journal, issue).previous_issue
+        nav = Navigation(journal, issue=issue).previous_issue
 
         self.assertEqual(nav, '/issue/AISS/4/')
 
@@ -218,7 +264,7 @@ class NavigationTest(MockerTestCase):
         journal = JournalFactory.build(issues=issues)
         issue = IssueFactory.build(**current_issue)
 
-        nav = Navigation(journal, issue).previous_issue
+        nav = Navigation(journal, issue=issue).previous_issue
 
         self.assertEqual(None, nav)
 
@@ -245,6 +291,6 @@ class NavigationTest(MockerTestCase):
         journal = JournalFactory.build(issues=issues)
         issue = IssueFactory.build(**current_issue)
 
-        nav = Navigation(journal, issue).previous_issue
+        nav = Navigation(journal, issue=issue).previous_issue
 
         self.assertEqual(None, nav)
