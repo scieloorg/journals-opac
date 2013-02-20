@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.template.context import RequestContext
 
 from catalog import mongomodels
-from catalog.utils import Navigation
+from catalog.tools import Navigation
 
 
 def list_journals(request):
@@ -64,7 +64,7 @@ def issue(request, journal_id, issue_id):
     journal = issue.journal
     sections = issue.list_sections()
 
-    navigation = Navigation(journal, issue)
+    navigation = Navigation(journal, issue=issue)
 
     return render_to_response('catalog/issue.html', {
                               'sections': sections,

@@ -7,7 +7,7 @@
 </div>
 <div class="span8">
   <div class="row">
-    <dl class="span4">
+    <dl class="span5">
       <dt>{% trans 'journal navigation' %}</dt>
       <dd>
         <div class="btn-group">
@@ -54,6 +54,15 @@
                class="btn btn-small btn-primary tip-bottom disabled" 
                data-placement="bottom" 
                data-original-title="{% trans 'next issue' %}"><strong>{% trans 'next' %}</strong></div>
+          {% endif %}
+
+          {% if navigation.ahead %}
+            <a href="{{ navigation.ahead }}" 
+               class="btn btn-small btn-primary tip-bottom" 
+               rel="tooltip" 
+               data-placement="bottom" 
+               data-original-title="{% trans 'ahead of print articles' %}"><strong>{% trans 'ahead' %}</strong></a>
+
           {% endif %}
         </div>
       </dd>
