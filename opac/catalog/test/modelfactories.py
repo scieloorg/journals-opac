@@ -8,6 +8,33 @@ from catalog import mongomodels
 class IssueFactory(factory.Factory):
     FACTORY_FOR = mongomodels.Issue
 
+    volume = u'45',
+    is_marked_up = False,
+    updated = u'2012-11-08T10:35:37.193612',
+    resource_uri = u'/api/v1/issues/1/',
+    total_documents = 17,
+    created = u'2010-04-01T01:01:01',
+    ctrl_vocabulary = u'nd',
+    suppl_volume = None,
+    cover = None,
+    number = u'4',
+    publication_end_month = 12,
+    editorial_standard = u'vancouv',
+    order = 4,
+    publication_year = 2009,
+    is_press_release = False,
+    suppl_number = None,
+    label = u'45 (4)',
+    sections = [
+        {
+            u'articles': [u'AISS-JHjashA'],
+            u'id': 514
+        }
+    ],
+    is_trashed = False,
+    publication_start_month = 10
+    id = 1
+
 
 class JournalFactory(factory.Factory):
     FACTORY_FOR = mongomodels.Journal

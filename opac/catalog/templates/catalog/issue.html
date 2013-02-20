@@ -1,8 +1,8 @@
 {% extends "base_lv1.html" %}
 {% load catalogtags %}
+{% load i18n %}
 
 {% block body %}
-
 <div class="span12">
   <center>
     <h3>{{ journal.title }}</h3>
@@ -55,7 +55,7 @@
 </blockquote>
 <blockquote class="span3">
     <dl>
-      <dt>Address</dt>
+      <dt>{% trans 'Address' %}</dt>
       <dd>
         {% if journal.publisher_name %}
           {{ journal.publisher_name }}</br>
@@ -64,22 +64,22 @@
         {{ journal.address }}<br/>
         {% endif %}
         {% for phone in journal.phones %}
-          <strong>phone: </strong> {{ phone }} <br/>
+          <strong>{% trans 'phone' %}: </strong> {{ phone }} <br/>
         {% endfor %}
         {% if journal.editor_email %}
-          <strong>e-mail: </strong> <a href="mailto: {{ journal.editor_email }}">{{ journal.editor_email }}</a>
+          <strong>{% trans 'e-mail' %}: </strong> <a href="mailto: {{ journal.editor_email }}">{{ journal.editor_email }}</a>
         {% endif %}
       </dd>
     </dl>
 </blockquote>
 <blockquote class="span4">
-  <strong>Links</strong><br/>
+  <strong>{% trans 'Links' %}</strong><br/>
   <ul class="unstyled">
-    <li><i class="icon-play"></i> <a href="#" target="_blank">about journal</a></li>
-    <li><i class="icon-play"></i> <a href="#" target="_blank">editorial board</a></li>
-    <li><i class="icon-play"></i> <a href="#" target="_blank">instructions to authors</a></li>
-    <li><i class="icon-play"></i> <a href="#" target="_blank">subscriptions</a></li>
-    <li><i class="icon-play"></i> <a href="#" target="_blank">statistics</a></li>
+    <li><i class="icon-play"></i> <a href="#" target="_blank">{% trans 'about journal' %}</a></li>
+    <li><i class="icon-play"></i> <a href="#" target="_blank">{% trans 'editorial board' %}</a></li>
+    <li><i class="icon-play"></i> <a href="#" target="_blank">{% trans 'instructions to authors' %}</a></li>
+    <li><i class="icon-play"></i> <a href="#" target="_blank">{% trans 'subscriptions' %}</a></li>
+    <li><i class="icon-play"></i> <a href="#" target="_blank">{% trans 'statistics' %}</a></li>
   </ul>
 </blockquote>
 {% endblock %}
