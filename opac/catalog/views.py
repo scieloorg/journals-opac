@@ -9,9 +9,13 @@ from catalog.utils import Navigation
 
 def list_journals(request):
 
-    journals = mongomodels.list_journals()
+    journals_current = mongomodels.list_journals(criteria={'pub_status': 'current'})
 
-    return render_to_response('catalog/alpha.html', {'journals': journals})
+    journals_non_current = mongomodels.list_journals(criteria={'pub_status': 'deceased'})
+
+    return render_to_response('catalog/alpha.html', {
+                              'journals_current': journals_current,
+                              'journals_non_current': journals_non_current})
 
 
 def list_journals_by_subject(request):

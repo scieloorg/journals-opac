@@ -69,36 +69,17 @@
 
 <h3 style="text-align: center;">Library Collection</h3>
 
-
 <h4>Alphabetic list - 15 serials listed</h4>
 <dl>
  <dt>Current titles - 15 serial listed</dt>
  <dd>
-  {% journal_alpha_list journals %}
+  {% journal_alpha_list journals_current %}
  </dd>
 </dl>
 <dl>
  <dt>Non-current titles - 40  serials listed</dt>
  <dd>
-  <ul>
-    <li>
-      <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as -
-      <a href="#">Scientia Agricola</a>
-    </li>
-  </ul>
-  <ul>
-    <li>
-      <a href="#">Entomología y Vectores</a> - 3 issues - Deceased in 2005
-    </li>
-    <li>
-      <a href="#">Estudos Afro-Asiáticos</a> - 9 issues - Indexing interrupted by committee in January 2004
-    </li>
-  </ul>
-  <ul>
-    <li>
-      <a href="#">Revista Brasileira de Otorrinolaringologia</a> - 46 issues - Continued as Brazilian Journal of Otorhinolaryngology (Impresso)
-    </li>
-  </ul>
+  {% journal_alpha_list journals_non_current %}
  </dd>
 </dl>
 {% endblock %}
