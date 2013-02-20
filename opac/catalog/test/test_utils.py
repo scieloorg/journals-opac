@@ -58,25 +58,28 @@ class NavigationTest(MockerTestCase):
         self.assertEqual(OrderedDict([(1, 4), (2, 5), (3, 6)]), nav._issues)
 
     def test_journal_with_ahead(self):
-        from .modelfactories import JournalFactory
+        from .modelfactories import JournalFactory, IssueFactory
         from catalog.utils import Navigation
 
         journal_data = {
                             u'current_ahead_documents': 10,
                         }
-        journal = JournalFactory.build(**journal_data)
 
-        nav = Navigation(journal).ahead
+        journal = JournalFactory.build(**journal_data)
+        issue = IssueFactory()
+
+        nav = Navigation(journal, issue).ahead
 
         self.assertEqual(nav, '/ahead/AISS/')
 
     def test_journal_without_ahead(self):
-        from .modelfactories import JournalFactory
+        from .modelfactories import JournalFactory, IssueFactory
         from catalog.utils import Navigation
 
         journal = JournalFactory.build()
+        issue = IssueFactory()
 
-        nav = Navigation(journal).ahead
+        nav = Navigation(journal, issue).ahead
 
         self.assertEqual(nav, None)
 
