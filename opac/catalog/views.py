@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.template.context import RequestContext
 
 from catalog import mongomodels
-from catalog.utils import Navigation
+from catalog.tools import Navigation
 
 
 def list_journals(request):
