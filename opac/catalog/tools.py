@@ -3,7 +3,10 @@ from catalog import mongomodels
 
 class Navigation(object):
 
-    def __init__(self, journal, issue=None):
+    def __init__(self,
+                 journal,
+                 issue=None,
+                 issue_lib=mongomodels.Issue):
 
         self._issues = dict((iss['data']['order'],
                              iss['data']['id']) for iss in journal.issues)
@@ -14,12 +17,22 @@ class Navigation(object):
         if issue:
             self._issue = issue
         else:
-            self._issue = mongomodels.Issue.get_issue(
+            self._issue = issue_lib.get_issue(
                                         journal._data.get('acronym'),
                                         self._current
                                         )
 
         self._journal = journal
+
+    @property
+    def ahead(self):
+
+        ahead = self._journal._data.get('current_ahead_documents')
+
+        if ahead > 0:
+            return '/ahead/{0}/'.format(self._journal._data.get('acronym'))
+        else:
+            return None
 
     @property
     def current_issue(self):
