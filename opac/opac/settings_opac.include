@@ -15,6 +15,11 @@ TEST_RUNNER = 'utils.runner.DiscoveryRunner'
 MONGO_URI = 'mongodb://localhost:27017/journalsopac'
 
 #
+# Celery configuration
+#
+BROKER_URL = MONGO_URI
+
+#
 # SciELO Manager API configuration
 #
 SCIELOMANAGER_API_URI = 'http://manager.scielo.org/api/v1/'

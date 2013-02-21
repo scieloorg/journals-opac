@@ -1,6 +1,7 @@
 # coding: utf-8
 import logging
 import time
+import itertools
 
 from django.conf import settings
 import slumber
@@ -69,7 +70,7 @@ class SciELOManagerAPI(object):
             else:
                 err_count = 0
 
-    def iter_docs(self, endpoint, collection):
+    def iter_docs(self, endpoint, collection=None):
         """
         Iterates over all documents of a given endpoint and collection.
 
@@ -86,11 +87,12 @@ class SciELOManagerAPI(object):
         offset = 0
         limit = ITEMS_PER_REQUEST
 
+        qry_params = {'offset': offset, 'limit': limit}
+        if collection:
+            qry_params.update({'collection': collection})
+
         while True:
-            doc = self.fetch_data(endpoint,
-                                   offset=offset,
-                                   limit=limit,
-                                   collection=collection)
+            doc = self.fetch_data(endpoint, **qry_params)
 
             for obj in doc['objects']:
                 # we are interested only in non-trashed items.
@@ -104,12 +106,29 @@ class SciELOManagerAPI(object):
             else:
                 offset += ITEMS_PER_REQUEST
 
-    def get_all_journals(self, collection):
+    def get_all_journals(self, *collections):
         """
-        Get all journals of a given collection
+        Get all journals from the given collections
 
-        ``collection`` is a string of a valid name_slug. A complete
-        list os collections is available at
-        http://manager.scielo.org/api/v1/collections/
+        ``collections`` is an arbitrary number of string values
+        of valid name_slug attributes. A complete list os collections is
+        available at http://manager.scielo.org/api/v1/collections/
         """
-        return self.iter_docs('journals', collection)
+        journals = [self.iter_docs('journals', c) for c in collections]
+        return itertools.chain(*journals)
+
+    def get_journals(self, *journals):
+        """
+        Get all the given journals
+
+        ``journals`` is an arbitrary number of string values
+        of resource_ids.
+        """
+        for j in journals:
+            yield self.fetch_data('journals', resource_id=j)
+
+    def get_all_collections(self):
+        """
+        Get all collections available at SciELO Manager.
+        """
+        return self.iter_docs('collections')
