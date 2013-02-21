@@ -13,28 +13,6 @@ from mocker import (
 
 class JournalTemplateTagTest(TestCase, MockerTestCase):
 
-    def test_journal_alpha_list(self):
-        from catalog.templatetags import catalogtags
-        from catalog.mongomodels import list_journals
-
-        mock_mongomanager = self.mocker.mock()
-
-        mock_mongomanager(mongo_collection='journals')
-        self.mocker.result(mock_mongomanager)
-
-        mock_mongomanager.find({})
-        self.mocker.result(mock_mongomanager)
-
-        mock_mongomanager.sort('_normalized_title', direction=pymongo.ASCENDING)
-        self.mocker.result([{'title': 'Micronucleated'}])
-
-        self.mocker.replay()
-
-        journals = list_journals(mongomanager_lib=mock_mongomanager)
-
-        self.assertEqual(catalogtags.journal_alpha_list(journals),
-            u'<ul class="unstyled"><li><a href="#">Micronucleated</a> - 0 issues</li></ul>')
-
     def test_journal_by_subject(self):
         from catalog.templatetags import catalogtags
         from catalog.mongomodels import list_journals_by_study_areas
