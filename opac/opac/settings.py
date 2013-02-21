@@ -2,6 +2,9 @@
 # Django settings for opac project.
 import os
 
+import djcelery
+djcelery.setup_loader()
+
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 BASE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..')
@@ -124,7 +127,9 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     'django.contrib.admindocs',
     'south',
+    'djcelery',
     'catalog',
+    'utils',
 )
 
 # A sample logging configuration. The only tangible logging

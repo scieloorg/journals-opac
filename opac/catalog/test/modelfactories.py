@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 import factory
 
 from catalog import mongomodels
+from catalog import models
 
 
 class IssueFactory(factory.Factory):
@@ -159,3 +160,21 @@ class JournalFactory(factory.Factory):
     title_iso = u'Ann. Ist. Super. Sanità'
     notes = ''
     resource_uri = u'/api/v1/journals/1/'
+
+
+class CollectionMetaFactory(factory.Factory):
+    FACTORY_FOR = models.CollectionMeta
+
+    is_member = False
+    resource_uri = u'/api/v1/collections/1/'
+    name = u'Saúde Pública'
+    name_slug = u'saude-publica'
+
+
+class JournalMetaFactory(factory.Factory):
+    FACTORY_FOR = models.JournalMeta
+
+    is_member = False
+    resource_uri = u'/api/v1/journals/1/'
+    name = u"Annali dell'Istituto Superiore di Sanit\xe0"
+    collection = factory.SubFactory(CollectionMetaFactory)

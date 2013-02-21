@@ -1,6 +1,13 @@
 from django.db import models
 
 
+class CustomMetaManager(models.Manager):
+    def members(self):
+        qset = self.get_query_set().filter(is_member=True)
+
+        return qset
+
+
 class CollectionMeta(models.Model):
     """
     Represents Collection Metadata available to be part
@@ -9,6 +16,8 @@ class CollectionMeta(models.Model):
     The entity selected as a member of the catalog must
     have the attribute ``is_member`` set to True.
     """
+    objects = CustomMetaManager()
+
     is_member = models.BooleanField(default=False)
     resource_uri = models.CharField(max_length=128)
     name = models.CharField(max_length=128)
@@ -17,6 +26,9 @@ class CollectionMeta(models.Model):
     class Meta:
         verbose_name = u'Collection Meta'
         verbose_name_plural = u'Collections Meta'
+
+    def __unicode__(self):
+        return self.name
 
 
 class JournalMeta(models.Model):
@@ -27,6 +39,8 @@ class JournalMeta(models.Model):
     The entity selected as a member of the catalog must
     have the attribute ``is_member`` set to True.
     """
+    objects = CustomMetaManager()
+
     is_member = models.BooleanField(default=False)
     resource_uri = models.CharField(max_length=128)
     name = models.CharField(max_length=128)
@@ -35,3 +49,6 @@ class JournalMeta(models.Model):
     class Meta:
         verbose_name = u'Journal Meta'
         verbose_name_plural = u'Journals Meta'
+
+    def __unicode__(self):
+        return self.name
