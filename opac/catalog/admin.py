@@ -28,8 +28,7 @@ class CollectionMetaAdmin(admin.ModelAdmin):
 
     def get_actions(self, request):
         actions = super(CollectionMetaAdmin, self).get_actions(request)
-        if 'delete_selected' in actions:
-            del actions['delete_selected']
+        actions.pop('delete_selected', None)
 
         return actions
 
@@ -59,6 +58,12 @@ class CollectionMetaAdmin(admin.ModelAdmin):
             urlresolvers.reverse('admin:catalog_collectionmeta_changelist')
         )
 
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 
 class JournalMetaAdmin(admin.ModelAdmin):
     list_display = ('name', 'collection', 'is_member')
@@ -77,8 +82,7 @@ class JournalMetaAdmin(admin.ModelAdmin):
 
     def get_actions(self, request):
         actions = super(JournalMetaAdmin, self).get_actions(request)
-        if 'delete_selected' in actions:
-            del actions['delete_selected']
+        actions.pop('delete_selected', None)
 
         return actions
 
@@ -107,6 +111,12 @@ class JournalMetaAdmin(admin.ModelAdmin):
         return HttpResponseRedirect(
             urlresolvers.reverse('admin:catalog_journalmeta_changelist')
         )
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 
 admin.site.register(models.CollectionMeta, CollectionMetaAdmin)

@@ -1,15 +1,17 @@
 {% extends "admin/change_list.html" %}
 {% load i18n %}
-{% block object-tools-items %}
+{% block object-tools %}
 {{block.super}}
-<li>
-  <a href="sync_collectionsmeta/">
-    {% trans 'Refresh Collections' %}
-  </a>
-</li>
-<li>
-  <a href="sync_catalog/">
-    {% trans 'Build Catalog' %}
-  </a>
-</li>
+<ul class="object-tools">
+    <li>
+      <a href="sync_collectionsmeta/">
+        {% trans 'Refresh Collections' %}
+      </a>
+    </li>
+    <li>
+      <a href="sync_catalog/">
+        {% trans 'Build Catalog' %}
+      </a>
+    </li>
+</ul>
 {% endblock %}
