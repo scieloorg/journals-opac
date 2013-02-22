@@ -98,13 +98,14 @@ class NavigationTest(MockerTestCase):
         journal = JournalFactory.build(issues=issues)
 
         nav = Navigation(journal, issue_lib=mock_issue)
+        nav._load_issue()
 
         self.assertEqual(nav._issues, OrderedDict([(1, 4), (2, 5), (3, 6)]))
         self.assertEqual(nav._current, 6)
         self.assertEqual(nav._issue, issue)
 
     def test_journal_with_ahead(self):
-        from .modelfactories import JournalFactory, IssueFactory
+        from .modelfactories import JournalFactory
         from catalog.tools import Navigation
 
         journal_data = {
@@ -112,31 +113,24 @@ class NavigationTest(MockerTestCase):
                         }
 
         journal = JournalFactory.build(**journal_data)
-        issue = IssueFactory()
 
-        nav = Navigation(journal, issue).ahead
+        nav = Navigation(journal).ahead
 
         self.assertEqual(nav, '/ahead/AISS/')
 
     def test_journal_without_ahead(self):
-        from .modelfactories import JournalFactory, IssueFactory
+        from .modelfactories import JournalFactory
         from catalog.tools import Navigation
 
         journal = JournalFactory.build()
-        issue = IssueFactory()
 
-        nav = Navigation(journal, issue=issue).ahead
+        nav = Navigation(journal).ahead
 
         self.assertEqual(nav, None)
 
     def test_current_issue(self):
-        from .modelfactories import JournalFactory, IssueFactory
+        from .modelfactories import JournalFactory
         from catalog.tools import Navigation
-
-        current_issue = {
-                            u'order': 1,
-                            u'id': 4,
-                        }
 
         issues = [
                 {
@@ -165,9 +159,8 @@ class NavigationTest(MockerTestCase):
             ]
 
         journal = JournalFactory.build(issues=issues)
-        issue = IssueFactory.build(**current_issue)
 
-        nav = Navigation(journal, issue=issue).current_issue
+        nav = Navigation(journal).current_issue
 
         self.assertEqual(nav, '/issue/AISS/3/')
 

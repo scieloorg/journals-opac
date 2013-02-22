@@ -13,24 +13,26 @@ class Navigation(object):
 
         current = max(self._issues, key=lambda x: x)
         self._current = self._issues[current]
+        self._issue_lib = issue_lib
 
         if issue:
             self._issue = issue
-        else:
-            self._issue = issue_lib.get_issue(
-                                        journal._data.get('acronym'),
-                                        self._current
-                                        )
 
         self._journal = journal
+
+    def _load_issue(self):
+        self._issue = self._issue_lib.get_issue(
+                                        self._journal.acronym,
+                                        self._current
+                                        )
 
     @property
     def ahead(self):
 
-        ahead = self._journal._data.get('current_ahead_documents')
+        ahead = self._journal.current_ahead_documents
 
         if ahead > 0:
-            return '/ahead/{0}/'.format(self._journal._data.get('acronym'))
+            return '/ahead/{0}/'.format(self._journal.acronym)
         else:
             return None
 
@@ -42,7 +44,7 @@ class Navigation(object):
         """
 
         return '/issue/{0}/{1}/'.format(
-                                        self._journal._data.get('acronym'),
+                                        self._journal.acronym,
                                         self._current
                                         )
 
@@ -54,13 +56,16 @@ class Navigation(object):
         for legacy compliance, the script will attempt a 100 different
         order numbers before delivery "None".
         """
+        if not hasattr(self, '_issue'):
+            self._load_issue()
+
         for i in range(1, 100):
-            match = self._issue._data.get('order') + i
+            match = self._issue.order + i
 
             next = self._issues.get(match)
             if next:
                 return '/issue/{0}/{1}/'.format(
-                                        self._journal._data.get('acronym'),
+                                        self._journal.acronym,
                                         next
                                         )
 
@@ -74,9 +79,11 @@ class Navigation(object):
         for legacy compliance, the script will attempt a 100 different
         order numbers before delivery "None".
         """
+        if not hasattr(self, '_issue'):
+            self._load_issue()
 
         for i in range(1, 100):
-            match = self._issue._data.get('order') - i
+            match = self._issue.order - i
 
             if match == 0:
                 break
@@ -84,7 +91,7 @@ class Navigation(object):
             previous = self._issues.get(match)
             if previous:
                 return '/issue/{0}/{1}/'.format(
-                                        self._journal._data.get('acronym'),
+                                        self._journal.acronym,
                                         previous)
 
         return None
