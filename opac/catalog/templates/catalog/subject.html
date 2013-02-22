@@ -12,11 +12,11 @@
       <dt>{% trans 'serial brownsing' %}</dt>
       <dd>
         <div class="btn-group">
-          <a href="/alpha" 
+          <a href="/alpha"
              class="btn btn-small btn-primary">
             <strong>{% trans 'alpha' %}</strong>
           </a>
-          <a href="/subject" 
+          <a href="/subject"
              class="btn btn-small btn-primary disabled">
             <strong>{% trans 'subject' %}</strong>
           </a>
@@ -54,7 +54,7 @@
       <dt>{% trans 'reports' %}</dt>
       <dd>
         <div class="btn-group">
-          <a href="/usage" 
+          <a href="/usage"
              class="btn btn-small btn-primary">
             <strong>{% trans 'usage' %}</strong>
           </a>
@@ -76,14 +76,33 @@
 {% endblock %}
 
 {% block body %}
+
 <h3 style="text-align: center;">{% trans 'Library Collection' %}</h3>
-<h4>{% trans 'Subjects' %}</h4>
 
-{% subject_list journals %}
-
-<h4>{% trans 'Subject list of serials' %}</h4>
-
-{% journals_by_subject journals %}
+{% for area in journals %}
+  {% if forloop.first %}
+    <h4>{% trans 'Subjects' %}</h4>
+    <ul class="unstyled">
+      <li><a href="#">{{ area.area }}</a></li>
+    </ul>
+    <h4>{% trans 'Subject list of serials' %}</h4>
+  {% endif %}
+    <dl>
+      <dt><a name="{{ area.area }}"></a>{{ area.area }}</dt>
+      <dd>
+        <dl>
+          <dd>
+            <ul class="unstyled">
+            {% for journal in area.journals %}
+                <li><a href="{{journal.get_absolute_url}}">{{ journal.title }}</a> - {{ journal.issues_count }} {% trans 'issues' %}</li>
+                {% ifchanged journal.title.0 %} <li>&nbsp;</li> {% endifchanged %}
+            {% endfor %}
+            </ul>
+          </dd>
+        </dl>
+      </dd>
+    </dl>
+{% endfor %}
 
 <dl>
  <dt><a name="AGRICULTURALSCIENCES"></a>AGRICULTURAL SCIENCES</dt>
