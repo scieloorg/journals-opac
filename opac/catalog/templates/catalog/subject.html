@@ -84,7 +84,7 @@
   <dl>
     {% for area in journals %}
       <dd>
-        <a href="#">{{ area.area }}</a></li>
+        <a href="#{{ area.area }}">{{ area.area }}</a></li>
       </dd>
     {% endfor %}
   </dl>
@@ -103,7 +103,7 @@
              <dd>
                 <ul class="unstyled">
                     {% for item in journal.list %}
-                      <li><a href="{{item.get_absolute_url}}">{{ item.title }}</a> - {{ item.issues_count }} {% trans 'issues' %}</li>
+                      <li><a href="{{ item.get_absolute_url }}">{{ item.title }}</a> - {{ item.issues_count }} {% trans 'issues' %}</li>
                       {% if not forloop.last %}
                         {% ifchanged item.title.0 %} <li>&nbsp;</li> {% endifchanged %}
                       {% endif %}
