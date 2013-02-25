@@ -6,13 +6,12 @@
 
 <div class="span12">
   <center>
-    <h3>Annali dell'Instituto Superiore di Sanità</h3>
-    <h5>print version ISSN 0021-2571</h5>
+    <h3>{{ journal.title }}</h3>
+    <h5>{{ journal.scielo_issn }} version ISSN {{ journal.issn }}</h5>
   </center>
 
   <div class="span12">
-    <p><small>{% trans 'Former Title' %}:</small></p>
-    <p class="text-info">Revista brasileira de pesquisas médicas e biológicas</p>
+    <p><strong>{% trans 'Former Title' %}:</strong> Revista brasileira de pesquisas médicas e biológicas</p>
 
     {% trans 'Available issues' %}*
   </div>
@@ -49,8 +48,10 @@
   </div>
 
   <div class="span12">
+    <small>
     *{% trans "Journal's history at this collection" %}<br/>
     Apr  1997: {% trans 'Admitted to this collection' %}
+    </small>
   </div>
 
 </div>
