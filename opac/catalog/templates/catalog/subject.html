@@ -1,5 +1,4 @@
 {% extends "base_lv0.html" %}
-{% load catalogtags %}
 {% load i18n %}
 
 {% block header %}
@@ -12,11 +11,11 @@
       <dt>{% trans 'serial brownsing' %}</dt>
       <dd>
         <div class="btn-group">
-          <a href="/alpha" 
+          <a href="/alpha"
              class="btn btn-small btn-primary">
             <strong>{% trans 'alpha' %}</strong>
           </a>
-          <a href="/subject" 
+          <a href="/subject"
              class="btn btn-small btn-primary disabled">
             <strong>{% trans 'subject' %}</strong>
           </a>
@@ -54,7 +53,7 @@
       <dt>{% trans 'reports' %}</dt>
       <dd>
         <div class="btn-group">
-          <a href="/usage" 
+          <a href="/usage"
              class="btn btn-small btn-primary">
             <strong>{% trans 'usage' %}</strong>
           </a>
@@ -76,150 +75,43 @@
 {% endblock %}
 
 {% block body %}
-<h3 style="text-align: center;">{% trans 'Library Collection' %}</h3>
-<h4>{% trans 'Subjects' %}</h4>
 
-{% subject_list journals %}
+  <h3 style="text-align: center;">{% trans 'Library Collection' %}</h3>
 
-<h4>{% trans 'Subject list of serials' %}</h4>
+  <h4>{% trans 'Subjects' %}</h4>
 
-{% journals_by_subject journals %}
+  <dl>
+    {% for area in journals %}
+      <dd>
+        <a href="#{{ area.area }}">{{ area.area }}</a></li>
+      </dd>
+    {% endfor %}
+  </dl>
 
-<dl>
- <dt><a name="AGRICULTURALSCIENCES"></a>AGRICULTURAL SCIENCES</dt>
- <dd>
+  <h4>{% trans 'Subject list of serials' %}</h4>
+
   <dl>
-    <dt>
-      Current titles
-    </dt>
-    <dd>
-      <ul>
-        <li><a href="/journal">Annali dell'Istituto Superiore di Sanità</a> - 12 issues</li>
-      </ul>
-      <ul>
-        <li><a href="/journal">Bulletin of the World Health Organization</a> - 215 issues</li>
-      </ul>
-      <ul>
-        <li><a href="#">Cadernos de Saúde Pública</a> - 215 issues</li>
-        <li><a href="#">Ciência &amp; Saúde Coletiva</a> - 87 issues</li>
-      </ul>
-    </dd>
+    {% for area in journals %}
+      <dt><a name="{{ area.area }}"></a>{{ area.area }}</dt>
+      <dd>
+        {% regroup area.journals|dictsort:"pub_status" by pub_status as journals_by_status %}
+
+        {% for journal in journals_by_status %}
+          <dl>
+           <dt>{{ journal.grouper|capfirst }} {% trans 'titles' %}</dt>
+             <dd>
+                <ul class="unstyled">
+                    {% for item in journal.list %}
+                      <li><a href="{{ item.get_absolute_url }}">{{ item.title }}</a> - {{ item.issues_count }} {% trans 'issues' %}</li>
+                      {% if not forloop.last %}
+                        {% ifchanged item.title.0 %} <li>&nbsp;</li> {% endifchanged %}
+                      {% endif %}
+                    {% endfor %}
+                </ul>
+             </dd>
+           </dl>
+        {% endfor %}
+      </dd>
+    {% endfor %}
   </dl>
-  <dl>
-   <dt>Non-current titles</dt>
-   <dd>
-    <ul>
-      <li>
-        <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as - <a href="#">Scientia Agricola</a>
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <a href="#">Entomología y Vectores</a> - 3 issues - Deceased in 2005
-      </li>
-      <li>
-        <a href="#">Estudos Afro-Asiáticos</a> - 9 issues - Indexing interrupted by committee in January 2004
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <a href="#">Revista Brasileira de Otorrinolaringologia</a> - 46 issues - Continued as Brazilian Journal of Otorhinolaryngology (Impresso)
-      </li>
-    </ul>
-   </dd>
-  </dl>
- </dd>
-</dl>
-<dl>
- <dt><a name="HEALTHSCIENCES"></a>HEALTH SCIENCES</dt>
- <dd>
-  <dl>
-    <dt>
-      Current titles
-    </dt>
-    <dd>
-      <ul>
-        <li><a href="#">Annali dell'Istituto Superiore di Sanità</a> - 12 issues</li>
-      </ul>
-      <ul>
-        <li><a href="#">Bulletin of the World Health Organization</a> - 215 issues</li>
-      </ul>
-      <ul>
-        <li><a href="#">Cadernos de Saúde Pública</a> - 215 issues</li>
-        <li><a href="#">Ciência &amp; Saúde Coletiva</a> - 87 issues</li>
-      </ul>
-    </dd>
-  </dl>
-  <dl>
-   <dt>Non-current titles</dt>
-   <dd>
-    <ul>
-      <li>
-        <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as -
-        <a href="#">Scientia Agricola</a>
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <a href="#">Entomología y Vectores</a> - 3 issues - Deceased in 2005
-      </li>
-      <li>
-        <a href="#">Estudos Afro-Asiáticos</a> - 9 issues - Indexing interrupted by committee in January 2004
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <a href="#">Revista Brasileira de Otorrinolaringologia</a> - 46 issues - Continued as Brazilian Journal of Otorhinolaryngology (Impresso)
-      </li>
-    </ul>
-   </dd>
-  </dl>
- </dd>
-</dl>
-<dl>
- <dt><a name="SOCIALSCIENCES"></a>SOCIAL SCIENCES</dt>
- <dd>
-  <dl>
-    <dt>
-      Current titles
-    </dt>
-    <dd>
-      <ul>
-        <li><a href="#">Annali dell'Istituto Superiore di Sanità</a> - 12 issues</li>
-      </ul>
-      <ul>
-        <li><a href="#">Bulletin of the World Health Organization</a> - 215 issues</li>
-      </ul>
-      <ul>
-        <li><a href="#">Cadernos de Saúde Pública</a> - 215 issues</li>
-        <li><a href="#">Ciência &amp; Saúde Coletiva</a> - 87 issues</li>
-      </ul>
-    </dd>
-  </dl>
-  <dl>
-   <dt>Non-current titles</dt>
-   <dd>
-    <ul>
-      <li>
-        <a href="#">Anais da Escola Superior de Agricultura Luiz de Queiroz</a> - 51  issues - Continued as -
-        <a href="#">Scientia Agricola</a>
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <a href="#">Entomología y Vectores</a> - 3 issues - Deceased in 2005
-      </li>
-      <li>
-        <a href="#">Estudos Afro-Asiáticos</a> - 9 issues - Indexing interrupted by committee in January 2004
-      </li>
-    </ul>
-    <ul>
-      <li>
-        <a href="#">Revista Brasileira de Otorrinolaringologia</a> - 46 issues - Continued as Brazilian Journal of Otorhinolaryngology (Impresso)
-      </li>
-    </ul>
-   </dd>
-  </dl>
- </dd>
-</dl>
 {% endblock %}
