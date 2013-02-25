@@ -2,12 +2,12 @@ import pymongo
 
 from django.conf import settings
 
-from catalog.mongomodels import MongoConnector
+from catalog import mongomodels
 
 
 class Marreta(object):
 
-    def __init__(self, mongoconn_lib=MongoConnector,
+    def __init__(self, mongoconn_lib=mongomodels.MongoConnector,
                        pymongo_lib=pymongo,
                        settings=settings):
 
@@ -32,6 +32,7 @@ class Marreta(object):
         self._mongoconn.db.drop_collection(collection)
 
         col = self._mongoconn.db[collection]
+        mongomodels.ensure_all_indexes()
 
         for data in new_data:
             col.insert(data, w=1)
