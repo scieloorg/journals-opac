@@ -14,7 +14,7 @@ from mocker import (
 from catalog.mongomodels import Journal
 
 
-class MongoManagerTest(TestCase, MockerTestCase):
+class MongoManagerTest(MockerTestCase, TestCase):
 
     def _makeOne(self, *args, **kwargs):
         from catalog.mongomodels import MongoManager
@@ -209,7 +209,115 @@ class MongoManagerTest(TestCase, MockerTestCase):
         self.assertTrue(True)
 
 
-class ArticleModelTest(TestCase, MockerTestCase):
+class ManagersAutoDiscoveryTest(MockerTestCase, TestCase):
+
+    def _makeCase1(self):
+        import types
+        from catalog.mongomodels import Document, MongoManager
+
+        mocker_mongoconn = self.mocker.mock()
+        mocker_mongoconn(KWARGS)
+        self.mocker.result(mocker_mongoconn)
+        self.mocker.replay()
+
+        new_module = types.ModuleType('fake_module')
+
+        class Foo(Document):
+            objects = MongoManager(mongoconn_lib=mocker_mongoconn,
+                mongo_collection='test')
+
+        new_module.Foo = Foo
+
+        return new_module
+
+    def _makeCase2(self):
+        import types
+        from catalog.mongomodels import Document
+
+        new_module = types.ModuleType('fake_module')
+
+        class Foo(Document):
+            objects = 'bla'
+
+        new_module.Foo = Foo
+
+        return new_module
+
+    def _makeCase3(self):
+        import types
+        from catalog.mongomodels import MongoManager
+
+        mocker_mongoconn = self.mocker.mock()
+        mocker_mongoconn(KWARGS)
+        self.mocker.result(mocker_mongoconn)
+        self.mocker.replay()
+
+        new_module = types.ModuleType('fake_module')
+
+        class Foo(object):
+            objects = MongoManager(mongoconn_lib=mocker_mongoconn,
+                mongo_collection='test')
+
+        new_module.Foo = Foo
+
+        return new_module
+
+    def test_mongomanager_instances_on_document_subclasses_are_identified(self):
+        from catalog.mongomodels import _managers_autodiscover
+        mod = self._makeCase1()
+
+        self.assertEqual(_managers_autodiscover(base=mod), [mod.Foo.objects])
+
+    def test_list_elements_are_mongomanager_instances(self):
+        from catalog.mongomodels import _managers_autodiscover, MongoManager
+        mod = self._makeCase1()
+
+        self.assertTrue(isinstance(_managers_autodiscover(base=mod)[0],
+            MongoManager))
+
+    def test_instances_different_than_mongomanager_are_ignored(self):
+        from catalog.mongomodels import _managers_autodiscover
+        mod = self._makeCase2()
+
+        self.assertEqual(_managers_autodiscover(base=mod), [])
+
+    def test_mongomanager_instances_on_not_document_subclasses_are_ignored(self):
+        from catalog.mongomodels import _managers_autodiscover
+        mod = self._makeCase3()
+
+        self.assertEqual(_managers_autodiscover(base=mod), [])
+
+
+class EnsureAllIndexesTests(MockerTestCase, TestCase):
+
+    def test_ensure_indexes_method_is_called_for_all_managers(self):
+        from catalog.mongomodels import ensure_all_indexes
+
+        mocker_manager = self.mocker.mock()
+        mocker_manager._ensure_indexes()
+        self.mocker.result(None)
+        self.mocker.replay()
+
+        self.assertIsNone(ensure_all_indexes(managers=[mocker_manager]))
+
+    def test_autodiscover_is_used_when_managers_is_not_provided(self):
+        from catalog.mongomodels import ensure_all_indexes
+
+        mocker_autodiscover = self.mocker.mock()
+        mocker_manager = self.mocker.mock()
+
+        mocker_autodiscover()
+        self.mocker.result([mocker_manager])
+
+        mocker_manager._ensure_indexes()
+        self.mocker.result(None)
+
+        self.mocker.replay()
+
+        self.assertIsNone(ensure_all_indexes(autodiscover=mocker_autodiscover))
+
+
+class ArticleModelTests(MockerTestCase, TestCase):
 
     def _makeOne(self, *args, **kwargs):
         from catalog.mongomodels import Article
@@ -304,7 +412,7 @@ class ArticleModelTest(TestCase, MockerTestCase):
         self.assertTrue(False)
 
 
-class JournalModelTest(TestCase, MockerTestCase):
+class JournalModelTest(MockerTestCase, TestCase):
 
     def setUp(self):
         """
@@ -910,7 +1018,7 @@ class JournalModelTest(TestCase, MockerTestCase):
         self.assertEqual(tweets, [])
 
 
-class IssueModelTest(MockerTestCase):
+class IssueModelTest(MockerTestCase, TestCase):
 
     def _makeOne(self, *args, **kwargs):
         from catalog.mongomodels import Issue
@@ -1098,7 +1206,7 @@ class IssueModelTest(MockerTestCase):
         self.assertIsInstance(section.articles[0], Article)
 
 
-class SectionModelTest(TestCase, MockerTestCase):
+class SectionModelTest(MockerTestCase, TestCase):
     def _makeOne(self, *args, **kwargs):
         from catalog.mongomodels import Section
         return Section(*args, **kwargs)

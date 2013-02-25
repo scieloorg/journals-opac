@@ -87,11 +87,12 @@ class SciELOManagerAPI(object):
         offset = 0
         limit = ITEMS_PER_REQUEST
 
-        qry_params = {'offset': offset, 'limit': limit}
+        qry_params = {'limit': limit}
         if collection:
             qry_params.update({'collection': collection})
 
         while True:
+            qry_params.update({'offset': offset})
             doc = self.fetch_data(endpoint, **qry_params)
 
             for obj in doc['objects']:

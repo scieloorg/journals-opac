@@ -1,11 +1,13 @@
 # encoding: utf-8
+import inspect
+import sys
 from urlparse import urlparse
+from collections import OrderedDict
+import copy
 
 from django.core.urlresolvers import reverse
 from django.conf import settings
-from collections import OrderedDict
 import pymongo
-
 import twitter
 from twitter import TwitterError
 
@@ -39,6 +41,60 @@ def ensure_exists(method):
         return method(instance, *args, **kwargs)
 
     return decorator
+
+
+def ensure_all_indexes(managers=None, autodiscover=None):
+    """
+    Recreates all indexes for the given managers.
+
+    ``managers`` is a list of MongoManager instances.
+
+    ``autodiscover`` is a callable that returns a list of
+    MongoManager instances.
+
+    If the function ``_managers_autodiscover`` is called before
+    the instantiation of ``Document`` subclasses in this module,
+    the ``obj._ensure_indexes()`` ends up being called 2 times
+    for each subclass(very inefficient).
+    """
+    if not autodiscover:
+        autodiscover = _managers_autodiscover
+
+    if not managers:
+        managers = autodiscover()
+
+    for obj in managers:
+        obj._ensure_indexes()
+
+
+def _managers_autodiscover(base=sys.modules[__name__]):
+    """
+    Inspects the module ``mongomodels`` looking for
+    ``MongoManager`` instances on ``Document`` subclasses
+    and returns them all in a list.
+
+    ``base`` is a reference to a python object that will
+    serve as the root for the discovery process.
+
+    This feature is particularly useful if you want to
+    call ``_ensure_indexes()`` on all Document instances.
+
+    It is important to note that this function call causes the python
+    interpreter to evaluate the top level attributes of all classes
+    belonging to ``base``.
+    """
+    members = inspect.getmembers(base, inspect.isclass)
+
+    def predicate(obj):
+        return isinstance(obj, MongoManager)
+
+    objects_ref = []
+    for identifier, instance in members:
+        if issubclass(instance, Document):
+            for attr_identifier, attr_value in inspect.getmembers(instance, predicate):
+                objects_ref.append(attr_value)
+
+    return objects_ref
 
 
 class MongoConnector(object):
@@ -83,13 +139,13 @@ class MongoManager(object):
         if 'mongo_collection' not in kwargs:
             raise ValueError('missing mongo_collection')
 
-        indexes = kwargs.pop('indexes', [])
+        self._indexes = kwargs.pop('indexes', [])
 
         self._mongoconn = mongoconn_lib(**kwargs)
 
         # ensure all needed mongodb indexes had been created
-        if indexes:
-            self._ensure_indexes(indexes)
+        if self._indexes:
+            self._ensure_indexes()
 
     def __getattr__(self, name):
 
@@ -105,11 +161,12 @@ class MongoManager(object):
         else:
             raise AttributeError()
 
-    def _ensure_indexes(self, indexes):
-        for index in indexes:
+    def _ensure_indexes(self):
+        for index in copy.deepcopy(self._indexes):
             if isinstance(index, dict):
                 attr = index.pop('attr')
-                self._mongoconn.col.ensure_index(attr, **index)
+                if attr:
+                    self._mongoconn.col.ensure_index(attr, **index)
                 continue
 
             self._mongoconn.col.ensure_index(index)
