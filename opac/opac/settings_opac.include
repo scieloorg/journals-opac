@@ -22,7 +22,7 @@ BROKER_URL = MONGO_URI
 #
 # SciELO Manager API configuration
 #
-SCIELOMANAGER_API_URI = 'http://localhost:8001/api/v1/'
+SCIELOMANAGER_API_URI = 'http://manager.scielo.org/api/v1/'
 
 # need to be replaced at settings_local.include
 SCIELOMANAGER_API_USERNAME = 'invalid_user'
