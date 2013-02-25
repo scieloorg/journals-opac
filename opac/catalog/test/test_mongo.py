@@ -212,7 +212,7 @@ class MongoManagerTest(MockerTestCase, TestCase):
 class ManagersAutoDiscoveryTest(MockerTestCase, TestCase):
 
     def _makeCase1(self):
-        import new
+        import types
         from catalog.mongomodels import Document, MongoManager
 
         mocker_mongoconn = self.mocker.mock()
@@ -220,7 +220,7 @@ class ManagersAutoDiscoveryTest(MockerTestCase, TestCase):
         self.mocker.result(mocker_mongoconn)
         self.mocker.replay()
 
-        new_module = new.module('fake_module')
+        new_module = types.ModuleType('fake_module')
 
         class Foo(Document):
             objects = MongoManager(mongoconn_lib=mocker_mongoconn,
@@ -231,10 +231,10 @@ class ManagersAutoDiscoveryTest(MockerTestCase, TestCase):
         return new_module
 
     def _makeCase2(self):
-        import new
+        import types
         from catalog.mongomodels import Document
 
-        new_module = new.module('fake_module')
+        new_module = types.ModuleType('fake_module')
 
         class Foo(Document):
             objects = 'bla'
@@ -244,7 +244,7 @@ class ManagersAutoDiscoveryTest(MockerTestCase, TestCase):
         return new_module
 
     def _makeCase3(self):
-        import new
+        import types
         from catalog.mongomodels import MongoManager
 
         mocker_mongoconn = self.mocker.mock()
@@ -252,7 +252,7 @@ class ManagersAutoDiscoveryTest(MockerTestCase, TestCase):
         self.mocker.result(mocker_mongoconn)
         self.mocker.replay()
 
-        new_module = new.module('fake_module')
+        new_module = types.ModuleType('fake_module')
 
         class Foo(object):
             objects = MongoManager(mongoconn_lib=mocker_mongoconn,
@@ -268,6 +268,13 @@ class ManagersAutoDiscoveryTest(MockerTestCase, TestCase):
 
         self.assertEqual(_managers_autodiscover(base=mod), [mod.Foo.objects])
 
+    def test_list_elements_are_mongomanager_instances(self):
+        from catalog.mongomodels import _managers_autodiscover, MongoManager
+        mod = self._makeCase1()
+
+        self.assertTrue(isinstance(_managers_autodiscover(base=mod)[0],
+            MongoManager))
+
     def test_instances_different_than_mongomanager_are_ignored(self):
         from catalog.mongomodels import _managers_autodiscover
         mod = self._makeCase2()
@@ -281,7 +288,36 @@ class ManagersAutoDiscoveryTest(MockerTestCase, TestCase):
         self.assertEqual(_managers_autodiscover(base=mod), [])
 
 
-class ArticleModelTest(MockerTestCase, TestCase):
+class EnsureAllIndexesTests(MockerTestCase, TestCase):
+
+    def test_ensure_indexes_method_is_called_for_all_managers(self):
+        from catalog.mongomodels import ensure_all_indexes
+
+        mocker_manager = self.mocker.mock()
+        mocker_manager._ensure_indexes()
+        self.mocker.result(None)
+        self.mocker.replay()
+
+        self.assertIsNone(ensure_all_indexes(managers=[mocker_manager]))
+
+    def test_autodiscover_is_used_when_managers_is_not_provided(self):
+        from catalog.mongomodels import ensure_all_indexes
+
+        mocker_autodiscover = self.mocker.mock()
+        mocker_manager = self.mocker.mock()
+
+        mocker_autodiscover()
+        self.mocker.result([mocker_manager])
+
+        mocker_manager._ensure_indexes()
+        self.mocker.result(None)
+
+        self.mocker.replay()
+
+        self.assertIsNone(ensure_all_indexes(autodiscover=mocker_autodiscover))
+
+
+class ArticleModelTests(MockerTestCase, TestCase):
 
     def _makeOne(self, *args, **kwargs):
         from catalog.mongomodels import Article

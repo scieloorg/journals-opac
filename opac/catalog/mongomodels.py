@@ -43,15 +43,27 @@ def ensure_exists(method):
     return decorator
 
 
-def ensure_all_indexes():
+def ensure_all_indexes(managers=None, autodiscover=None):
     """
-    Recreates all indexes declared on ``Document`` subclasses.
+    Recreates all indexes for the given managers.
 
-    If this function is called before the instantiation of ``Document``
-    subclasses in this module, the ``obj._ensure_indexes()`` ends up
-    being called 2 times for each subclass(very inefficient).
+    ``managers`` is a list of MongoManager instances.
+
+    ``autodiscover`` is a callable that returns a list of
+    MongoManager instances.
+
+    If the function ``_managers_autodiscover`` is called before
+    the instantiation of ``Document`` subclasses in this module,
+    the ``obj._ensure_indexes()`` ends up being called 2 times
+    for each subclass(very inefficient).
     """
-    for obj in _managers_autodiscover():
+    if not autodiscover:
+        autodiscover = _managers_autodiscover
+
+    if not managers:
+        managers = autodiscover()
+
+    for obj in managers:
         obj._ensure_indexes()
 
 
@@ -66,6 +78,10 @@ def _managers_autodiscover(base=sys.modules[__name__]):
 
     This feature is particularly useful if you want to
     call ``_ensure_indexes()`` on all Document instances.
+
+    It is important to note that this function call causes the python
+    interpreter to evaluate the top level attributes of all classes
+    belonging to ``base``.
     """
     members = inspect.getmembers(base, inspect.isclass)
 
