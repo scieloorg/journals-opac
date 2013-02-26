@@ -1183,7 +1183,7 @@ class IssueModelTest(MockerTestCase, TestCase):
         issue_mock_objects.find_one({'acronym': 'foo'}, {'issues': {'$elemMatch': {'id': 1}}})
         self.mocker.result(issue_section_microdata)
 
-        section_mock_objects.find_one({'id': 1}, {'sections': {'$elemMatch': {'id': 514}}})
+        section_mock_objects.find_one({'acronym': 'foo'}, {'sections': {'$elemMatch': {'id': 514}}})
         self.mocker.result(section_microdata)
 
         article_mock_objects.find_one({'id': 'AISS-JHjashA'})
@@ -1230,7 +1230,7 @@ class SectionModelTest(MockerTestCase, TestCase):
             ]
           }
 
-        mock_objects.find_one({'id': 1}, {'sections': {'$elemMatch': {'id': 514}}})
+        mock_objects.find_one({'acronym': 1}, {'sections': {'$elemMatch': {'id': 514}}})
         self.mocker.result(section_microdata)
 
         self.mocker.replay()
@@ -1260,7 +1260,7 @@ class SectionModelTest(MockerTestCase, TestCase):
             ]
           }
 
-        mock_objects.find_one({'id': 1}, {'sections': {'$elemMatch': {'id': 514}}})
+        mock_objects.find_one({'acronym': 1}, {'sections': {'$elemMatch': {'id': 514}}})
         self.mocker.result(section_microdata)
 
         self.mocker.replay()
