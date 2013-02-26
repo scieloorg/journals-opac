@@ -419,6 +419,22 @@ class Journal(Document):
     def get_absolute_url(self):
         return reverse('catalog.journal', kwargs={'journal_id': self.acronym})
 
+    @property
+    def history(self):
+        """
+        This property return a list of all history from the journal
+        """
+
+        history_list = []
+
+        for history in self.pub_status_history:
+            splitted_date = history['date'].split('-')
+            history_list.append({'month': splitted_date[1],
+                                 'year': splitted_date[0],
+                                 'reason': history['status']})
+
+        return history_list
+
 
 class Issue(Document):
     objects = ManagerFactory(collection='journals', indexes=['issues.id'])

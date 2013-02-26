@@ -815,6 +815,37 @@ class JournalModelTest(MockerTestCase, TestCase):
 
         self.assertEqual(phones, [])
 
+    def test_history(self):
+        from .modelfactories import JournalFactory
+
+        pub_status_history_data = {
+            'pub_status_history': [{
+              "date": "2010-04-01T00:00:00 ",
+              "status": "current",
+            },
+            {
+                "date": "1995-012-01T00:00:00",
+                "status": "desease",
+            }]}
+
+        journal = JournalFactory.build(**pub_status_history_data)
+        history = journal.history
+
+        self.assertEqual(history,
+                        [{'reason': 'current', 'year': '2010', 'month': '04'},
+                        {'reason': 'desease', 'year': '1995', 'month': '012'}])
+
+    def test_history_without_status(self):
+        from .modelfactories import JournalFactory
+
+        pub_status_history_data = {
+            'pub_status_history': []}
+
+        journal = JournalFactory.build(**pub_status_history_data)
+        history = journal.history
+
+        self.assertEqual(history, [])
+
     def test_scielo_issn_print_version(self):
         from .modelfactories import JournalFactory
 
