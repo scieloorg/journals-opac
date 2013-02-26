@@ -19,6 +19,9 @@ urlpatterns = patterns('',
     url(r'^journal/(?P<journal_id>\w+)/$', views.journal, name='catalog.journal'),
     url(r'^journal/(?P<journal_id>\w+)/stats/$', views.journal_stats, name='catalog.journal_stats'),
 
+    #Article Templates
+    url(r'^article/(?P<article_id>\w+)', direct_to_template, {'template': 'catalog/article.html'}, name='catalog.article'),
+
     # Ajax
     url(r'^ajx/ajx1/(?P<journal_id>\w+)/$', views.ajx_list_journal_tweets,
         name='catalog.ajx_list_journal_tweets'),
