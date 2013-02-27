@@ -2,6 +2,7 @@
 import unittest
 
 from django.test import TestCase
+import datetime
 import pymongo
 
 from mocker import (
@@ -820,20 +821,21 @@ class JournalModelTest(MockerTestCase, TestCase):
 
         pub_status_history_data = {
             'pub_status_history': [{
-              "date": "2010-04-01T00:00:00 ",
-              "status": "current",
+                "date": "2010-04-01T00:00:00",
+                "status": "current",
             },
             {
-                "date": "1995-012-01T00:00:00",
-                "status": "desease",
+                "date": "1995-12-01T00:00:00",
+                "status": "Deceased",
             }]}
 
         journal = JournalFactory.build(**pub_status_history_data)
         history = journal.history
 
-        self.assertEqual(history,
-                        [{'reason': 'current', 'year': '2010', 'month': '04'},
-                        {'reason': 'desease', 'year': '1995', 'month': '012'}])
+        self.assertEqual(history, [
+            {'history_date': datetime.datetime(2010, 4, 1, 0, 0), 'reason': 'current'},
+            {'history_date': datetime.datetime(1995, 12, 1, 0, 0), 'reason': 'Deceased'}
+            ])
 
     def test_history_without_status(self):
         from .modelfactories import JournalFactory

@@ -50,7 +50,7 @@
       * {% trans "Journal's history at this collection" %}<br/>
       <ul>
         {% for status in journal.history %}
-          <li>{{ status.month }} {{ status.year }}: {{ status.reason }}</li>
+          <li>{{ status.history_date|date:"N Y" }}: {{ status.reason }}</li>
         {% endfor %}
         <li>Apr  1997: {% trans 'Admitted to this collection' %}</li>
       <ul>

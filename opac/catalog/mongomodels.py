@@ -3,6 +3,7 @@ import inspect
 import sys
 from urlparse import urlparse
 from collections import OrderedDict
+from datetime import datetime
 import copy
 
 from django.core.urlresolvers import reverse
@@ -428,9 +429,8 @@ class Journal(Document):
         history_list = []
 
         for history in self.pub_status_history:
-            splitted_date = history['date'].split('-')
-            history_list.append({'month': splitted_date[1],
-                                 'year': splitted_date[0],
+            history_date = datetime.strptime(history['date'], '%Y-%m-%dT%H:%M:%S')
+            history_list.append({'history_date': history_date,
                                  'reason': history['status']})
 
         return history_list
