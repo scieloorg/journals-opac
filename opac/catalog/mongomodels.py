@@ -455,7 +455,7 @@ class Issue(Document):
         """
 
         for issue_section in self.sections:
-            journal_section = Section.get_section(self.id, issue_section['id'])
+            journal_section = Section.get_section(self.acronym, issue_section['id'])
 
             articles_list = []
             for article_id in issue_section['articles']:
@@ -475,7 +475,7 @@ class Section(Document):
         Return a specific section from a specific journal
         """
 
-        section = cls.objects.find_one({'id': journal_id},
+        section = cls.objects.find_one({'acronym': journal_id},
                                        {'sections': {'$elemMatch': {'id': int(section_id)}}})['sections'][0]['data']
 
         if not section:
