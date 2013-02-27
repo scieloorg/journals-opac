@@ -83,3 +83,18 @@
   </ul>
 </blockquote>
 {% endblock %}
+
+{% block extra_js %}
+<script type="text/javascript">
+  $(document).ready(function() {
+      ratchet_obj = {
+        resource: 'issue',
+        region: 'bra',
+        code: '{{ issue.id }}',
+        journal: '{{ journal.id }}',
+        ratchet_uri: '{{ SETTINGS.RATCHET_URI }}'
+      };
+      send_access(ratchet_obj);
+  });
+</script>
+{% endblock %}

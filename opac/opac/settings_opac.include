@@ -10,6 +10,11 @@ TEST_DISCOVERY_ROOT = BASE_PATH
 TEST_RUNNER = 'utils.runner.DiscoveryRunner'
 
 #
+# Ratchet configuration
+#
+RATCHET_URI = 'http://localhost:8860/api/v1/'
+
+#
 # MongoDB configuration
 #
 MONGO_URI = 'mongodb://localhost:27017/journalsopac'
