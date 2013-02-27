@@ -1,5 +1,4 @@
 {% extends "base_lv1.html" %}
-{% load catalogtags %}
 {% load i18n %}
 
 {% block body %}
@@ -7,13 +6,12 @@
 <div class="span12">
   <center>
     <h3>{{ journal.title }}</h3>
-    <h5>{{ journal.scielo_issn }} version ISSN {{ journal.issn }}</h5>
+    <h5>{{ journal.scielo_issn|capfirst }} {% trans 'version ISSN' %} {{ journal.issn }}</h5>
   </center>
 
   <div class="span12">
-    <p><strong>{% trans 'Former Title' %}:</strong> Revista brasileira de pesquisas médicas e biológicas</p>
-
-    {% trans 'Available issues' %}*
+    <p><strong>{% trans 'Former Title' %}:</strong> {{ journal.title }} </p>
+    <small>{% trans 'Available issues' %}*</small>
   </div>
 
   <div class="span12">
@@ -33,11 +31,11 @@
             <th>{{ vol|default:'-' }}</th>
             {% for num in nums %}
               {% if num.suppl_number %}
-                <td><a href="#">{% trans 'suppl.' %}</a></td>
+                <td><a href="{% url catalog.show_issue journal.acronym num.id %}">{% trans 'suppl.' %}</a></td>
               {% elif num.suppl_volume %}
-                <td><a href="#">{% trans 'suppl.' %} {{ num.suppl_volume }}</a></td>
+                <td><a href="{% url catalog.show_issue journal.acronym num.id %}">{% trans 'suppl.' %} {{ num.suppl_volume }}</a></td>
               {% elif not num.is_press_release %}
-                <td><a href="#">{{ num.number }}</a></td>
+                <td><a href="{% url catalog.show_issue journal.acronym num.id %}">{{ num.number }}</a></td>
               {% endif %}
             {% endfor %}
           </tr>
@@ -49,8 +47,13 @@
 
   <div class="span12">
     <small>
-    *{% trans "Journal's history at this collection" %}<br/>
-    Apr  1997: {% trans 'Admitted to this collection' %}
+      * {% trans "Journal's history at this collection" %}<br/>
+      <ul>
+        {% for status in journal.history %}
+          <li>{{ status.history_date|date:"N Y" }}: {{ status.reason }}</li>
+        {% endfor %}
+        <li>Apr  1997: {% trans 'Admitted to this collection' %}</li>
+      <ul>
     </small>
   </div>
 
