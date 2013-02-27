@@ -1,15 +1,15 @@
 from django.conf.urls import patterns, include, url
-from django.views.generic.simple import direct_to_template
+from django.views.generic import TemplateView
 
 from catalog import views
 
 urlpatterns = patterns('',
 
     # Collection Templates
-    url(r'^$', direct_to_template, {'template': 'catalog/index.html'}),
+    url(r'^$', TemplateView.as_view(template_name='catalog/index.html')),
     url(r'^alpha/$', views.list_journals, name="catalog.list_journals"),
     url(r'^subject/$', views.list_journals_by_subject, name="catalog.list_journals_by_subject"),
-    url(r'^stats/$', direct_to_template, {'template': 'catalog/collection_stats.html'}),
+    url(r'^stats/$', TemplateView.as_view(template_name='catalog/collection_stats.html')),
 
     # Issue Templates
     url(r'^issues/(?P<journal_id>\w+)/', views.issues, name='catalog.show_issues'),
