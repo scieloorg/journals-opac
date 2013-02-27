@@ -31,11 +31,11 @@
             <th>{{ vol|default:'-' }}</th>
             {% for num in nums %}
               {% if num.suppl_number %}
-                <td><a href="{% url catalog.show_issue journal.acronym num.id %}">{% trans 'suppl.' %}</a></td>
+                <td><a href="{% url "catalog.show_issue" journal.acronym num.id %}">{% trans 'suppl.' %}</a></td>
               {% elif num.suppl_volume %}
-                <td><a href="{% url catalog.show_issue journal.acronym num.id %}">{% trans 'suppl.' %} {{ num.suppl_volume }}</a></td>
+                <td><a href="{% url "catalog.show_issue" journal.acronym num.id %}">{% trans 'suppl.' %} {{ num.suppl_volume }}</a></td>
               {% elif not num.is_press_release %}
-                <td><a href="{% url catalog.show_issue journal.acronym num.id %}">{{ num.number }}</a></td>
+                <td><a href="{% url "catalog.show_issue journal.acronym num.id %}">{{ num.number }}</a></td>
               {% endif %}
             {% endfor %}
           </tr>
