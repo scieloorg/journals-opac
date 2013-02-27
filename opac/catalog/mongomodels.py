@@ -3,6 +3,7 @@ import inspect
 import sys
 from urlparse import urlparse
 from collections import OrderedDict
+from datetime import datetime
 import copy
 
 from django.core.urlresolvers import reverse
@@ -418,6 +419,21 @@ class Journal(Document):
     @ensure_exists
     def get_absolute_url(self):
         return reverse('catalog.journal', kwargs={'journal_id': self.acronym})
+
+    @property
+    def history(self):
+        """
+        This property return a list of all history from the journal
+        """
+
+        history_list = []
+
+        for history in self.pub_status_history:
+            history_date = datetime.strptime(history['date'], '%Y-%m-%dT%H:%M:%S')
+            history_list.append({'history_date': history_date,
+                                 'reason': history['status']})
+
+        return history_list
 
 
 class Issue(Document):
