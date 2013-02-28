@@ -69,11 +69,6 @@ STATIC_ROOT = ''
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
-# Webassets
-ASSETS_ROOT = os.path.join(PROJECT_PATH, 'static/')
-ASSETS_URL = '/static/'
-ASSETS_DEBUG = False
-
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -102,13 +97,13 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'htmlmin.middleware.HtmlMinifyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    #'htmlmin.middleware.HtmlMinifyMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -178,6 +173,3 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 execfile(os.path.join(os.path.abspath(os.path.dirname(__file__)),
     'settings_opac.include'))
-
-# Always minify the HTML when the DEBUG mode is False
-HTML_MINIFY = not DEBUG
