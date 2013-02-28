@@ -5,3 +5,7 @@ pymongo
 python-twitter==0.8.2
 south
 django-celery-with-mongodb
+django-htmlmin
+django-assets
+webassets
+yuicompressor

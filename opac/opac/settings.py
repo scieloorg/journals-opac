@@ -7,6 +7,7 @@ djcelery.setup_loader()
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 BASE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..')
 
 ADMINS = (
@@ -68,6 +69,11 @@ STATIC_ROOT = ''
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
+# Webassets
+ASSETS_ROOT = os.path.join(PROJECT_PATH, 'static/')
+ASSETS_URL = '/static/'
+ASSETS_DEBUG = False
+
 # Additional locations of static files
 STATICFILES_DIRS = (
     # Put strings here, like "/home/html/static" or "C:/www/django/static".
@@ -102,6 +108,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    #'htmlmin.middleware.HtmlMinifyMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -126,6 +133,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'django_assets',
     'south',
     'djcelery',
     'catalog',
@@ -170,3 +178,6 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 execfile(os.path.join(os.path.abspath(os.path.dirname(__file__)),
     'settings_opac.include'))
+
+# Always minify the HTML when the DEBUG mode is False
+HTML_MINIFY = not DEBUG
