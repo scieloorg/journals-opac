@@ -429,11 +429,42 @@ class Journal(Document):
         history_list = []
 
         for history in self.pub_status_history:
-            history_date = datetime.strptime(history['date'], '%Y-%m-%dT%H:%M:%S')
+            history_date = datetime.strptime(history['date'][:19], '%Y-%m-%dT%H:%M:%S')
             history_list.append({'history_date': history_date,
                                  'reason': history['status']})
 
         return history_list
+
+    @property
+    def last_date_history(self):
+        """
+        This property get the last date status from journal and otherwise ''
+        """
+
+        date_list = []
+
+        for history in self.pub_status_history:
+            date = datetime.strptime(history['date'][:19], '%Y-%m-%dT%H:%M:%S')
+            date_list.append(date)
+
+        if date_list:
+            return max(date_list)
+        else:
+            return ''
+
+    @property
+    def other_title(self):
+        """
+        This property try to get the previous_title field or
+        other_previous_title field and otherwise ''
+        """
+
+        if self.previous_title:
+            return self.previous_title
+        elif self.other_previous_title:
+            return self.other_previous_title
+        else:
+            return ''
 
 
 class Issue(Document):
