@@ -1,4 +1,5 @@
 {% extends "base_lv1.html" %}
+{% load catalogtags %}
 {% load i18n %}
 
 {% block body %}
@@ -119,13 +120,7 @@
   }
   $(document).ready(function() {
       qry_tweets();
-      ratchet_obj = {
-        resource: 'journal',
-        region: 'bra',
-        code: '{{ journal.id }}',
-        ratchet_uri: '{{ SETTINGS.RATCHET_URI }}'
-      };
-      send_access(ratchet_obj);
+      {% ratchet_caller resource='journal' code=journal.id region='bra' %}
   });
 </script>
 {% endblock %}

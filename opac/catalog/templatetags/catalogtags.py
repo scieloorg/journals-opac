@@ -1,10 +1,28 @@
+import json
+
 from django import template
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
+from opac import settings
+
 register = template.Library()
 
 
+@register.simple_tag
+def ratchet_caller(**attributes):
+
+    if settings.DEBUG:
+        return ''
+
+    attributes['ratchet_uri'] = settings.RATCHET_URI
+    js = json.dumps(attributes)
+    snippet = u'ratchet_obj = {0}; send_access(ratchet_obj);'.format(js)
+
+    return snippet
+
+
+@register.simple_tag
 def list_articles_by_section(sections, language):
 
     snippet = u'<dl class="issue_toc">'
@@ -36,5 +54,3 @@ def list_articles_by_section(sections, language):
     snippet += u'</dl>'
 
     return snippet
-
-register.simple_tag(list_articles_by_section)
