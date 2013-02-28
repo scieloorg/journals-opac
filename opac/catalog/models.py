@@ -52,3 +52,17 @@ class JournalMeta(models.Model):
 
     def __unicode__(self):
         return self.name
+
+    @property
+    def resource_id(self):
+        cleaned = [seg for seg in self.resource_uri.split('/') if seg]
+        return cleaned[-1]
+
+
+class Sync(models.Model):
+    """
+    Represents an incremental sync event.
+    """
+    started_at = models.DateTimeField(auto_now_add=True)
+    ended_at = models.DateTimeField(null=True)
+    last_seq = models.IntegerField(default=0)

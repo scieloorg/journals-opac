@@ -9,6 +9,28 @@ from .sync import pipes
 from catalog import models
 
 
+def _get_user_catalog_definitions():
+    """
+    It analyses the choices the user made, and returns a list
+    in the form:
+    [[<collection_name_slug>,], [<journal>,]]
+    """
+    collections = models.CollectionMeta.objects.members()
+
+    full_collections = []
+    journals_a_la_carte = []
+
+    for collection in collections:
+        # decide if the entire collection must be synced or only some
+        # journals.
+        if collection.journals.members().exists():
+            journals_a_la_carte = collection.journals.members()
+        else:
+            full_collections.append(collection)
+
+    return [full_collections, journals_a_la_carte]
+
+
 def _what_to_sync(managerapi_dep=datacollector.SciELOManagerAPI):
     """
     Returns an iterator containing all journals that must be synced
@@ -20,28 +42,23 @@ def _what_to_sync(managerapi_dep=datacollector.SciELOManagerAPI):
     sync all its journals.
     """
     scielo_api = managerapi_dep(settings=settings)
-    collections = models.CollectionMeta.objects.members()
+    full_collections, journals_a_la_carte = _get_user_catalog_definitions()
 
-    full_collections = []
-    journals_a_la_carte = []
-
-    for collection in collections:
-        # decide if the entire collection must be synced or only some
-        # journals.
-        if collection.journals.members().exists():
-            for journal in collection.journals.members():
-                # getting the resource_id
-                cleaned = [seg for seg in journal.resource_uri.split('/') if seg]
-                resource_id = cleaned[-1]
-
-                journals_a_la_carte.append(resource_id)
-        else:
-            full_collections.append(collection.name_slug)
+    full_collections = (c.name_slug for c in full_collections)
+    journals_a_la_carte = (j.resource_id for j in journals_a_la_carte)
 
     return itertools.chain(
         scielo_api.get_all_journals(*full_collections),
         scielo_api.get_journals(*journals_a_la_carte)
     )
+
+
+def _what_have_changed(managerapi_dep=datacollector.SciELOManagerAPI):
+    """
+    Returns an iterator containing all journals that must be created
+    or updated in order to keep the catalog updated.
+    """
+    full_collections, journals_a_la_carte = _get_user_catalog_definitions()
 
 
 @task(name='utils.tasks.build_catalog')
