@@ -1,8 +1,5 @@
 # coding: utf-8
 import mocker
-from django.test import TestCase
-
-from catalog.test import modelfactories
 
 
 class SciELOManagerAPITests(mocker.MockerTestCase):

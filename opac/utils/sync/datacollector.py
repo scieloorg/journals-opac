@@ -70,7 +70,7 @@ class SciELOManagerAPI(object):
             else:
                 err_count = 0
 
-    def iter_docs(self, endpoint, collection=None):
+    def iter_docs(self, endpoint, collection=None, **kwargs):
         """
         Iterates over all documents of a given endpoint and collection.
 
@@ -87,13 +87,13 @@ class SciELOManagerAPI(object):
         offset = 0
         limit = ITEMS_PER_REQUEST
 
-        qry_params = {'limit': limit}
+        kwargs.update({'limit': limit})
         if collection:
-            qry_params.update({'collection': collection})
+            kwargs.update({'collection': collection})
 
         while True:
-            qry_params.update({'offset': offset})
-            doc = self.fetch_data(endpoint, **qry_params)
+            kwargs.update({'offset': offset})
+            doc = self.fetch_data(endpoint, **kwargs)
 
             for obj in doc['objects']:
                 # we are interested only in non-trashed items.
@@ -135,4 +135,14 @@ class SciELOManagerAPI(object):
         return self.iter_docs('collections')
 
     def get_changes(self, since=0):
-        return self.iter_docs('changes')
+        return self.iter_docs('changes', since=since)
+
+    def get_issues(self, *issues):
+        """
+        Get all the given issues
+
+        ``issues`` is an arbitrary number of string values
+        of resource_ids.
+        """
+        for i in issues:
+            yield self.fetch_data('issues', resource_id=i)
