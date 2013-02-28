@@ -3,45 +3,17 @@
 {% load i18n %}
 
 {% block body %}
+
 <div class="span12">
   <center>
     <h3>{{ journal.title }}</h3>
-    <h5>{{ journal.scielo_issn }} version ISSN {{ journal.issn }}</h5>
+    <h5>{{ journal.scielo_issn|capfirst }} {% trans 'version ISSN' %} {{ journal.issn }}</h5>
   </center>
-  <h4>Table of Contents</h4>
-  <h4>{{ journal.short_title }} vol.48 n.3 {{ journal.publication_city }} Jan.</h4>
+  <h4>{% trans 'Table of Contents' %}</h4>
+  <h4>{{ journal.short_title }} vol.{{ issue.volume }} n.{{ issue.number }} {{ journal.publication_city }} {{ issue.publication_start_month }} {{ issue.publication_end_month }} {{ issue.publication_year }}</h4>
 
-  {% list_articles_by_section sections 'en' %}
+  {% list_articles_by_section sections LANGUAGE_CODE %}
 
-  <dl class="issue_toc">
-      <dt><i class="icon-chevron-right"></i> Example</dt>
-      <dd>
-        <ul class="unstyled toc_article">
-          <li>
-            In defence of bioethicists of the third king
-            <ul class="inline toc_article_authors">
-              <li><a href="#">Petrini, Carlo</a></li>
-              <li><a href="#">Petrini, Carlo</a></li>
-            </ul>
-            <ul class="inline toc_article_links">
-              <li>
-                abstract:
-                <a href="#">English</a> |
-                <a href="#">Italian</a>
-              </li>
-              <li>
-                full text:
-                <a href="#">English</a>
-              </li>
-              <li>
-                pdf:
-                <a href="#">English</a>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </dd>
-  </dl>
 </div>
 {% endblock %}
 
@@ -50,7 +22,7 @@
 <blockquote class="span4">
   <strong>{{ journal.title }}</strong>
   <small>{{ journal.scielo_issn }} version ISSN {{ journal.issn }}</small>
-  <strong>Mission</strong>
+  <strong>{% trans 'Mission' %}</strong>
   <small>{{ journal.missions.en }}</small>
 </blockquote>
 <blockquote class="span3">

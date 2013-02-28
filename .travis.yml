@@ -4,7 +4,7 @@ python:
 services:
   - mongodb
 env:
-  - DJANGO_VERSION=1.4.3
+  - DJANGO_VERSION=1.5
 install:
   - pip install -r requirements.txt --use-mirrors
   - pip install -r requirements-tests.txt --use-mirrors

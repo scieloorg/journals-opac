@@ -2,7 +2,7 @@ django
 slumber
 requests==0.13.3
 pymongo
-python-twitter==0.8.2
+python-twitter
 south
 django-celery-with-mongodb
 django-htmlmin

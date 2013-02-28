@@ -2,6 +2,7 @@
 import unittest
 
 from django.test import TestCase
+import datetime
 import pymongo
 
 from mocker import (
@@ -815,6 +816,38 @@ class JournalModelTest(MockerTestCase, TestCase):
 
         self.assertEqual(phones, [])
 
+    def test_history(self):
+        from .modelfactories import JournalFactory
+
+        pub_status_history_data = {
+            'pub_status_history': [{
+                "date": "2010-04-01T00:00:00",
+                "status": "current",
+            },
+            {
+                "date": "1995-12-01T00:00:00",
+                "status": "Deceased",
+            }]}
+
+        journal = JournalFactory.build(**pub_status_history_data)
+        history = journal.history
+
+        self.assertEqual(history, [
+            {'history_date': datetime.datetime(2010, 4, 1, 0, 0), 'reason': 'current'},
+            {'history_date': datetime.datetime(1995, 12, 1, 0, 0), 'reason': 'Deceased'}
+            ])
+
+    def test_history_without_status(self):
+        from .modelfactories import JournalFactory
+
+        pub_status_history_data = {
+            'pub_status_history': []}
+
+        journal = JournalFactory.build(**pub_status_history_data)
+        history = journal.history
+
+        self.assertEqual(history, [])
+
     def test_scielo_issn_print_version(self):
         from .modelfactories import JournalFactory
 
@@ -1183,7 +1216,7 @@ class IssueModelTest(MockerTestCase, TestCase):
         issue_mock_objects.find_one({'acronym': 'foo'}, {'issues': {'$elemMatch': {'id': 1}}})
         self.mocker.result(issue_section_microdata)
 
-        section_mock_objects.find_one({'id': 1}, {'sections': {'$elemMatch': {'id': 514}}})
+        section_mock_objects.find_one({'acronym': 'foo'}, {'sections': {'$elemMatch': {'id': 514}}})
         self.mocker.result(section_microdata)
 
         article_mock_objects.find_one({'id': 'AISS-JHjashA'})
@@ -1230,7 +1263,7 @@ class SectionModelTest(MockerTestCase, TestCase):
             ]
           }
 
-        mock_objects.find_one({'id': 1}, {'sections': {'$elemMatch': {'id': 514}}})
+        mock_objects.find_one({'acronym': 1}, {'sections': {'$elemMatch': {'id': 514}}})
         self.mocker.result(section_microdata)
 
         self.mocker.replay()
@@ -1260,7 +1293,7 @@ class SectionModelTest(MockerTestCase, TestCase):
             ]
           }
 
-        mock_objects.find_one({'id': 1}, {'sections': {'$elemMatch': {'id': 514}}})
+        mock_objects.find_one({'acronym': 1}, {'sections': {'$elemMatch': {'id': 514}}})
         self.mocker.result(section_microdata)
 
         self.mocker.replay()

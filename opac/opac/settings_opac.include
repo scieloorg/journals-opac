@@ -33,12 +33,9 @@ SCIELOMANAGER_API_URI = 'http://manager.scielo.org/api/v1/'
 SCIELOMANAGER_API_USERNAME = 'invalid_user'
 SCIELOMANAGER_API_KEY = 'invalid_token'
 
-try:
-    execfile(os.path.join(os.path.abspath(os.path.dirname(__file__)),
-        'settings_local.include'))
-except IOError:
-    exit('Missing configuration file: "settings_local.include"')
-
+#
+# i18n and l10n support
+#
 LANGUAGES = (
     (u'en', u'English'),
     (u'es', u'Español'),
@@ -47,4 +44,20 @@ LANGUAGES = (
 
 LOCALE_PATHS = (
     os.path.join(BASE_PATH, 'locale'),
-    )
+)
+
+#
+# Hosts whitelist (all by default)
+#
+ALLOWED_HOSTS = ['*']
+
+####################################################
+# This must be the last piece of code of this module
+####################################################
+try:
+    execfile(os.path.join(os.path.abspath(os.path.dirname(__file__)),
+        'settings_local.include'))
+except IOError:
+    exit('Missing configuration file: "settings_local.include"')
+
+

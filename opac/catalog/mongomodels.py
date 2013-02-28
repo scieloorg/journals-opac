@@ -3,6 +3,7 @@ import inspect
 import sys
 from urlparse import urlparse
 from collections import OrderedDict
+from datetime import datetime
 import copy
 
 from django.core.urlresolvers import reverse
@@ -419,6 +420,21 @@ class Journal(Document):
     def get_absolute_url(self):
         return reverse('catalog.journal', kwargs={'journal_id': self.acronym})
 
+    @property
+    def history(self):
+        """
+        This property return a list of all history from the journal
+        """
+
+        history_list = []
+
+        for history in self.pub_status_history:
+            history_date = datetime.strptime(history['date'], '%Y-%m-%dT%H:%M:%S')
+            history_list.append({'history_date': history_date,
+                                 'reason': history['status']})
+
+        return history_list
+
 
 class Issue(Document):
     objects = ManagerFactory(collection='journals', indexes=['issues.id'])
@@ -455,7 +471,7 @@ class Issue(Document):
         """
 
         for issue_section in self.sections:
-            journal_section = Section.get_section(self.id, issue_section['id'])
+            journal_section = Section.get_section(self.acronym, issue_section['id'])
 
             articles_list = []
             for article_id in issue_section['articles']:
@@ -475,7 +491,7 @@ class Section(Document):
         Return a specific section from a specific journal
         """
 
-        section = cls.objects.find_one({'id': journal_id},
+        section = cls.objects.find_one({'acronym': journal_id},
                                        {'sections': {'$elemMatch': {'id': int(section_id)}}})['sections'][0]['data']
 
         if not section:
