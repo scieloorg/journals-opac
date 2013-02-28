@@ -51,6 +51,20 @@ LOCALE_PATHS = (
 #
 ALLOWED_HOSTS = ['*']
 
+#
+# Webassets
+#
+ASSETS_ROOT = os.path.join(PROJECT_PATH, 'static/')
+ASSETS_URL = '/static/'
+ASSETS_DEBUG = DEBUG
+
+#
+# HTML minification
+# Always minify the HTML when the DEBUG mode is False
+#
+HTML_MINIFY = not DEBUG
+
+
 ####################################################
 # This must be the last piece of code of this module
 ####################################################
@@ -59,5 +73,3 @@ try:
         'settings_local.include'))
 except IOError:
     exit('Missing configuration file: "settings_local.include"')
-
-
