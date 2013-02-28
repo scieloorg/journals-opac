@@ -848,6 +848,80 @@ class JournalModelTest(MockerTestCase, TestCase):
 
         self.assertEqual(history, [])
 
+    def test_last_date_history(self):
+        from .modelfactories import JournalFactory
+
+        pub_status_history_data = {
+            'pub_status_history': [
+            {
+                "date": "2010-04-01T00:00:00",
+                "status": "current"
+            },
+            {
+                "date": "1968-04-01T00:00:00",
+                "status": "deceased"
+            },
+            {
+                "date": "2013-04-01T00:00:00",
+                "status": "suspened"
+            },
+            ]}
+
+        journal = JournalFactory.build(**pub_status_history_data)
+        last_date = journal.last_date_history
+
+        self.assertEqual(last_date, datetime.datetime(2013, 4, 1, 0, 0))
+
+    def test_last_date_history_without_status(self):
+        from .modelfactories import JournalFactory
+
+        pub_status_history_data = {
+            'pub_status_history': []}
+
+        journal = JournalFactory.build(**pub_status_history_data)
+        last_date = journal.last_date_history
+
+        self.assertEqual(last_date, '')
+
+    def test_other_title_with_other_previous_title(self):
+        from .modelfactories import JournalFactory
+
+        pub_status_history_data = {
+            "other_previous_title": "High School Musical",
+            "previous_title": "",
+        }
+
+        journal = JournalFactory.build(**pub_status_history_data)
+        last_date = journal.other_title
+
+        self.assertEqual(last_date, 'High School Musical')
+
+    def test_other_title_with_previous_title(self):
+        from .modelfactories import JournalFactory
+
+        pub_status_history_data = {
+            "other_previous_title": "",
+            "previous_title": "High School Musical",
+        }
+
+        journal = JournalFactory.build(**pub_status_history_data)
+        last_date = journal.other_title
+
+        self.assertEqual(last_date, 'High School Musical')
+
+    def test_other_title_empty(self):
+        from .modelfactories import JournalFactory
+
+        pub_status_history_data = {
+            "other_previous_title": "",
+            "previous_title": "",
+        }
+
+        journal = JournalFactory.build(**pub_status_history_data)
+        last_date = journal.other_title
+
+        self.assertEqual(last_date, '')
+
     def test_scielo_issn_print_version(self):
         from .modelfactories import JournalFactory
 

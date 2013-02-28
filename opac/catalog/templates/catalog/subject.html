@@ -102,10 +102,24 @@
              <dd>
                 <ul class="unstyled">
                     {% for item in journal.list %}
-                      <li><a href="{{ item.get_absolute_url }}">{{ item.title }}</a> - {{ item.issues_count }} {% trans 'issues' %}</li>
-                      {% if not forloop.last %}
-                        {% ifchanged item.title.0 %} <li>&nbsp;</li> {% endifchanged %}
+                      {% ifchanged item.title.0 %} <li>&nbsp;</li> {% endifchanged %}
+                      <li><a href="{{ item.get_absolute_url }}">{{ item.title }}</a>
+                        - {{ item.issues_count }} {% trans 'issues' %}
+                      {% if item.other_title and item.pub_status = 'deceased' %}
+                        - <small>
+                            <em>{% trans 'Continued as' %}</em>
+                          </small>
+                        {{ item.other_title }}
+                      {% elif item.pub_status = 'deceased' and item.other_title == '' %}
+                        - <small>
+                            <em>{% trans 'Deceased in ' %} - {{ item.last_date_history|date:"F d, Y" }}</em>
+                          </small>
+                      {% elif item.pub_status = 'suspended' %}
+                        - <small>
+                            <em>{% trans 'Indexing interrupted by committee in ' %} {{ item.last_date_history|date:"F d, Y" }}</em>
+                          </small>
                       {% endif %}
+                      </li>
                     {% endfor %}
                 </ul>
              </dd>
