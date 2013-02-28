@@ -134,29 +134,5 @@ class SciELOManagerAPI(object):
         """
         return self.iter_docs('collections')
 
-
-def identify_changes(changes, collections, journals):
-    """
-    Returns a list of ``object_uri`` that must be
-    synced.
-
-    ``changes`` is an iterable where each element is an
-    entry in changes API.
-
-    ``collections`` is an iterable of collections
-    that must have all its journals synced.
-
-    ``journals`` is an iterable of journals that must
-    be synced.
-    """
-    colls_resource_uri = set(c.resource_uri for c in collections)
-    jours_resource_uri = set(j.resource_uri for j in journals)
-
-    changed = []
-    for change_rec in changes:
-        if change_rec.get('collection_uri') in colls_resource_uri or (
-            change_rec.get('object_uri') in jours_resource_uri):
-
-            changed.append(change_rec.get('object_uri'))
-
-    return changed
+    def get_changes(self, since=0):
+        return self.iter_docs('changes')

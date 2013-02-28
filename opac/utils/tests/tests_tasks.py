@@ -280,3 +280,212 @@ class SyncJournalsMetaTests(mocker.MockerTestCase, TestCase):
         sync_journals_meta(managerapi_dep=mocker_scieloapi)
 
         self.assertEqual(models.JournalMeta.objects.count(), 0)
+
+
+class ChangesIdentificationTests(mocker.MockerTestCase, TestCase):
+
+    def test_identify_journals_given_collections(self):
+        from utils.tasks import identify_changes
+
+        changes = [
+            {
+                "changed_at": "2013-01-23T15:11:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/31/",
+                "resource_uri": "/api/v1/changes/8/",
+                "seq": 8
+            },
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "added",
+                "object_uri": "/api/v1/issues/2840/",
+                "resource_uri": "/api/v1/changes/2/",
+                "seq": 9
+            },
+        ]
+
+        c = modelfactories.CollectionMetaFactory.create()
+
+        docs = identify_changes(changes, collections=[c], journals=[])
+
+        self.assertEqual(len(docs), 1)
+        self.assertEqual(docs[0], "/api/v1/journals/31/")
+
+    def test_identify_journals_given_journals(self):
+        from utils.tasks import identify_changes
+
+        mocker_list_issues = self.mocker.mock()
+        mocker_list_issues(mocker.ANY)
+        self.mocker.result([u'/api/v1/issues/1/'])
+        self.mocker.replay()
+
+        changes = [
+            {
+                "changed_at": "2013-01-23T15:11:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/31/",
+                "resource_uri": "/api/v1/changes/8/",
+                "seq": 8
+            },
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/1/",
+                "resource_uri": "/api/v1/changes/2/",
+                "seq": 9
+            },
+        ]
+
+        j = modelfactories.JournalMetaFactory.create()
+
+        docs = identify_changes(changes,
+                                collections=[],
+                                journals=[j],
+                                list_issues_uri_dep=mocker_list_issues)
+
+        self.assertEqual(len(docs), 1)
+        self.assertEqual(docs[0], "/api/v1/journals/1/")
+
+    def test_identify_journals_given_journals_and_collections(self):
+        from utils.tasks import identify_changes
+
+        mocker_list_issues = self.mocker.mock()
+        mocker_list_issues(mocker.ANY)
+        self.mocker.result([u'/api/v1/issues/1/'])
+        self.mocker.replay()
+
+        changes = [
+            {
+                "changed_at": "2013-01-23T15:11:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/31/",
+                "resource_uri": "/api/v1/changes/8/",
+                "seq": 8
+            },
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/1/",
+                "resource_uri": "/api/v1/changes/2/",
+                "seq": 9
+            },
+            {
+                "changed_at": "2013-01-23T15:13:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/2/",
+                "resource_uri": "/api/v1/changes/3/",
+                "seq": 10
+            },
+        ]
+
+        c = modelfactories.CollectionMetaFactory.create(
+            resource_uri="/api/v1/collections/2/"
+        )
+        c2 = modelfactories.CollectionMetaFactory.create(
+            resource_uri="/api/v1/collections/1/"
+        )
+        j = modelfactories.JournalMetaFactory.create(
+            collection=c,
+            resource_uri="/api/v1/journals/1/"
+        )
+
+        docs = identify_changes(changes,
+                                collections=[c2],
+                                journals=[j],
+                                list_issues_uri_dep=mocker_list_issues)
+
+        self.assertEqual(len(docs), 2)
+        self.assertIn("/api/v1/journals/31/", docs)
+        self.assertIn("/api/v1/journals/1/", docs)
+
+    def test_membership_is_irrelevant(self):
+        from utils.tasks import identify_changes
+
+        mocker_list_issues = self.mocker.mock()
+
+        mocker_list_issues(mocker.ANY)
+        self.mocker.result([u'/api/v1/issues/1/'])
+
+        mocker_list_issues(mocker.ANY)
+        self.mocker.result([])
+
+        self.mocker.replay()
+
+        changes = [
+            {
+                "changed_at": "2013-01-23T15:11:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/1/",
+                "resource_uri": "/api/v1/changes/8/",
+                "seq": 8
+            },
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "added",
+                "object_uri": "/api/v1/journals/2/",
+                "resource_uri": "/api/v1/changes/2/",
+                "seq": 9
+            },
+        ]
+
+        j = modelfactories.JournalMetaFactory.create(
+            is_member=True,
+            resource_uri=u'/api/v1/journals/1/')
+        j2 = modelfactories.JournalMetaFactory.create(
+            is_member=False,
+            resource_uri=u'/api/v1/journals/2/')
+
+        docs = identify_changes(changes,
+                                collections=[],
+                                journals=[j, j2],
+                                list_issues_uri_dep=mocker_list_issues)
+
+        self.assertEqual(len(docs), 2)
+
+    def test_identify_issue_changes(self):
+        from utils.tasks import identify_changes
+
+        mocker_list_issues = self.mocker.mock()
+        mocker_list_issues(mocker.ANY)
+        self.mocker.result([u'/api/v1/issues/1/'])
+
+        self.mocker.replay()
+
+        journal_doc = modelfactories.JournalFactory.build()
+        journal_meta = modelfactories.JournalMetaFactory.create()
+
+        changes = [
+            {
+                "changed_at": "2013-01-23T15:11:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/2/",
+                "resource_uri": "/api/v1/changes/8/",
+                "seq": 8
+            },
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/issues/1/",
+                "resource_uri": "/api/v1/changes/2/",
+                "seq": 9
+            },
+        ]
+
+        docs = identify_changes(changes,
+                                collections=[],
+                                journals=[journal_meta],
+                                list_issues_uri_dep=mocker_list_issues)
+
+        self.assertEqual(len(docs), 1)
+        self.assertEqual(docs[0], "/api/v1/issues/1/")

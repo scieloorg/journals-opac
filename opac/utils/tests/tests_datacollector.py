@@ -83,36 +83,3 @@ class SciELOManagerAPITests(mocker.MockerTestCase):
 
         res = api.fetch_data('journals', resource_id=1)
         self.assertIn('title', res)
-
-
-class ChangesIdentificationTests(mocker.MockerTestCase, TestCase):
-
-    def test_identify_journals_given_collections(self):
-        from utils.sync.datacollector import identify_changes
-
-        changes = [
-            {
-                "changed_at": "2013-01-23T15:11:33.409478",
-                "collection_uri": "/api/v1/collections/1/",
-                "event_type": "updated",
-                "object_uri": "/api/v1/journals/31/",
-                "resource_uri": "/api/v1/changes/8/",
-                "seq": 8
-            },
-            {
-                "changed_at": "2013-01-23T15:12:33.409478",
-                "collection_uri": "/api/v1/collections/2/",
-                "event_type": "added",
-                "object_uri": "/api/v1/issues/2840/",
-                "resource_uri": "/api/v1/changes/2/",
-                "seq": 9
-            },
-        ]
-
-        c = modelfactories.CollectionMetaFactory.create(is_member=True)
-
-        docs = identify_changes(changes, collections=[c], journals=[])
-        self.assertEqual(docs[0], "/api/v1/journals/31/")
-
-    # def test_identify_journals_given_journals(self):
-    #     self.assertTrue(True)

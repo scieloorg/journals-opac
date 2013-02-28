@@ -7,6 +7,7 @@ from .sync import datacollector
 from .sync import dataloader
 from .sync import pipes
 from catalog import models
+from catalog import mongomodels
 
 
 def _get_user_catalog_definitions():
@@ -58,7 +59,12 @@ def _what_have_changed(managerapi_dep=datacollector.SciELOManagerAPI):
     Returns an iterator containing all journals that must be created
     or updated in order to keep the catalog updated.
     """
+    scielo_api = managerapi_dep(settings=settings)
     full_collections, journals_a_la_carte = _get_user_catalog_definitions()
+
+    data = scielo_api.get_changes()
+
+    return identify_changes(data, full_collections, journals_a_la_carte)
 
 
 @task(name='utils.tasks.build_catalog')
@@ -123,3 +129,50 @@ def sync_journals_meta(managerapi_dep=datacollector.SciELOManagerAPI):
             name=col.get('title', ''),
             collection=cols_memo[collection],
         )
+
+
+def _list_issues_uri(journal_meta, journal_dep=mongomodels.Journal):
+        # TODO: This instantiation logic must be at Journal.get_journal
+        journal_data = journal_dep.objects.find_one({'id': journal_meta.resource_id})
+        journal_doc = journal_dep(**journal_data)
+        return (issue.resource_uri for issue in journal_doc.list_issues())
+
+
+def identify_changes(changes,
+                     collections,
+                     journals,
+                     list_issues_uri_dep=_list_issues_uri):
+    """
+    Returns a list of ``object_uri`` that must be
+    synced.
+
+    ``changes`` is an iterable where each element is an
+    entry in changes API.
+
+    ``collections`` is an iterable of collections
+    that must have all its journals synced.
+
+    ``journals`` is an iterable of journals that must
+    be synced.
+    """
+    journals_list = []
+    issues_list = []
+
+    # list uris from all journals and its issues
+    for j in journals:
+        journals_list.append(j.resource_uri)
+        issues_list.append(list_issues_uri_dep(j))
+
+    collections_uris = (c.resource_uri for c in collections)
+    journals_uris = journals_list
+    issues_uris = itertools.chain(*issues_list)
+    super_set = set().union(collections_uris, journals_uris, issues_uris)
+
+    changed = set()
+    for change_rec in changes:
+        if change_rec.get('collection_uri') in super_set or (
+            change_rec.get('object_uri') in super_set):
+
+            changed.add(change_rec.get('object_uri'))
+
+    return list(changed)
