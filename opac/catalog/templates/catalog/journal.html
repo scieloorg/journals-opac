@@ -117,9 +117,15 @@
       }
     });
   }
-
   $(document).ready(function() {
       qry_tweets();
+      ratchet_obj = {
+        resource: 'journal',
+        region: 'bra',
+        code: '{{ journal.id }}',
+        ratchet_uri: '{{ SETTINGS.RATCHET_URI }}'
+      };
+      send_access(ratchet_obj);
   });
 </script>
 {% endblock %}
