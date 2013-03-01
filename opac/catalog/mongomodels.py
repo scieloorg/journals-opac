@@ -289,9 +289,10 @@ class Journal(Document):
     _twitter_api = twitter.Api()
 
     @classmethod
-    def get_journal(cls, journal_id=None, criteria=None):
+    def get_journal(cls, criteria=None):
         """
         Return a specific journal by acronym or by any valid criteria
+        IMPORTANT: Try using indexed fields in the parameter criteria
         """
 
         criteria = {} if criteria is None else criteria
@@ -299,13 +300,10 @@ class Journal(Document):
         if not isinstance(criteria, dict):
             raise ValueError('criteria must be dict')
 
-        if criteria:
-            journal = cls.objects.find_one(criteria)
-        else:
-            journal = cls.objects.find_one({'acronym': journal_id})
+        journal = cls.objects.find_one(criteria)
 
         if not journal:
-            raise ValueError('no journal found for id:'.format(journal_id))
+            raise ValueError('no journal found for this citeria')
 
         return cls(**journal)
 
@@ -517,7 +515,7 @@ class Issue(Document):
         This method retrieves the journal related to issue instance.
         """
 
-        journal = Journal.get_journal(journal_id=self._data['acronym'])
+        journal = Journal.get_journal({'acronym': self._data['acronym']})
 
         return journal
 

@@ -643,7 +643,7 @@ class JournalModelTest(MockerTestCase, TestCase):
 
         Journal.objects = mock_objects
 
-        journal = Journal.get_journal(journal_id='foo')
+        journal = Journal.get_journal({'acronym': 'foo'})
 
         self.assertIsInstance(journal, Journal)
         self.assertEqual(journal.id, 1)

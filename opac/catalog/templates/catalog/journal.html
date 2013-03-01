@@ -70,9 +70,9 @@
               <strong>{% trans 'Former Title:' %}</strong>
               <a href={% url 'catalog.journal' journal.former_journal.acronym %}> {{ journal.former_journal.title }}</a>
             {% endif %}
-            {% if journal.late_journal %}
+            {% if journal.latter_journal %}
               <strong>{% trans 'New Title:' %}</strong>
-              <a href={% url 'catalog.journal' journal.late_journal.acronym %}> {{ journal.late_journal.title }}</a>
+              <a href={% url 'catalog.journal' journal.latter_journal.acronym %}> {{ journal.latter_journal.title }}</a>
             {% endif %}
         </dd>
     </dl>
