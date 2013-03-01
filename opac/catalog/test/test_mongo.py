@@ -881,46 +881,7 @@ class JournalModelTest(MockerTestCase, TestCase):
         journal = JournalFactory.build(**pub_status_history_data)
         last_date = journal.last_date_history
 
-        self.assertEqual(last_date, '')
-
-    def test_other_title_with_other_previous_title(self):
-        from .modelfactories import JournalFactory
-
-        pub_status_history_data = {
-            "other_previous_title": "High School Musical",
-            "previous_title": "",
-        }
-
-        journal = JournalFactory.build(**pub_status_history_data)
-        last_date = journal.other_title
-
-        self.assertEqual(last_date, 'High School Musical')
-
-    def test_other_title_with_previous_title(self):
-        from .modelfactories import JournalFactory
-
-        pub_status_history_data = {
-            "other_previous_title": "",
-            "previous_title": "High School Musical",
-        }
-
-        journal = JournalFactory.build(**pub_status_history_data)
-        last_date = journal.other_title
-
-        self.assertEqual(last_date, 'High School Musical')
-
-    def test_other_title_empty(self):
-        from .modelfactories import JournalFactory
-
-        pub_status_history_data = {
-            "other_previous_title": "",
-            "previous_title": "",
-        }
-
-        journal = JournalFactory.build(**pub_status_history_data)
-        last_date = journal.other_title
-
-        self.assertEqual(last_date, '')
+        self.assertEqual(last_date, None)
 
     def test_scielo_issn_print_version(self):
         from .modelfactories import JournalFactory
@@ -1124,6 +1085,93 @@ class JournalModelTest(MockerTestCase, TestCase):
 
         self.assertEqual(tweets, [])
 
+    def test_former_journal(self):
+        from .modelfactories import JournalFactory
+        from catalog import mongomodels
+
+        mock_objects = self.mocker.mock()
+
+        journal_microdata = {
+                  "id": 2,
+                  "other_previous_title": None,
+                  "previous_ahead_documents": 0,
+                  "print_issn": "0021-2571",
+                  "pub_status": "current",
+                  "publication_city": "Roma",
+                  "publisher_country": "IT",
+                  "publisher_name": "Istituto Superiore di Sanità",
+                  "publisher_state": None,
+                  "resource_uri": "/api/v1/journals/1/",
+                  "scielo_issn": "print",
+                  "short_title": "Ann. Ist. Super. Sanità",
+                  "title": "Annali dell'Istituto Superiore di Sanità",
+                  "title_iso": "Ann. Ist. Super. Sanità",
+                  "url_journal": None,
+                  "url_online_submission": None,
+                }
+
+        mock_objects.find_one({'id': 2})
+        self.mocker.result(journal_microdata)
+
+        self.mocker.replay()
+
+        former_data = {
+            "previous_title": "/api/v1/journals/2/",
+            }
+
+        journal = JournalFactory.build(**former_data)
+
+        mongomodels.Journal.objects = mock_objects
+
+        journal = journal.former_journal
+
+        self.assertIsInstance(journal, Journal)
+
+    def test_empty_former_journal(self):
+        from .modelfactories import JournalFactory
+
+        former_data = {
+            "previous_title": "",
+            }
+
+        journal = JournalFactory.build(**former_data)
+
+        journal = journal.former_journal
+
+        self.assertIsNone(journal)
+
+    def test_late_journal(self):
+        from .modelfactories import JournalFactory
+        from catalog import mongomodels
+
+        mock_objects = self.mocker.mock()
+
+        journal_microdata = {
+                  "previous_title": "/api/v1/journals/1/",
+                  "title": "Annali dell'Istituto Superiore di Sanità",
+                }
+
+        mock_objects.find_one({'previous_title': {'$regex': '/*/*/*/1/'}})
+        self.mocker.result(journal_microdata)
+
+        self.mocker.replay()
+
+        journal = JournalFactory.build()
+
+        mongomodels.Journal.objects = mock_objects
+
+        journal = journal.late_journal
+
+        self.assertIsInstance(journal, Journal)
+
+    def test_empty_late_journal(self):
+        from .modelfactories import JournalFactory
+
+        journal = JournalFactory.build()
+
+        journal = journal.late_journal
+
+        self.assertIsNone(journal)
 
 class IssueModelTest(MockerTestCase, TestCase):
 

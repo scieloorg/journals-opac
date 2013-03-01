@@ -282,19 +282,27 @@ def list_journals_by_study_areas(mongomanager_lib=MongoManager):
 
 class Journal(Document):
     objects = ManagerFactory(collection='journals', indexes=[
-        'issue_ref', 'title', 'study_areas', 'id',
+        'issue_ref', 'title', 'study_areas', 'id', 'previous_title',
         {'attr': 'acronym', 'unique': True}
     ])
 
     _twitter_api = twitter.Api()
 
     @classmethod
-    def get_journal(cls, journal_id):
+    def get_journal(cls, journal_id=None, criteria=None):
         """
-        Return a specific journal
+        Return a specific journal by acronym or by any valid criteria
         """
 
-        journal = cls.objects.find_one({'acronym': journal_id})
+        criteria = {} if criteria is None else criteria
+
+        if not isinstance(criteria, dict):
+            raise ValueError('criteria must be dict')
+
+        if criteria:
+            journal = cls.objects.find_one(criteria)
+        else:
+            journal = cls.objects.find_one({'acronym': journal_id})
 
         if not journal:
             raise ValueError('no journal found for id:'.format(journal_id))
@@ -330,6 +338,10 @@ class Journal(Document):
                 issues.sort(key=lambda x: x.order)
 
         return grid
+
+    def get_resource_id(self, resource):
+        cleaned = [seg for seg in resource.split('/') if seg]
+        return cleaned[-1]
 
     @property
     def issues_count(self):
@@ -438,7 +450,7 @@ class Journal(Document):
     @property
     def last_date_history(self):
         """
-        This property get the last date status from journal and otherwise ''
+        This property get the last date status from journal
         """
 
         date_list = []
@@ -449,22 +461,35 @@ class Journal(Document):
 
         if date_list:
             return max(date_list)
-        else:
-            return ''
 
     @property
-    def other_title(self):
+    def former_journal(self):
         """
-        This property try to get the previous_title field or
-        other_previous_title field and otherwise ''
+        This property get the former journal by the api path ```/api/v1/journals/2/```
         """
 
         if self.previous_title:
-            return self.previous_title
-        elif self.other_previous_title:
-            return self.other_previous_title
-        else:
-            return ''
+            journal = Journal.get_journal(
+                        criteria={
+                            'id': int(self.get_resource_id(self.previous_title))
+                        })
+
+            return journal
+
+    @property
+    def late_journal(self):
+        """
+        This property get the new journal by api ```/api/v1/journals/2/``` using
+        the mongo regex operator
+        """
+        try:
+            journal = Journal.get_journal(
+                        criteria={
+                            'previous_title': {'$regex': '/*/*/*/' + str(self.id) + '/'}
+                        })
+            return journal
+        except:
+            return None
 
 
 class Issue(Document):
