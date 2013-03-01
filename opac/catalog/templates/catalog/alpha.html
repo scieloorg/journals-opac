@@ -91,11 +91,11 @@
             {% ifchanged item.title.0 %} <li>&nbsp;</li> {% endifchanged %}
             <li><a href="{{item.get_absolute_url}}">{{ item.title }}</a>
               - {{ item.issues_count }} {% trans 'issues' %}
-            {% if item.late_journal and item.pub_status = 'deceased' %}
+            {% if item.latter_journal and item.pub_status = 'deceased' %}
               - <small>
                   <em>{% trans 'Continued as' %}</em>
                 </small>
-                <a href={% url 'catalog.journal' item.late_journal.acronym %}>{{ item.late_journal.title }}</a>
+                <a href={% url 'catalog.journal' item.latter_journal.acronym %}>{{ item.latter_journal.title }}</a>
             {% elif item.pub_status = 'deceased' %}
               - <small>
                   <em>{% trans 'Deceased in ' %} - {{ item.last_date_history|date:"F d, Y" }}</em>

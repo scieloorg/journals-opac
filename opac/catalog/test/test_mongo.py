@@ -1140,7 +1140,7 @@ class JournalModelTest(MockerTestCase, TestCase):
 
         self.assertIsNone(journal)
 
-    def test_late_journal(self):
+    def test_latter_journal(self):
         from .modelfactories import JournalFactory
         from catalog import mongomodels
 
@@ -1160,16 +1160,16 @@ class JournalModelTest(MockerTestCase, TestCase):
 
         mongomodels.Journal.objects = mock_objects
 
-        journal = journal.late_journal
+        journal = journal.latter_journal
 
         self.assertIsInstance(journal, Journal)
 
-    def test_empty_late_journal(self):
+    def test_empty_latter_journal(self):
         from .modelfactories import JournalFactory
 
         journal = JournalFactory.build()
 
-        journal = journal.late_journal
+        journal = journal.latter_journal
 
         self.assertIsNone(journal)
 

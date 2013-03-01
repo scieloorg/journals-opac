@@ -477,7 +477,7 @@ class Journal(Document):
             return journal
 
     @property
-    def late_journal(self):
+    def latter_journal(self):
         """
         This property get the new journal by api ```/api/v1/journals/2/``` using
         the mongo regex operator
