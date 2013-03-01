@@ -84,12 +84,28 @@
 
 {% for journal in journals_list %}
 <dl>
- <dt>{{ journal.grouper|capfirst }} {% trans 'titles' %} - {{journal.list|length}} {% trans 'serial(s) listed' %}</dt>
+ <dt>{{ journal.grouper|capfirst }} {% trans 'titles' %} - {{ journal.list|length }} {% trans 'serial(s) listed' %}</dt>
    <dd>
       <ul class="unstyled">
           {% for item in journal.list %}
             {% ifchanged item.title.0 %} <li>&nbsp;</li> {% endifchanged %}
-            <li><a href="{{item.get_absolute_url}}">{{ item.title }}</a> - {{ item.issues_count }} {% trans 'issues' %}</li>
+            <li><a href="{{item.get_absolute_url}}">{{ item.title }}</a>
+              - {{ item.issues_count }} {% trans 'issues' %}
+            {% if item.latter_journal and item.pub_status = 'deceased' %}
+              - <small>
+                  <em>{% trans 'Continued as' %}</em>
+                </small>
+                <a href={% url 'catalog.journal' item.latter_journal.acronym %}>{{ item.latter_journal.title }}</a>
+            {% elif item.pub_status = 'deceased' %}
+              - <small>
+                  <em>{% trans 'Deceased in ' %} - {{ item.last_date_history|date:"F d, Y" }}</em>
+                </small>
+            {% elif item.pub_status = 'suspended' %}
+              - <small>
+                  <em>{% trans 'Indexing interrupted by committee in ' %} {{ item.last_date_history|date:"F d, Y" }}</em>
+                </small>
+            {% endif %}
+            </li>
           {% endfor %}
       </ul>
    </dd>

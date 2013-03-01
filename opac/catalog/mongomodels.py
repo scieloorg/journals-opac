@@ -282,22 +282,28 @@ def list_journals_by_study_areas(mongomanager_lib=MongoManager):
 
 class Journal(Document):
     objects = ManagerFactory(collection='journals', indexes=[
-        'issue_ref', 'title', 'study_areas', 'id',
+        'issue_ref', 'title', 'study_areas', 'id', 'previous_title',
         {'attr': 'acronym', 'unique': True}
     ])
 
     _twitter_api = twitter.Api()
 
     @classmethod
-    def get_journal(cls, journal_id):
+    def get_journal(cls, criteria=None):
         """
-        Return a specific journal
+        Return a specific journal by acronym or by any valid criteria
+        IMPORTANT: Try using indexed fields in the parameter criteria
         """
 
-        journal = cls.objects.find_one({'acronym': journal_id})
+        criteria = {} if criteria is None else criteria
+
+        if not isinstance(criteria, dict):
+            raise ValueError('criteria must be dict')
+
+        journal = cls.objects.find_one(criteria)
 
         if not journal:
-            raise ValueError('no journal found for id:'.format(journal_id))
+            raise ValueError('no journal found for this citeria')
 
         return cls(**journal)
 
@@ -330,6 +336,10 @@ class Journal(Document):
                 issues.sort(key=lambda x: x.order)
 
         return grid
+
+    def get_resource_id(self, resource):
+        cleaned = [seg for seg in resource.split('/') if seg]
+        return cleaned[-1]
 
     @property
     def issues_count(self):
@@ -429,11 +439,55 @@ class Journal(Document):
         history_list = []
 
         for history in self.pub_status_history:
-            history_date = datetime.strptime(history['date'], '%Y-%m-%dT%H:%M:%S')
+            history_date = datetime.strptime(history['date'][:19], '%Y-%m-%dT%H:%M:%S')
             history_list.append({'history_date': history_date,
                                  'reason': history['status']})
 
         return history_list
+
+    @property
+    def last_date_history(self):
+        """
+        This property get the last date status from journal
+        """
+
+        date_list = []
+
+        for history in self.pub_status_history:
+            date = datetime.strptime(history['date'][:19], '%Y-%m-%dT%H:%M:%S')
+            date_list.append(date)
+
+        if date_list:
+            return max(date_list)
+
+    @property
+    def former_journal(self):
+        """
+        This property get the former journal by the api path ```/api/v1/journals/2/```
+        """
+
+        if self.previous_title:
+            journal = Journal.get_journal(
+                        criteria={
+                            'id': int(self.get_resource_id(self.previous_title))
+                        })
+
+            return journal
+
+    @property
+    def latter_journal(self):
+        """
+        This property get the new journal by api ```/api/v1/journals/2/``` using
+        the mongo regex operator
+        """
+        try:
+            journal = Journal.get_journal(
+                        criteria={
+                            'previous_title': {'$regex': '/*/*/*/' + str(self.id) + '/'}
+                        })
+            return journal
+        except:
+            return None
 
 
 class Issue(Document):
@@ -461,7 +515,7 @@ class Issue(Document):
         This method retrieves the journal related to issue instance.
         """
 
-        journal = Journal.get_journal(journal_id=self._data['acronym'])
+        journal = Journal.get_journal({'acronym': self._data['acronym']})
 
         return journal
 
