@@ -59,7 +59,7 @@
 {% block extra_js %}
 <script type="text/javascript">
   $(document).ready(function() {
-    {% ratchet_caller resource='issue' code=issue.id journal=journal.id region='bra' %}
+    {% ratchet_caller resource='issue' code=issue.id journal=journal.id %}
   });
 </script>
 {% endblock %}

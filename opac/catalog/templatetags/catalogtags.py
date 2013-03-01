@@ -4,7 +4,7 @@ from django import template
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
-from opac import settings
+from django.conf import settings
 
 register = template.Library()
 

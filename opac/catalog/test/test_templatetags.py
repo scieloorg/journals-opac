@@ -2,6 +2,8 @@
 import unittest
 
 from django.test import TestCase
+from django.test.utils import override_settings
+
 import pymongo
 from mocker import (
     MockerTestCase,
@@ -11,9 +13,53 @@ from mocker import (
 )
 
 
-class IssueTemplateTagTest(TestCase, MockerTestCase):
+class RatchetTemplateTagTest(MockerTestCase, TestCase):
 
-    def list_articles_by_section(self):
+    @override_settings(DEBUG=True, RATCHET_URI='http://localhost:8860/api/v1/')
+    def test_ratchet_caller_debug_environment(self):
+        from catalog.templatetags import catalogtags
+
+        issue_access = {
+                    'resource': 'issue',
+                    'code': 1,
+                    'journal': 1,
+                    }
+        caller = catalogtags.ratchet_caller(**issue_access)
+
+        self.assertEqual(caller, '')
+
+    @override_settings(DEBUG=False, RATCHET_URI='http://localhost:8860/api/v1/')
+    def test_ratchet_caller_issue_access(self):
+        from catalog.templatetags import catalogtags
+
+        issue_access = {
+                    'resource': 'issue',
+                    'code': 1,
+                    'journal': 1,
+                    }
+
+        caller = catalogtags.ratchet_caller(**issue_access)
+
+        self.assertEqual(caller, 'ratchet_obj = {"journal": 1, "code": 1, "resource": "issue", "ratchet_uri": "http://localhost:8860/api/v1/"}; send_access(ratchet_obj);')
+
+    @override_settings(DEBUG=False, RATCHET_URI='http://localhost:8860/api/v1/')
+    def test_ratchet_caller_journal_access(self):
+        from catalog.templatetags import catalogtags
+
+        issue_access = {
+                    'resource': 'journal',
+                    'code': 1,
+                    }
+
+        caller = catalogtags.ratchet_caller(**issue_access)
+
+        self.assertEqual(caller, 'ratchet_obj = {"code": 1, "resource": "journal", "ratchet_uri": "http://localhost:8860/api/v1/"}; send_access(ratchet_obj);')
+
+
+class IssueTemplateTagTest(MockerTestCase, TestCase):
+
+    @unittest.expectedFailure
+    def test_list_articles_by_section(self):
         from catalog.templatetags import catalogtags
         from catalog.mongomodels import Issue
         from catalog.mongomodels import Section
