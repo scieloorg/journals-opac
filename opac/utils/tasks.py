@@ -3,7 +3,6 @@ from celery import task
 
 from .sync import datacollector
 from .sync import dataloader
-from .sync import pipes
 from . import functions
 from catalog import models
 
@@ -15,17 +14,23 @@ def build_catalog():
     Important! All catalog public data are erased and reconstructed
     when you perform this operation.
     """
-    ppl = pipes.Pipeline(pipes.PIssue,
-                         pipes.PMission,
-                         pipes.PSection,
-                         pipes.PNormalizeJournalTitle,
-                         pipes.PCleanup)
+    ppl = functions.make_journal_pipeline()
 
     data = functions._what_to_sync()
     transformed_data = ppl.run(data)
 
     marreta = dataloader.Marreta(settings=settings)
     marreta.rebuild_collection('journals', transformed_data)
+
+
+def update_catalog():
+    journal_ppl = functions.make_journal_pipeline()
+
+    data = functions._what_have_changed()
+    transformed_data = journal_ppl.run(data['journals'])
+
+    marreta = dataloader.Marreta(settings=settings)
+    marreta.update_collection('journals', transformed_data)
 
 
 def sync_collections_meta(managerapi_dep=datacollector.SciELOManagerAPI):

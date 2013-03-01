@@ -3,8 +3,18 @@ import itertools
 from django.conf import settings
 
 from .sync import datacollector
+from .sync import pipes
 from catalog import models
 from catalog import mongomodels
+
+
+def make_journal_pipeline():
+    ppl = pipes.Pipeline(pipes.PIssue,
+                         pipes.PMission,
+                         pipes.PSection,
+                         pipes.PNormalizeJournalTitle,
+                         pipes.PCleanup)
+    return ppl
 
 
 def _get_user_catalog_definitions():
@@ -51,22 +61,23 @@ def _what_to_sync(managerapi_dep=datacollector.SciELOManagerAPI):
     )
 
 
-def _what_have_changed(managerapi_dep=datacollector.SciELOManagerAPI):
+def _what_have_changed(since=0, managerapi_dep=datacollector.SciELOManagerAPI):
     """
-    Returns an iterator containing all journals that must be created
+    Returns a dict with the keys ``issues`` and ``journals``, where
+    each one is an iterator containing all data that must be created
     or updated in order to keep the catalog updated.
     """
     scielo_api = managerapi_dep(settings=settings)
     full_collections, journals_a_la_carte = _get_user_catalog_definitions()
 
-    data = scielo_api.get_changes()
+    data = scielo_api.get_changes(since=since)
 
     changed = identify_changes(data, full_collections, journals_a_la_carte)
 
-    return itertools.chain(
-        scielo_api.get_issues(*changed['issues']),
-        scielo_api.get_journals(*changed['journals'])
-    )
+    return {
+        'issues': scielo_api.get_issues(*changed['issues']),
+        'journals': scielo_api.get_journals(*changed['journals'])
+    }
 
 
 def _list_issues_uri(journal_meta, journal_dep=mongomodels.Journal):

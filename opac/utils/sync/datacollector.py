@@ -2,10 +2,13 @@
 import logging
 import time
 import itertools
+import copy
 
 from django.conf import settings
 import slumber
 import requests
+
+from catalog import mongomodels
 
 
 logger = logging.getLogger(__name__)
@@ -146,3 +149,91 @@ class SciELOManagerAPI(object):
         """
         for i in issues:
             yield self.fetch_data('issues', resource_id=i)
+
+
+def _list_issues_uri(journal_meta, journal_dep=mongomodels.Journal):
+        # TODO: This instantiation logic must be at Journal.get_journal
+        journal_data = journal_dep.objects.find_one({'id': journal_meta.resource_id})
+
+        if not journal_data:
+            raise ValueError('invalid id for Journals: %s' % journal_meta.resource_id)
+
+        journal_doc = journal_dep(**journal_data)
+
+        return (issue.resource_uri for issue in journal_doc.list_issues())
+
+
+class ChangeListIterator(object):
+    def __init__(self, data):
+        self._data = sorted(copy.deepcopy(data), key=lambda x: x.seq)
+        self._index = -1
+
+    def __iter__(self):
+        return self
+
+    def next(self):
+        self._index += 1
+        try:
+            return self._data[self._index]
+        except IndexError:
+            raise StopIteration()
+
+
+class ChangesList(object):
+
+    def __init__(self, data, list_issues_uri_dep=_list_issues_uri):
+        self._changes = []
+
+        for event in data:
+            if isinstance(event, dict):
+                self._changes.append(Change(**event))
+            elif isinstance(event, Change):
+                self._changes.append(event)
+            else:
+                raise TypeError()
+
+        self.list_issues_uri = list_issues_uri_dep
+
+    def filter(self, collections=None, journals=None):
+        """
+        Produces another ChangesList instance containing only
+        Changes that match the expectations.
+        """
+        journals_list = []
+        issues_list = []
+
+        # list uris from all journals and its issues
+        if journals:
+            for j in journals:
+                journals_list.append(j.resource_uri)
+                issues_list.append(self.list_issues_uri(j))
+
+        journals_uris = set(journals_list)
+        issues_uris = set(itertools.chain(*issues_list))
+
+        if collections:
+            collections_uris = set(c.resource_uri for c in collections)
+        else:
+            collections_uris = []
+
+        superset = set().union(journals_uris, issues_uris, collections_uris)
+
+        changes = []
+        for change in self:
+            _collection_uri = change.collection_uri
+            _object_uri = change.object_uri
+
+            if _collection_uri in superset or _object_uri in superset:
+                changes.append(change)
+
+        return ChangesList(changes)
+
+    def __iter__(self):
+        return ChangeListIterator(self._changes)
+
+
+class Change(object):
+
+    def __init__(self, **kwargs):
+        for key, value in kwargs.items():
+            setattr(self, key, value)
