@@ -72,11 +72,16 @@ def _what_have_changed(since=0, managerapi_dep=datacollector.SciELOManagerAPI):
 
     data = scielo_api.get_changes(since=since)
 
-    changed = identify_changes(data, full_collections, journals_a_la_carte)
+    changes_list = datacollector.ChangesList(data)
+    changes = changes_list.filter(collections=full_collections,
+        journals=journals_a_la_carte)
+
+    journals = [ch.resource_id for ch in changes.show('journals', unique=True)]
+    # issues = changes.show('issues', unique=True)
 
     return {
-        'issues': scielo_api.get_issues(*changed['issues']),
-        'journals': scielo_api.get_journals(*changed['journals'])
+        'journals': scielo_api.get_journals(*journals),
+        # 'issues': changes.show('issues', unique=True),
     }
 
 

@@ -38,3 +38,11 @@ class Marreta(object):
             col.insert(data, w=1)
 
         return None
+
+    def update_collection(self, collection, new_data):
+        col = self._mongoconn.db[collection]
+
+        for data in new_data:
+            col.update({'id': data['id']}, data, w=1, upsert=True)
+
+        return None

@@ -156,7 +156,7 @@ def _list_issues_uri(journal_meta, journal_dep=mongomodels.Journal):
         journal_data = journal_dep.objects.find_one({'id': journal_meta.resource_id})
 
         if not journal_data:
-            raise ValueError('invalid id for Journals: %s' % journal_meta.resource_id)
+            return []
 
         journal_doc = journal_dep(**journal_data)
 
