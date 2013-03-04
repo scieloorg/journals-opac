@@ -1,4 +1,5 @@
 {% extends "base_lv1.html" %}
+{% load catalogtags %}
 {% load i18n %}
 
 {% block body %}
@@ -65,6 +66,16 @@
           <strong>{% trans 'e-mail' %}: </strong> <a href="mailto: {{ journal.editor_email }}">{{ journal.editor_email }}</a>
         {% endif %}
       </dd>
+        <dd>
+            {% if journal.former_journal %}
+              <strong>{% trans 'Former Title:' %}</strong>
+              <a href={% url 'catalog.journal' journal.former_journal.acronym %}> {{ journal.former_journal.title }}</a>
+            {% endif %}
+            {% if journal.latter_journal %}
+              <strong>{% trans 'New Title:' %}</strong>
+              <a href={% url 'catalog.journal' journal.latter_journal.acronym %}> {{ journal.latter_journal.title }}</a>
+            {% endif %}
+        </dd>
     </dl>
 </div>
 <div class="span3">
@@ -117,9 +128,9 @@
       }
     });
   }
-
   $(document).ready(function() {
       qry_tweets();
+      {% ratchet_caller resource='journal' code=journal.id %}
   });
 </script>
 {% endblock %}

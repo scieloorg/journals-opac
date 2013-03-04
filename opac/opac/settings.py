@@ -7,6 +7,7 @@ djcelery.setup_loader()
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
+PROJECT_PATH = os.path.abspath(os.path.dirname(__file__))
 BASE_PATH = os.path.join(os.path.abspath(os.path.dirname(__file__)), '..')
 
 ADMINS = (
@@ -96,6 +97,7 @@ TEMPLATE_LOADERS = (
 )
 
 MIDDLEWARE_CLASSES = (
+    'htmlmin.middleware.HtmlMinifyMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -126,6 +128,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'django_assets',
     'south',
     'djcelery',
     'catalog',
@@ -165,6 +168,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.i18n',
     'django.core.context_processors.csrf',
+    'catalog.context_processors.access_to_settings',
     )
 
 execfile(os.path.join(os.path.abspath(os.path.dirname(__file__)),

@@ -34,3 +34,13 @@ _template
 #OPAC
 settings_local.include
 settings_opac.include
+
+
+#DJANGO-ASSETS
+bundle.min.js
+bundle.min.css
+.webassets-cache
+
+#DEV Database
+data.sqlite
+

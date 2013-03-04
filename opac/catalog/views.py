@@ -28,7 +28,7 @@ def list_journals_by_subject(request):
 
 def journal(request, journal_id):
 
-    journal = mongomodels.Journal.get_journal(journal_id=journal_id)
+    journal = mongomodels.Journal.get_journal({'acronym': journal_id})
 
     navigation = Navigation(journal)
 
@@ -41,7 +41,7 @@ def journal(request, journal_id):
 
 def journal_stats(request, journal_id):
 
-    journal = mongomodels.Journal.get_journal(journal_id=journal_id)
+    journal = mongomodels.Journal.get_journal({'acronym': journal_id})
 
     return render_to_response('catalog/journal_stats.html', {
                               'journal': journal},
@@ -50,7 +50,7 @@ def journal_stats(request, journal_id):
 
 def issues(request, journal_id):
 
-    journal = mongomodels.Journal.get_journal(journal_id)
+    journal = mongomodels.Journal.get_journal({'acronym': journal_id})
     issues = journal.list_issues_as_grid()
 
     navigation = Navigation(journal)
@@ -88,7 +88,7 @@ def ajx_list_journal_tweets(request, journal_id):
         return HttpResponse(status=400)
 
     try:
-        journal = mongomodels.Journal.get_journal(journal_id=journal_id)
+        journal = mongomodels.Journal.get_journal({'acronym': journal_id})
     except ValueError:
         return HttpResponse(status=400)
 

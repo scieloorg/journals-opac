@@ -2,6 +2,8 @@
 import unittest
 
 from django.test import TestCase
+from django.test.utils import override_settings
+
 import pymongo
 from mocker import (
     MockerTestCase,
@@ -11,9 +13,53 @@ from mocker import (
 )
 
 
-class IssueTemplateTagTest(TestCase, MockerTestCase):
+class RatchetTemplateTagTest(MockerTestCase, TestCase):
 
-    def list_articles_by_section(self):
+    @override_settings(DEBUG=True, RATCHET_URI='http://localhost:8860/api/v1/')
+    def test_ratchet_caller_debug_environment(self):
+        from catalog.templatetags import catalogtags
+
+        issue_access = {
+                    'resource': 'issue',
+                    'code': 1,
+                    'journal': 1,
+                    }
+        caller = catalogtags.ratchet_caller(**issue_access)
+
+        self.assertEqual(caller, '')
+
+    @override_settings(DEBUG=False, RATCHET_URI='http://localhost:8860/api/v1/')
+    def test_ratchet_caller_issue_access(self):
+        from catalog.templatetags import catalogtags
+
+        issue_access = {
+                    'resource': 'issue',
+                    'code': 1,
+                    'journal': 1,
+                    }
+
+        caller = catalogtags.ratchet_caller(**issue_access)
+
+        self.assertEqual(caller, 'ratchet_obj = {"journal": 1, "code": 1, "resource": "issue", "ratchet_uri": "http://localhost:8860/api/v1/"}; send_access(ratchet_obj);')
+
+    @override_settings(DEBUG=False, RATCHET_URI='http://localhost:8860/api/v1/')
+    def test_ratchet_caller_journal_access(self):
+        from catalog.templatetags import catalogtags
+
+        issue_access = {
+                    'resource': 'journal',
+                    'code': 1,
+                    }
+
+        caller = catalogtags.ratchet_caller(**issue_access)
+
+        self.assertEqual(caller, 'ratchet_obj = {"code": 1, "resource": "journal", "ratchet_uri": "http://localhost:8860/api/v1/"}; send_access(ratchet_obj);')
+
+
+class IssueTemplateTagTest(MockerTestCase, TestCase):
+
+
+    def test_list_articles_by_section(self):
         from catalog.templatetags import catalogtags
         from catalog.mongomodels import Issue
         from catalog.mongomodels import Section
@@ -99,6 +145,7 @@ class IssueTemplateTagTest(TestCase, MockerTestCase):
                 'en': 'Management of health-care waste in Izmir, Turkey',
             'it': 'Gestione dei rifiuti sanitari in Izmir, Turchia'
             },
+            'default_language': 'en',
             'contrib_group': {
                 'author': [
                     {
@@ -112,10 +159,10 @@ class IssueTemplateTagTest(TestCase, MockerTestCase):
             },
         }
 
-        issue_mock_objects.find_one({'id': 1, 'issues.id': 1}, {'issues.data': 1})
+        issue_mock_objects.find_one({'acronym': 1}, {'issues': {'$elemMatch': {'id': 1}}})
         self.mocker.result(issue_section_microdata)
 
-        section_mock_objects.find_one({'id': 1, 'sections.id': 514}, {'sections.data': 1})
+        section_mock_objects.find_one({'acronym': 1}, {'sections': {'$elemMatch': {'id': 514}}})
         self.mocker.result(section_microdata)
 
         article_mock_objects.find_one({'id': 'AISS-JHjashA'})
@@ -131,4 +178,4 @@ class IssueTemplateTagTest(TestCase, MockerTestCase):
 
         sections = issue.list_sections()
 
-        self.assertEqual(catalogtags.list_articles_by_section(sections, 'en'), '<dl class="issue_toc"><dt><i class="icon-chevron-right"></i> WHO Publications</dt><dd><ul class="unstyled toc_article"><li>Management of health-care waste in Izmir, Turkey<ul class="inline toc_article_authors"><li><a href="#">Soysal, Ahmet</a>;</li></ul><ul class="inline toc_article_links"><li>abstract: <a href="#">en</a>  | <a href="#">it</a> </li></ul></li></dl>')
+        self.assertEqual(catalogtags.list_articles_by_section(sections, 'en'), u'<dl class="issue_toc"><dt><i class="icon-chevron-right"></i> WHO Publications</dt><dd><ul class="unstyled toc_article"><li>Management of health-care waste in Izmir, Turkey<ul class="inline toc_article_authors"><li><a href="#">Soysal, Ahmet</a>;</li></ul><ul class="inline toc_article_links"><li>abstract: <a href="#">en</a> | <a href="#">it</a></li><li>full text: <a href="/article/AISS-JHjashA/">en</a></li><li>pdf: <a href="#">en</a></li></ul></li></dd></dl>')
