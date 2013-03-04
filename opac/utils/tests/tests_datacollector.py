@@ -223,3 +223,169 @@ class ChangesListTests(mocker.MockerTestCase):
 
         ch_list = ChangesList(changes)
         self.assertEqual([ch.seq for ch in ch_list], [8, 9])
+
+    def test_get_current_seq_while_iterating(self):
+        from utils.sync.datacollector import ChangesList
+        changes = [
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/1/",
+                "resource_uri": "/api/v1/changes/2/",
+                "seq": 9
+            },
+            {
+                "changed_at": "2013-01-23T15:11:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/31/",
+                "resource_uri": "/api/v1/changes/8/",
+                "seq": 8
+            }
+        ]
+
+        ch_list = ChangesList(changes)
+        i_ch_list = iter(ch_list)
+
+        i_ch_list.next()
+        self.assertEqual(i_ch_list.current_seq, 8)
+
+        i_ch_list.next()
+        self.assertEqual(i_ch_list.current_seq, 9)
+
+    def test_get_current_seq_on_a_non_primed_iterator_raises_attribute_error(self):
+        """
+        To prime an iterator means to call its ``next`` method at
+        least once.
+        """
+        from utils.sync.datacollector import ChangesList
+        changes = [
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/1/",
+                "resource_uri": "/api/v1/changes/2/",
+                "seq": 9
+            },
+            {
+                "changed_at": "2013-01-23T15:11:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/31/",
+                "resource_uri": "/api/v1/changes/8/",
+                "seq": 8
+            }
+        ]
+
+        ch_list = ChangesList(changes)
+        i_ch_list = iter(ch_list)
+        self.assertRaises(AttributeError, lambda: i_ch_list.current_seq)
+
+    def test_show_only_changes_on_some_endpoints(self):
+        from utils.sync.datacollector import ChangesList
+        changes = [
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/1/",
+                "resource_uri": "/api/v1/changes/2/",
+                "seq": 9
+            },
+            {
+                "changed_at": "2013-01-23T15:11:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/issues/31/",
+                "resource_uri": "/api/v1/changes/8/",
+                "seq": 8
+            }
+        ]
+
+        ch_list = ChangesList(changes)
+        for ch in ch_list.show('journals'):
+            self.assertTrue('journals' in ch.object_uri)
+
+    def test_show_unique_changes_on_some_endpoints(self):
+        from utils.sync.datacollector import ChangesList
+        changes = [
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "added",
+                "object_uri": "/api/v1/journals/1/",
+                "resource_uri": "/api/v1/changes/1/",
+                "seq": 1
+            },
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "added",
+                "object_uri": "/api/v1/journals/2/",
+                "resource_uri": "/api/v1/changes/2/",
+                "seq": 2
+            },
+            {
+                "changed_at": "2013-01-23T15:11:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/1/",
+                "resource_uri": "/api/v1/changes/8/",
+                "seq": 3
+            }
+        ]
+
+        ch_list = ChangesList(changes)
+        i_ch_list = ch_list.show('journals', unique=True)
+        changes = list(i_ch_list)
+
+        self.assertTrue(len(changes), 2)
+        self.assertEqual(changes[0].seq, 2)
+        self.assertEqual(changes[1].seq, 3)
+
+    def test_unique_records_from_different_endpoints_doesnt_clash(self):
+        from utils.sync.datacollector import ChangesList
+        changes = [
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "added",
+                "object_uri": "/api/v1/journals/1/",
+                "resource_uri": "/api/v1/changes/1/",
+                "seq": 1
+            },
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "added",
+                "object_uri": "/api/v1/journals/2/",
+                "resource_uri": "/api/v1/changes/2/",
+                "seq": 2
+            },
+            {
+                "changed_at": "2013-01-23T15:11:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/1/",
+                "resource_uri": "/api/v1/changes/8/",
+                "seq": 3
+            },
+            {
+                "changed_at": "2013-01-23T15:11:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/issues/1/",
+                "resource_uri": "/api/v1/changes/9/",
+                "seq": 4
+            }
+        ]
+
+        ch_list = ChangesList(changes)
+        i_ch_list = ch_list.show('journals', unique=True)
+        changes = list(i_ch_list)
+
+        self.assertTrue(len(changes), 2)
+        self.assertEqual(changes[0].seq, 2)
+        self.assertEqual(changes[1].seq, 3)

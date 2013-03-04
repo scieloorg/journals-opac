@@ -178,8 +178,22 @@ class ChangeListIterator(object):
         except IndexError:
             raise StopIteration()
 
+    @property
+    def current_seq(self):
+        if self._index < 0:
+            raise AttributeError('the iteration have not started yet.')
+
+        try:
+            return self._data[self._index].seq
+        except IndexError:
+            raise AttributeError()
+
 
 class ChangesList(object):
+    """
+    Represents a container of ``Change`` objects with some
+    useful methods to iterate over it.
+    """
 
     def __init__(self, data, list_issues_uri_dep=_list_issues_uri):
         self._changes = []
@@ -231,9 +245,54 @@ class ChangesList(object):
     def __iter__(self):
         return ChangeListIterator(self._changes)
 
+    def show(self, endpoint, unique=False):
+        """
+        Returns a ChangesList iterator with items of a given endpoint.
+
+        ``endpoint`` is a string of an endpoint to filter by
+
+        ``unique`` is a bool that filters the changes by the
+        ``resource_uri`` attribute, and returns only the latest
+        changes.
+        """
+        if unique:
+            seen = set()
+            uniques = []
+            # need to expand the iterator in order to reverse it
+            for ch in [i for i in self][::-1]:
+                resource_repr = '%s-%s' % (ch.resource_id, ch.endpoint)
+                if resource_repr not in seen:
+                    seen.add(resource_repr)
+                    uniques.append(ch)
+
+            iterable = sorted(uniques, key=lambda x: x.seq)
+
+        else:
+            iterable = self
+
+        for change in iterable:
+            if change.endpoint == endpoint:
+                yield change
+            else:
+                continue
+
 
 class Change(object):
 
     def __init__(self, **kwargs):
         for key, value in kwargs.items():
             setattr(self, key, value)
+
+        self._clean()
+
+    @property
+    def endpoint(self):
+        return self._cleaned[-2]
+
+    @property
+    def resource_id(self):
+        return self._cleaned[-1]
+
+    def _clean(self):
+        if not hasattr(self, '_cleaned'):
+            self._cleaned = [seg for seg in self.object_uri.split('/') if seg]
