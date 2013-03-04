@@ -58,7 +58,7 @@ class RatchetTemplateTagTest(MockerTestCase, TestCase):
 
 class IssueTemplateTagTest(MockerTestCase, TestCase):
 
-    @unittest.expectedFailure
+
     def test_list_articles_by_section(self):
         from catalog.templatetags import catalogtags
         from catalog.mongomodels import Issue
@@ -145,6 +145,7 @@ class IssueTemplateTagTest(MockerTestCase, TestCase):
                 'en': 'Management of health-care waste in Izmir, Turkey',
             'it': 'Gestione dei rifiuti sanitari in Izmir, Turchia'
             },
+            'default_language': 'en',
             'contrib_group': {
                 'author': [
                     {
@@ -158,10 +159,10 @@ class IssueTemplateTagTest(MockerTestCase, TestCase):
             },
         }
 
-        issue_mock_objects.find_one({'id': 1, 'issues.id': 1}, {'issues.data': 1})
+        issue_mock_objects.find_one({'acronym': 1}, {'issues': {'$elemMatch': {'id': 1}}})
         self.mocker.result(issue_section_microdata)
 
-        section_mock_objects.find_one({'id': 1, 'sections.id': 514}, {'sections.data': 1})
+        section_mock_objects.find_one({'acronym': 1}, {'sections': {'$elemMatch': {'id': 514}}})
         self.mocker.result(section_microdata)
 
         article_mock_objects.find_one({'id': 'AISS-JHjashA'})
@@ -177,4 +178,4 @@ class IssueTemplateTagTest(MockerTestCase, TestCase):
 
         sections = issue.list_sections()
 
-        self.assertEqual(catalogtags.list_articles_by_section(sections, 'en'), '<dl class="issue_toc"><dt><i class="icon-chevron-right"></i> WHO Publications</dt><dd><ul class="unstyled toc_article"><li>Management of health-care waste in Izmir, Turkey<ul class="inline toc_article_authors"><li><a href="#">Soysal, Ahmet</a>;</li></ul><ul class="inline toc_article_links"><li>abstract: <a href="#">en</a>  | <a href="#">it</a> </li></ul></li></dl>')
+        self.assertEqual(catalogtags.list_articles_by_section(sections, 'en'), u'<dl class="issue_toc"><dt><i class="icon-chevron-right"></i> WHO Publications</dt><dd><ul class="unstyled toc_article"><li>Management of health-care waste in Izmir, Turkey<ul class="inline toc_article_authors"><li><a href="#">Soysal, Ahmet</a>;</li></ul><ul class="inline toc_article_links"><li>abstract: <a href="#">en</a> | <a href="#">it</a></li><li>full text: <a href="/article/AISS-JHjashA/">en</a></li><li>pdf: <a href="#">en</a></li></ul></li></dd></dl>')
