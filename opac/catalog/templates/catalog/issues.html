@@ -13,11 +13,11 @@
     <p>
       {% if journal.former_journal %}
         <strong>{% trans 'Former Title:' %}</strong>
-        <a href={% url 'catalog.journal' journal.former_journal.acronym %}> {{ journal.former_journal.title }}</a>
+        <a href="{{journal.former_journal.get_absolute_url}}"> {{ journal.former_journal.title }}</a>
       {% endif %}
       {% if journal.latter_journal %}
         <strong>{% trans 'New Title:' %}</strong>
-        <a href={% url 'catalog.journal' journal.latter_journal.acronym %}> {{ journal.latter_journal.title }}</a>
+        <a href="{{journal.latter_journal.get_absolute_url}}"> {{ journal.latter_journal.title }}</a>
       {% endif %}
     </p>
     <small>{% trans 'Available issues' %}*</small>
