@@ -2,7 +2,6 @@
 import logging
 import time
 import itertools
-import copy
 
 from django.conf import settings
 import slumber
@@ -280,6 +279,10 @@ class ChangesList(object):
 
     @property
     def last_seq(self):
+        """
+        Returns the seq of the last Change instance
+        in this ChangeList.
+        """
         return self._changes[-1].seq
 
 

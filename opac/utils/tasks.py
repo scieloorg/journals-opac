@@ -1,4 +1,4 @@
-from datetime import datetime
+import datetime
 
 from django.conf import settings
 from django.db import transaction
@@ -19,24 +19,29 @@ def build_catalog():
     """
     ppl = functions.make_journal_pipeline()
 
-    data = functions._what_to_sync()
+    data = functions.get_all_data_for_build()
     transformed_data = ppl.run(data)
 
     marreta = dataloader.Marreta(settings=settings)
     marreta.rebuild_collection('journals', transformed_data)
 
-    models.Sync.objects.create(ended_at=datetime.now(),
-        last_seq=60, status='finished')
+    models.Sync.objects.create(ended_at=datetime.datetime.now(),
+        last_seq=functions.get_remote_last_seq(), status='finished')
 
 
+@task(name='utils.tasks.update_catalog')
 def update_catalog(managerapi_dep=datacollector.SciELOManagerAPI):
+    """
+    Scans the SciELO Manager's changes API looking for
+    changes on Journals that are part of this catalog.
+    """
     scielo_api = managerapi_dep(settings=settings)
     journal_ppl = functions.make_journal_pipeline()
 
     with transaction.commit_on_success():
         sync = models.Sync.objects.create()
 
-        changes = functions._what_have_changed(since=functions.get_last_seq())
+        changes = functions.get_all_changes(since=functions.get_last_seq())
         changed_journals = changes.show('journals', unique=True)
         # changed_issues = changes.show('issues', unique=True)
 
@@ -53,7 +58,7 @@ def update_catalog(managerapi_dep=datacollector.SciELOManagerAPI):
 
         sync.last_seq = changes.last_seq
         sync.status = 'finished'
-        sync.ended_at = datetime.now()
+        sync.ended_at = datetime.datetime.now()
         sync.save()
 
 
