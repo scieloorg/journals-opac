@@ -55,8 +55,9 @@ class Navigation(object):
     @property
     def next_issue(self):
         """
-        This method retrivies next url based on issue ID and return
+        This method retrives a link to the next issue or None
         """
+
         if not hasattr(self, '_issue'):
             self._load_issue()
 
@@ -79,8 +80,9 @@ class Navigation(object):
     @property
     def previous_issue(self):
         """
-
+        This method retrives a link to the previous issue or None
         """
+
         if not hasattr(self, '_issue'):
             self._load_issue()
 
