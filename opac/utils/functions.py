@@ -76,13 +76,7 @@ def _what_have_changed(since=0, managerapi_dep=datacollector.SciELOManagerAPI):
     changes = changes_list.filter(collections=full_collections,
         journals=journals_a_la_carte)
 
-    journals = [ch.resource_id for ch in changes.show('journals', unique=True)]
-    # issues = changes.show('issues', unique=True)
-
-    return {
-        'journals': scielo_api.get_journals(*journals),
-        # 'issues': changes.show('issues', unique=True),
-    }
+    return changes
 
 
 def _list_issues_uri(journal_meta, journal_dep=mongomodels.Journal):
@@ -146,3 +140,12 @@ def identify_changes(changes,
             continue
 
     return {'journals': list(changed_journals), 'issues': list(changed_issues)}
+
+
+def get_last_seq():
+    last_sync = models.Sync.objects.all()[0]
+
+    if last_sync:
+        return last_sync.last_seq
+    else:
+        return 0

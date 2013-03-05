@@ -165,7 +165,8 @@ def _list_issues_uri(journal_meta, journal_dep=mongomodels.Journal):
 
 class ChangeListIterator(object):
     def __init__(self, data):
-        self._data = sorted(copy.deepcopy(data), key=lambda x: x.seq)
+        # self._data = sorted(copy.deepcopy(data), key=lambda x: x.seq)
+        self._data = data
         self._index = -1
 
     def __iter__(self):
@@ -207,6 +208,7 @@ class ChangesList(object):
                 raise TypeError()
 
         self.list_issues_uri = list_issues_uri_dep
+        self._changes.sort(key=lambda x: x.seq)
 
     def filter(self, collections=None, journals=None):
         """
@@ -275,6 +277,10 @@ class ChangesList(object):
                 yield change
             else:
                 continue
+
+    @property
+    def last_seq(self):
+        return self._changes[-1].seq
 
 
 class Change(object):

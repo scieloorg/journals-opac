@@ -1,4 +1,7 @@
+from datetime import datetime
+
 from django.conf import settings
+from django.db import transaction
 from celery import task
 
 from .sync import datacollector
@@ -22,15 +25,36 @@ def build_catalog():
     marreta = dataloader.Marreta(settings=settings)
     marreta.rebuild_collection('journals', transformed_data)
 
+    models.Sync.objects.create(ended_at=datetime.now(),
+        last_seq=60, status='finished')
 
-def update_catalog():
+
+def update_catalog(managerapi_dep=datacollector.SciELOManagerAPI):
+    scielo_api = managerapi_dep(settings=settings)
     journal_ppl = functions.make_journal_pipeline()
 
-    data = functions._what_have_changed()
-    transformed_data = journal_ppl.run(data['journals'])
+    with transaction.commit_on_success():
+        sync = models.Sync.objects.create()
 
-    marreta = dataloader.Marreta(settings=settings)
-    marreta.update_collection('journals', transformed_data)
+        changes = functions._what_have_changed(since=functions.get_last_seq())
+        changed_journals = changes.show('journals', unique=True)
+        # changed_issues = changes.show('issues', unique=True)
+
+        changed_journals_ids = [ch.resource_id for ch in changed_journals]
+        # changed_issues_ids = [ch.resource_id for ch in changed_issues]
+
+        journals_data = scielo_api.get_journals(*changed_journals_ids)
+        # issues_data = scielo_api.get_issues(*changed_issues_ids)
+
+        transformed_journals_data = journal_ppl.run(journals_data)
+
+        marreta = dataloader.Marreta(settings=settings)
+        marreta.update_collection('journals', transformed_journals_data)
+
+        sync.last_seq = changes.last_seq
+        sync.status = 'finished'
+        sync.ended_at = datetime.now()
+        sync.save()
 
 
 def sync_collections_meta(managerapi_dep=datacollector.SciELOManagerAPI):
