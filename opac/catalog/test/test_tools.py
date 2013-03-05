@@ -23,6 +23,8 @@ class NavigationTest(MockerTestCase):
                     u'total_documents': 3,
                     u'order': 1,
                     u'id': 4,
+                    u'publication_year': 2005,
+                    u'volume': '47'
                 },
             },
             {
@@ -32,6 +34,8 @@ class NavigationTest(MockerTestCase):
                     u'total_documents': 3,
                     u'order': 3,
                     u'id': 6,
+                    u'publication_year': 2005,
+                    u'volume': '47'
                 },
             },
             {
@@ -41,6 +45,8 @@ class NavigationTest(MockerTestCase):
                     u'total_documents': 3,
                     u'order': 2,
                     u'id': 5,
+                    u'publication_year': 2005,
+                    u'volume': '47'
                 },
             }
         ]
@@ -50,8 +56,8 @@ class NavigationTest(MockerTestCase):
 
         nav = Navigation(journal, issue=issue)
 
-        self.assertEqual(nav._issues, OrderedDict([(1, 4), (2, 5), (3, 6)]))
-        self.assertEqual(nav._current, 6)
+        self.assertEqual(nav._issues, OrderedDict([((2005, '47', 1), 4), ((2005, '47', 2), 5), ((2005, '47', 3), 6)]))
+        self.assertEqual(nav._current_key, (2005, '47', 3))
         self.assertEqual(nav._issue, issue)
 
     def test_instatiation_without_issue(self):
@@ -68,6 +74,8 @@ class NavigationTest(MockerTestCase):
                     u'total_documents': 3,
                     u'order': 1,
                     u'id': 4,
+                    u'publication_year': 2005,
+                    u'volume': '47'
                 },
             },
             {
@@ -77,6 +85,8 @@ class NavigationTest(MockerTestCase):
                     u'total_documents': 3,
                     u'order': 3,
                     u'id': 6,
+                    u'publication_year': 2005,
+                    u'volume': '47'
                 },
             },
             {
@@ -86,6 +96,8 @@ class NavigationTest(MockerTestCase):
                     u'total_documents': 3,
                     u'order': 2,
                     u'id': 5,
+                    u'publication_year': 2005,
+                    u'volume': '47'
                 },
             }
         ]
@@ -100,8 +112,8 @@ class NavigationTest(MockerTestCase):
         nav = Navigation(journal, issue_lib=mock_issue)
         nav._load_issue()
 
-        self.assertEqual(nav._issues, OrderedDict([(1, 4), (2, 5), (3, 6)]))
-        self.assertEqual(nav._current, 6)
+        self.assertEqual(nav._issues, OrderedDict([((2005, '47', 1), 4), ((2005, '47', 2), 5), ((2005, '47', 3), 6)]))
+        self.assertEqual(nav._current_key, (2005, '47', 3))
         self.assertEqual(nav._issue, issue)
 
     def test_journal_with_ahead(self):
@@ -143,6 +155,7 @@ class NavigationTest(MockerTestCase):
                     "total_documents": 3,
                     "updated": "2012-11-08T10:35:37.193612",
                     "publication_year": 2005,
+                    "volume": '46'
                     }
                 },
                 {
@@ -154,6 +167,7 @@ class NavigationTest(MockerTestCase):
                     "total_documents": 3,
                     "updated": "2012-11-08T10:35:37.193612",
                     "publication_year": 2005,
+                    "volume": '47'
                     }
                 }
             ]
@@ -171,6 +185,8 @@ class NavigationTest(MockerTestCase):
         current_issue = {
                             u'order': 1,
                             u'id': 4,
+                            u'publication_year': 2005,
+                            u'volume': '47'
                         }
 
         issues = [
@@ -180,6 +196,8 @@ class NavigationTest(MockerTestCase):
                 {
                     u'order': 1,
                     u'id': 4,
+                    u'publication_year': 2005,
+                    u'volume': '47'
                 },
             },
             {
@@ -188,6 +206,8 @@ class NavigationTest(MockerTestCase):
                 {
                     u'order': 3,
                     u'id': 6,
+                    u'publication_year': 2005,
+                    u'volume': '47'
                 },
             }
         ]
@@ -206,6 +226,8 @@ class NavigationTest(MockerTestCase):
         current_issue = {
                             u'order': 3,
                             u'id': 6,
+                            u'publication_year': 2005,
+                            u'volume': '47'
                         }
 
         issues = [
@@ -215,6 +237,8 @@ class NavigationTest(MockerTestCase):
                 {
                     u'order': 1,
                     u'id': 4,
+                    u'publication_year': 2005,
+                    u'volume': '47'
                 },
             },
             {
@@ -223,6 +247,8 @@ class NavigationTest(MockerTestCase):
                 {
                     u'order': 3,
                     u'id': 6,
+                    u'publication_year': 2005,
+                    u'volume': '47'
                 },
             }
         ]
@@ -233,57 +259,3 @@ class NavigationTest(MockerTestCase):
         nav = Navigation(journal, issue=issue).previous_issue
 
         self.assertEqual(nav, '/issue/AISS/4/')
-
-    def test_get_invalid_previous_issue_id_attemping_100_times(self):
-        from .modelfactories import JournalFactory, IssueFactory
-        from catalog.tools import Navigation
-
-        current_issue = {
-                            u'order': 101,
-                            u'id': 20,
-                        }
-
-        issues = [
-            {
-                u'id': 4,
-                u'data':
-                {
-                    u'order': 1,
-                    u'id': 4,
-                },
-            },
-        ]
-
-        journal = JournalFactory.build(issues=issues)
-        issue = IssueFactory.build(**current_issue)
-
-        nav = Navigation(journal, issue=issue).previous_issue
-
-        self.assertEqual(None, nav)
-
-    def test_get_invalid_previous_issue_id_reaching_boundary_0(self):
-        from .modelfactories import JournalFactory, IssueFactory
-        from catalog.tools import Navigation
-
-        current_issue = {
-                            u'order': 10,
-                            u'id': 20,
-                        }
-
-        issues = [
-            {
-                u'id': 4,
-                u'data':
-                {
-                    u'order': 100,
-                    u'id': 4,
-                },
-            },
-        ]
-
-        journal = JournalFactory.build(issues=issues)
-        issue = IssueFactory.build(**current_issue)
-
-        nav = Navigation(journal, issue=issue).previous_issue
-
-        self.assertEqual(None, nav)

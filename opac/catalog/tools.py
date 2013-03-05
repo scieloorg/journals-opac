@@ -9,8 +9,9 @@ class Navigation(object):
                  issue=None,
                  issue_lib=mongomodels.Issue):
 
-        issues = dict(((iss['data']['publication_year'], iss['data']['order']),
-                             iss['data']['id']) for iss in journal.issues)
+        issues = dict(((iss['data']['publication_year'], iss['data']['volume'],
+                        iss['data']['order']), iss['data']['id'])
+                        for iss in journal.issues)
 
         self._issues = collections.OrderedDict(sorted(issues.items()))
 
@@ -54,15 +55,13 @@ class Navigation(object):
     @property
     def next_issue(self):
         """
-        This method retrieves the next issue url according to the
-        order sequence. If there is a gap in the issues sequence,
-        for legacy compliance, the script will attempt a 100 different
-        order numbers before delivery "None".
+        This method retrivies next url based on issue ID and return
         """
         if not hasattr(self, '_issue'):
             self._load_issue()
 
         index = self._issues.keys().index((self._issue.publication_year,
+                                          self._issue.volume,
                                           self._issue.order))
 
         try:
@@ -72,8 +71,7 @@ class Navigation(object):
 
         next = self._issues.get(next_index)
 
-        if next:
-            return '/issue/{0}/{1}/'.format(
+        return '/issue/{0}/{1}/'.format(
                                     self._journal.acronym,
                                     next)
 
@@ -81,16 +79,14 @@ class Navigation(object):
     @property
     def previous_issue(self):
         """
-        This method retrieves the previous issue url according to the
-        order sequence. If there is a gap in the issues sequence,
-        for legacy compliance, the script will attempt a 100 different
-        order numbers before delivery "None".
+
         """
         if not hasattr(self, '_issue'):
             self._load_issue()
 
         index = self._issues.keys().index((self._issue.publication_year,
-                                          self._issue.order))
+                                           self._issue.volume,
+                                           self._issue.order))
 
         if index != 0:
             previous_index = self._issues.keys()[index - 1]
@@ -99,7 +95,6 @@ class Navigation(object):
 
         previous = self._issues.get(previous_index)
 
-        if previous:
-            return '/issue/{0}/{1}/'.format(
+        return '/issue/{0}/{1}/'.format(
                                     self._journal.acronym,
                                     previous)
