@@ -76,7 +76,6 @@ class Navigation(object):
                                     self._journal.acronym,
                                     next)
 
-
     @property
     def previous_issue(self):
         """

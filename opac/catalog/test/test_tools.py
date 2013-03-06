@@ -259,3 +259,115 @@ class NavigationTest(MockerTestCase):
         nav = Navigation(journal, issue=issue).previous_issue
 
         self.assertEqual(nav, '/issue/AISS/4/')
+
+    def test_get_next_issue_from_current_must_return_none(self):
+        from .modelfactories import JournalFactory, IssueFactory
+        from catalog.tools import Navigation
+
+        current_issue = {
+                            u'order': 3,
+                            u'id': 5,
+                            u'publication_year': 2005,
+                            u'volume': '47'
+                        }
+
+        issues = [
+            {
+                u'id': 4,
+                u'data':
+                {
+                    u'order': 1,
+                    u'id': 4,
+                    u'publication_year': 2005,
+                    u'volume': '47'
+                },
+            },
+            {
+                u'id': 6,
+                u'data':
+                {
+                    u'order': 2,
+                    u'id': 6,
+                    u'publication_year': 2005,
+                    u'volume': '47'
+                },
+            },
+            {
+                u'id': 7,
+                u'data':
+                {
+                    u'order': 3,
+                    u'id': 5,
+                    u'publication_year': 2005,
+                    u'volume': '47'
+                }
+            }
+        ]
+
+        journal = JournalFactory.build(issues=issues)
+        issue = IssueFactory.build(**current_issue)
+
+        nav = Navigation(journal, issue=issue).next_issue
+
+        self.assertEqual(nav, None)
+
+    def test_get_previous_from_first_issue_must_return_none(self):
+        from .modelfactories import JournalFactory, IssueFactory
+        from catalog.tools import Navigation
+
+        current_issue = {
+                            u'order': 1,
+                            u'id': 5,
+                            u'publication_year': 2005,
+                            u'volume': '47'
+                        }
+
+        issues = [
+            {
+                u'id': 3,
+                u'data':
+                {
+                    u'order': 1,
+                    u'id': 5,
+                    u'publication_year': 2005,
+                    u'volume': '47'
+                }
+            },
+            {
+                u'id': 4,
+                u'data':
+                {
+                    u'order': 2,
+                    u'id': 4,
+                    u'publication_year': 2005,
+                    u'volume': '47'
+                },
+            },
+            {
+                u'id': 6,
+                u'data':
+                {
+                    u'order': 3,
+                    u'id': 6,
+                    u'publication_year': 2005,
+                    u'volume': '47'
+                },
+            },
+            {
+                u'id': 7,
+                u'data':
+                {
+                    u'order': 4,
+                    u'id': 5,
+                    u'publication_year': 2005,
+                    u'volume': '47'
+                }
+            }
+        ]
+
+        journal = JournalFactory.build(issues=issues)
+        issue = IssueFactory.build(**current_issue)
+
+        nav = Navigation(journal, issue=issue).previous_issue
+
+        self.assertEqual(nav, None)
