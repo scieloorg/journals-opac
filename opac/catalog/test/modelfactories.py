@@ -1,5 +1,7 @@
 # coding: utf-8
 from __future__ import unicode_literals
+
+from django.utils import timezone
 import factory
 
 from catalog import mongomodels
@@ -178,3 +180,11 @@ class JournalMetaFactory(factory.Factory):
     resource_uri = u'/api/v1/journals/1/'
     name = u"Annali dell'Istituto Superiore di Sanit\xe0"
     collection = factory.SubFactory(CollectionMetaFactory)
+
+
+class SyncFactory(factory.Factory):
+    FACTORY_FOR = models.Sync
+
+    ended_at = timezone.now()
+    last_seq = 47
+    status = 'finished'

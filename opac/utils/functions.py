@@ -65,18 +65,21 @@ def get_all_data_for_build(managerapi_dep=datacollector.SciELOManagerAPI):
     )
 
 
-def get_all_changes(since=0, managerapi_dep=datacollector.SciELOManagerAPI):
+def get_all_changes(since=0,
+                    managerapi_dep=datacollector.SciELOManagerAPI,
+                    catalog_defs_dep=get_user_catalog_definitions,
+                    changeslist_dep=datacollector.ChangesList):
     """
     Returns a ``utils.datacollector.ChangesList`` instance
     containing all data that must be created or updated in
     order to keep the catalog updated.
     """
     scielo_api = managerapi_dep(settings=settings)
-    full_collections, journals_a_la_carte = get_user_catalog_definitions()
+    full_collections, journals_a_la_carte = catalog_defs_dep()
 
     data = scielo_api.get_changes(since=since)
 
-    changes_list = datacollector.ChangesList(data)
+    changes_list = changeslist_dep(data)
     changes = changes_list.filter(collections=full_collections,
         journals=journals_a_la_carte)
 
@@ -84,22 +87,21 @@ def get_all_changes(since=0, managerapi_dep=datacollector.SciELOManagerAPI):
 
 
 def _list_issues_uri(journal_meta, journal_dep=mongomodels.Journal):
-    # TODO: This instantiation logic must be at Journal.get_journal
-    journal_data = journal_dep.objects.find_one({'id': journal_meta.resource_id})
-    journal_doc = journal_dep(**journal_data)
+    journal_doc = journal_dep.get_journal(criteria={'id': journal_meta.resource_id})
     return (issue.resource_uri for issue in journal_doc.list_issues())
 
 
 def get_last_seq():
     """
-
+    Get the seq of the lastest Sync object, returns ``0`` if
+    there are no Sync objects.
     """
-    last_sync = models.Sync.objects.all()[0]
-
-    if last_sync:
-        return last_sync.last_seq
-    else:
+    try:
+        last_sync = models.Sync.objects.all()[0]
+    except IndexError:
         return 0
+
+    return last_sync.last_seq
 
 
 def get_remote_last_seq(managerapi_dep=datacollector.SciELOManagerAPI):
