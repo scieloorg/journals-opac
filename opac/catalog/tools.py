@@ -1,3 +1,4 @@
+import collections
 from catalog import mongomodels
 
 
@@ -8,11 +9,14 @@ class Navigation(object):
                  issue=None,
                  issue_lib=mongomodels.Issue):
 
-        self._issues = dict((iss['data']['order'],
-                             iss['data']['id']) for iss in journal.issues)
+        issues = dict(((iss['data']['publication_year'], iss['data']['volume'],
+                        iss['data']['order']), iss['data']['id'])
+                        for iss in journal.issues)
 
-        current = max(self._issues, key=lambda x: x)
-        self._current = self._issues[current]
+        self._issues = collections.OrderedDict(sorted(issues.items()))
+
+        self._current_key = max(self._issues)
+        self._current_value = self._issues[self._current_key]
         self._issue_lib = issue_lib
 
         if issue:
@@ -23,7 +27,7 @@ class Navigation(object):
     def _load_issue(self):
         self._issue = self._issue_lib.get_issue(
                                         self._journal.acronym,
-                                        self._current
+                                        self._current_value
                                         )
 
     @property
@@ -45,53 +49,53 @@ class Navigation(object):
 
         return '/issue/{0}/{1}/'.format(
                                         self._journal.acronym,
-                                        self._current
+                                        self._current_value
                                         )
 
     @property
     def next_issue(self):
         """
-        This method retrieves the next issue url according to the
-        order sequence. If there is a gap in the issues sequence,
-        for legacy compliance, the script will attempt a 100 different
-        order numbers before delivery "None".
+        This method retrives a link to the next issue or None
         """
+
         if not hasattr(self, '_issue'):
             self._load_issue()
 
-        for i in range(1, 100):
-            match = self._issue.order + i
+        index = self._issues.keys().index((self._issue.publication_year,
+                                          self._issue.volume,
+                                          self._issue.order))
 
-            next = self._issues.get(match)
-            if next:
-                return '/issue/{0}/{1}/'.format(
-                                        self._journal.acronym,
-                                        next
-                                        )
+        try:
+            next_index = self._issues.keys()[index + 1]
+        except IndexError:
+            return None
 
-        return None
+        next = self._issues.get(next_index)
+
+        return '/issue/{0}/{1}/'.format(
+                                    self._journal.acronym,
+                                    next)
 
     @property
     def previous_issue(self):
         """
-        This method retrieves the previous issue url according to the
-        order sequence. If there is a gap in the issues sequence,
-        for legacy compliance, the script will attempt a 100 different
-        order numbers before delivery "None".
+        This method retrives a link to the previous issue or None
         """
+
         if not hasattr(self, '_issue'):
             self._load_issue()
 
-        for i in range(1, 100):
-            match = self._issue.order - i
+        index = self._issues.keys().index((self._issue.publication_year,
+                                           self._issue.volume,
+                                           self._issue.order))
 
-            if match == 0:
-                break
+        if index != 0:
+            previous_index = self._issues.keys()[index - 1]
+        else:
+            return None
 
-            previous = self._issues.get(match)
-            if previous:
-                return '/issue/{0}/{1}/'.format(
-                                        self._journal.acronym,
-                                        previous)
+        previous = self._issues.get(previous_index)
 
-        return None
+        return '/issue/{0}/{1}/'.format(
+                                    self._journal.acronym,
+                                    previous)
