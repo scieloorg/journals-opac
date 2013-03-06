@@ -95,7 +95,7 @@
               - <small>
                   <em>{% trans 'Continued as' %}</em>
                 </small>
-                <a href={% url 'catalog.journal' item.latter_journal.acronym %}>{{ item.latter_journal.title }}</a>
+                <a href="{{item.latter_journal.get_absolute_url}}">{{ item.latter_journal.title }}</a>
             {% elif item.pub_status = 'deceased' %}
               - <small>
                   <em>{% trans 'Deceased in ' %} - {{ item.last_date_history|date:"F d, Y" }}</em>
