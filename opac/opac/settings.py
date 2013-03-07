@@ -132,6 +132,7 @@ INSTALLED_APPS = (
     'south',
     'djcelery',
     'catalog',
+    'accesses',
     'utils',
 )
 
