@@ -161,6 +161,11 @@ LOGGING = {
             'level': 'ERROR',
             'propagate': True,
         },
+        'utils.sync.datacollector': {
+            'handlers': ['mail_admins'],
+            'level': 'ERROR',
+            'propagate': True,
+        },
     }
 }
 

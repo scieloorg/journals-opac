@@ -15,8 +15,10 @@ ITEMS_PER_REQUEST = 50
 
 
 class ResourceUnavailableError(Exception):
-    def __init__(self, *args, **kwargs):
-        super(ResourceUnavailableError, self).__init__(*args, **kwargs)
+    """
+    Raised when the remote resource is unavailable.
+    """
+    pass
 
 
 class SciELOManagerAPI(object):
@@ -41,6 +43,7 @@ class SciELOManagerAPI(object):
 
     def fetch_data(self, endpoint,
                          resource_id=None,
+                         time_dep=time,
                          **kwargs):
         """
         Fetches the specified resource from the SciELO Manager API.
@@ -62,8 +65,8 @@ class SciELOManagerAPI(object):
             except requests.exceptions.ConnectionError as exc:
                 if err_count < 10:
                     wait_secs = err_count * 5
-                    logger.info('Connection failed. Waiting %ss to retry.' % wait_secs)
-                    time.sleep(wait_secs)
+                    logger.warning('Connection failed. Waiting %ss to retry.' % wait_secs)
+                    time_dep.sleep(wait_secs)
                     err_count += 1
                     continue
                 else:
@@ -151,20 +154,12 @@ class SciELOManagerAPI(object):
 
 
 def _list_issues_uri(journal_meta, journal_dep=mongomodels.Journal):
-        # TODO: This instantiation logic must be at Journal.get_journal
-        journal_data = journal_dep.objects.find_one({'id': journal_meta.resource_id})
-
-        if not journal_data:
-            return []
-
-        journal_doc = journal_dep(**journal_data)
-
-        return (issue.resource_uri for issue in journal_doc.list_issues())
+    journal_doc = journal_dep.get_journal({'id': journal_meta.resource_id})
+    return (issue.resource_uri for issue in journal_doc.list_issues())
 
 
 class ChangeListIterator(object):
     def __init__(self, data):
-        # self._data = sorted(copy.deepcopy(data), key=lambda x: x.seq)
         self._data = data
         self._index = -1
 
@@ -176,6 +171,7 @@ class ChangeListIterator(object):
         try:
             return self._data[self._index]
         except IndexError:
+            self._index -= 1
             raise StopIteration()
 
     @property
@@ -183,10 +179,7 @@ class ChangeListIterator(object):
         if self._index < 0:
             raise AttributeError('the iteration have not started yet.')
 
-        try:
-            return self._data[self._index].seq
-        except IndexError:
-            raise AttributeError()
+        return self._data[self._index].seq
 
 
 class ChangesList(object):

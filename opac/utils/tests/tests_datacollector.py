@@ -1,5 +1,6 @@
 # coding: utf-8
 import mocker
+from django.test.utils import override_settings
 
 from catalog.test import modelfactories
 
@@ -51,6 +52,79 @@ class SciELOManagerAPITests(mocker.MockerTestCase):
         self.assertTrue('objects' in res)
         self.assertTrue(len(res['objects']), 1)
 
+    def test_fetching_all_docs_of_an_endpoint_retries_after_connection_error(self):
+        import requests
+
+        mock_settings = self.mocker.mock()
+        mock_slumber = self.mocker.mock()
+
+        mock_settings.SCIELOMANAGER_API_URI
+        self.mocker.result('http://manager.scielo.org/api/v1/')
+
+        mock_settings.SCIELOMANAGER_API_USERNAME
+        self.mocker.result('any.username')
+
+        mock_settings.SCIELOMANAGER_API_KEY
+        self.mocker.result('any.apikey')
+
+        mock_slumber.API('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.journals
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.get(api_key='any.apikey', username='any.username')
+        self.mocker.throw(requests.exceptions.ConnectionError)
+
+        mock_slumber.get(api_key='any.apikey', username='any.username')
+        self.mocker.result(self.valid_full_microset)
+
+        self.mocker.replay()
+
+        api = self._makeOne(slumber_lib=mock_slumber, settings=mock_settings)
+
+        res = api.fetch_data('journals')
+        self.assertTrue('objects' in res)
+        self.assertTrue(len(res['objects']), 1)
+
+    def test_fetching_all_docs_of_an_endpoint_raises_exception_after_attempts_are_exhausted(self):
+        import requests
+        from utils.sync.datacollector import ResourceUnavailableError
+
+        mock_settings = self.mocker.mock()
+        mock_slumber = self.mocker.mock()
+        mock_time = self.mocker.mock()
+
+        mock_settings.SCIELOMANAGER_API_URI
+        self.mocker.result('http://manager.scielo.org/api/v1/')
+
+        mock_settings.SCIELOMANAGER_API_USERNAME
+        self.mocker.result('any.username')
+
+        mock_settings.SCIELOMANAGER_API_KEY
+        self.mocker.result('any.apikey')
+
+        mock_slumber.API('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.journals
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.get(api_key='any.apikey', username='any.username')
+        self.mocker.throw(requests.exceptions.ConnectionError)
+        self.mocker.count(11)
+
+        mock_time.sleep(mocker.ANY)
+        self.mocker.result(None)
+        self.mocker.count(10)
+
+        self.mocker.replay()
+
+        api = self._makeOne(slumber_lib=mock_slumber, settings=mock_settings)
+
+        self.assertRaises(ResourceUnavailableError,
+            lambda: api.fetch_data('journals', time_dep=mock_time))
+
     def test_single_document_of_an_endpoint(self):
         mock_settings = self.mocker.mock()
         mock_slumber = self.mocker.mock()
@@ -82,6 +156,319 @@ class SciELOManagerAPITests(mocker.MockerTestCase):
 
         res = api.fetch_data('journals', resource_id=1)
         self.assertIn('title', res)
+
+    def test_missing_settings_SCIELOMANAGER_API_URI_raises_exception(self):
+        mock_settings = self.mocker.mock()
+
+        mock_settings.SCIELOMANAGER_API_URI
+        self.mocker.result(None)
+
+        mock_settings.SCIELOMANAGER_API_KEY
+        self.mocker.result('foo')
+
+        mock_settings.SCIELOMANAGER_API_USERNAME
+        self.mocker.result('foo')
+
+        self.mocker.replay()
+
+        self.assertRaises(ValueError,
+            lambda: self._makeOne(settings=mock_settings))
+
+    def test_missing_settings_SCIELOMANAGER_API_KEY_raises_exception(self):
+        mock_settings = self.mocker.mock()
+
+        mock_settings.SCIELOMANAGER_API_URI
+        self.mocker.result('foo')
+
+        mock_settings.SCIELOMANAGER_API_KEY
+        self.mocker.result(None)
+
+        mock_settings.SCIELOMANAGER_API_USERNAME
+        self.mocker.result('foo')
+
+        self.mocker.replay()
+
+        self.assertRaises(ValueError,
+            lambda: self._makeOne(settings=mock_settings))
+
+    def test_missing_settings_SCIELOMANAGER_API_USERNAME_raises_exception(self):
+        mock_settings = self.mocker.mock()
+
+        mock_settings.SCIELOMANAGER_API_URI
+        self.mocker.result('foo')
+
+        mock_settings.SCIELOMANAGER_API_KEY
+        self.mocker.result('foo')
+
+        mock_settings.SCIELOMANAGER_API_USERNAME
+        self.mocker.result(None)
+
+        self.mocker.replay()
+
+        self.assertRaises(ValueError,
+            lambda: self._makeOne(settings=mock_settings))
+
+    def test_iter_docs_returns_a_generator(self):
+        import types
+        mock_slumber = self.mocker.mock()
+
+        mock_slumber.API('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_slumber)
+
+        self.mocker.replay()
+
+        sapi = self._makeOne(slumber_lib=mock_slumber)
+        self.assertIsInstance(sapi.iter_docs('journals'), types.GeneratorType)
+
+    def test_iter_docs_makes_seamless_pagination(self):
+        valid_full_microset1 = {
+            'objects': [
+                {
+                    'title': u'ABCD. Arquivos Brasileiros de Cirurgia Digestiva (São Paulo)'
+                },
+            ],
+            'meta': {'next': '/api/v1/journals/?some_values'},
+        }
+        valid_full_microset2 = {
+            'objects': [
+                {
+                    'title': u'EFGH. Arquivos Brasileiros de Cirurgia Digestiva (São Paulo)'
+                },
+            ],
+            'meta': {'next': None},
+        }
+
+        mock_settings = self.mocker.mock()
+        mock_slumber = self.mocker.mock()
+
+        mock_settings.SCIELOMANAGER_API_URI
+        self.mocker.result('http://manager.scielo.org/api/v1/')
+
+        mock_settings.SCIELOMANAGER_API_USERNAME
+        self.mocker.result('any.username')
+
+        mock_settings.SCIELOMANAGER_API_KEY
+        self.mocker.result('any.apikey')
+
+        mock_slumber.API('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.journals
+        self.mocker.result(mock_slumber)
+        self.mocker.count(2)
+
+        mock_slumber.get(api_key='any.apikey', username='any.username', limit=50, offset=0)
+        self.mocker.result(valid_full_microset1)
+
+        mock_slumber.get(api_key='any.apikey', username='any.username', limit=50, offset=50)
+        self.mocker.result(valid_full_microset2)
+
+        self.mocker.replay()
+
+        sapi = self._makeOne(slumber_lib=mock_slumber, settings=mock_settings)
+        for i, doc in enumerate(sapi.iter_docs('journals')):
+            if i == 0:
+                self.assertTrue(doc['title'].startswith('ABCD'))
+            else:
+                self.assertTrue(doc['title'].startswith('EFGH'))
+
+    def test_iter_docs_ignores_trashed_docs(self):
+        valid_full_microset1 = {
+            'objects': [
+                {
+                    'title': u'ABCD. Arquivos Brasileiros de Cirurgia Digestiva (São Paulo)'
+                },
+                {
+                    'title': u'EFGH. Arquivos Brasileiros de Cirurgia Digestiva (São Paulo)',
+                    'is_trashed': True,
+                },
+            ],
+            'meta': {'next': None},
+        }
+
+        mock_settings = self.mocker.mock()
+        mock_slumber = self.mocker.mock()
+
+        mock_settings.SCIELOMANAGER_API_URI
+        self.mocker.result('http://manager.scielo.org/api/v1/')
+
+        mock_settings.SCIELOMANAGER_API_USERNAME
+        self.mocker.result('any.username')
+
+        mock_settings.SCIELOMANAGER_API_KEY
+        self.mocker.result('any.apikey')
+
+        mock_slumber.API('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.journals
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.get(api_key='any.apikey', username='any.username', limit=50, offset=0)
+        self.mocker.result(valid_full_microset1)
+
+        self.mocker.replay()
+
+        sapi = self._makeOne(slumber_lib=mock_slumber, settings=mock_settings)
+        self.assertEqual(1, len(list(sapi.iter_docs('journals'))))
+
+    def test_iter_docs_accepts_filter_by_collection(self):
+        mock_settings = self.mocker.mock()
+        mock_slumber = self.mocker.mock()
+
+        mock_settings.SCIELOMANAGER_API_URI
+        self.mocker.result('http://manager.scielo.org/api/v1/')
+
+        mock_settings.SCIELOMANAGER_API_USERNAME
+        self.mocker.result('any.username')
+
+        mock_settings.SCIELOMANAGER_API_KEY
+        self.mocker.result('any.apikey')
+
+        mock_slumber.API('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.journals
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.get(api_key='any.apikey',
+                         username='any.username',
+                         limit=50,
+                         offset=0,
+                         collection='saude-publica')
+        self.mocker.result(self.valid_full_microset)
+
+        self.mocker.replay()
+
+        sapi = self._makeOne(slumber_lib=mock_slumber, settings=mock_settings)
+        self.assertEqual(1, len(list(sapi.iter_docs('journals', collection='saude-publica'))))
+
+    def test_get_all_journals_from_collection(self):
+        mock_settings = self.mocker.mock()
+        mock_slumber = self.mocker.mock()
+
+        mock_settings.SCIELOMANAGER_API_URI
+        self.mocker.result('http://manager.scielo.org/api/v1/')
+
+        mock_settings.SCIELOMANAGER_API_USERNAME
+        self.mocker.result('any.username')
+
+        mock_settings.SCIELOMANAGER_API_KEY
+        self.mocker.result('any.apikey')
+
+        mock_slumber.API('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.journals
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.get(api_key='any.apikey',
+                         username='any.username',
+                         limit=50,
+                         offset=0,
+                         collection='saude-publica')
+        self.mocker.result(self.valid_full_microset)
+
+        self.mocker.replay()
+
+        sapi = self._makeOne(slumber_lib=mock_slumber, settings=mock_settings)
+        self.assertEqual(1, len(list(sapi.get_all_journals('saude-publica'))))
+
+    def test_get_journals_from_resource_ids(self):
+        mock_settings = self.mocker.mock()
+        mock_slumber = self.mocker.mock()
+
+        mock_settings.SCIELOMANAGER_API_URI
+        self.mocker.result('http://manager.scielo.org/api/v1/')
+
+        mock_settings.SCIELOMANAGER_API_USERNAME
+        self.mocker.result('any.username')
+
+        mock_settings.SCIELOMANAGER_API_KEY
+        self.mocker.result('any.apikey')
+
+        mock_slumber.API('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.journals
+        self.mocker.result(mock_slumber)
+
+        mock_slumber(47)
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.get(api_key='any.apikey', username='any.username')
+        self.mocker.result(self.valid_full_microset)
+
+        self.mocker.replay()
+
+        sapi = self._makeOne(slumber_lib=mock_slumber, settings=mock_settings)
+        self.assertEqual(1, len(list(sapi.get_journals(47))))
+
+    def test_get_all_collections_returns_a_generator(self):
+        import types
+        mock_slumber = self.mocker.mock()
+
+        mock_slumber.API('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_slumber)
+
+        self.mocker.replay()
+
+        sapi = self._makeOne(slumber_lib=mock_slumber)
+        self.assertIsInstance(sapi.get_all_collections(), types.GeneratorType)
+
+    def test_get_changes_returns_a_generator(self):
+        import types
+        mock_slumber = self.mocker.mock()
+
+        mock_slumber.API('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_slumber)
+
+        self.mocker.replay()
+
+        sapi = self._makeOne(slumber_lib=mock_slumber)
+        self.assertIsInstance(sapi.get_changes(), types.GeneratorType)
+
+    def test_get_issues_returns_a_generator(self):
+        import types
+        mock_slumber = self.mocker.mock()
+
+        mock_slumber.API('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_slumber)
+
+        self.mocker.replay()
+
+        sapi = self._makeOne(slumber_lib=mock_slumber)
+        self.assertIsInstance(sapi.get_issues(), types.GeneratorType)
+
+    def test_get_issues_from_resource_ids(self):
+        mock_settings = self.mocker.mock()
+        mock_slumber = self.mocker.mock()
+
+        mock_settings.SCIELOMANAGER_API_URI
+        self.mocker.result('http://manager.scielo.org/api/v1/')
+
+        mock_settings.SCIELOMANAGER_API_USERNAME
+        self.mocker.result('any.username')
+
+        mock_settings.SCIELOMANAGER_API_KEY
+        self.mocker.result('any.apikey')
+
+        mock_slumber.API('http://manager.scielo.org/api/v1/')
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.issues
+        self.mocker.result(mock_slumber)
+
+        mock_slumber(47)
+        self.mocker.result(mock_slumber)
+
+        mock_slumber.get(api_key='any.apikey', username='any.username')
+        self.mocker.result(self.valid_microset)
+
+        self.mocker.replay()
+
+        sapi = self._makeOne(slumber_lib=mock_slumber, settings=mock_settings)
+        self.assertEqual(1, len(list(sapi.get_issues(47))))
 
 
 class ChangesListTests(mocker.MockerTestCase):
@@ -389,3 +776,76 @@ class ChangesListTests(mocker.MockerTestCase):
         self.assertTrue(len(changes), 2)
         self.assertEqual(changes[0].seq, 2)
         self.assertEqual(changes[1].seq, 3)
+
+
+class ChangesListIteratorTests(mocker.MockerTestCase):
+
+    changes = [
+        {
+            "changed_at": "2013-01-23T15:12:33.409478",
+            "collection_uri": "/api/v1/collections/2/",
+            "event_type": "added",
+            "object_uri": "/api/v1/journals/1/",
+            "resource_uri": "/api/v1/changes/1/",
+            "seq": 1
+        },
+        {
+            "changed_at": "2013-01-23T15:12:33.409478",
+            "collection_uri": "/api/v1/collections/2/",
+            "event_type": "added",
+            "object_uri": "/api/v1/journals/2/",
+            "resource_uri": "/api/v1/changes/2/",
+            "seq": 2
+        },
+        {
+            "changed_at": "2013-01-23T15:11:33.409478",
+            "collection_uri": "/api/v1/collections/1/",
+            "event_type": "updated",
+            "object_uri": "/api/v1/journals/1/",
+            "resource_uri": "/api/v1/changes/8/",
+            "seq": 3
+        },
+        {
+            "changed_at": "2013-01-23T15:11:33.409478",
+            "collection_uri": "/api/v1/collections/1/",
+            "event_type": "updated",
+            "object_uri": "/api/v1/issues/1/",
+            "resource_uri": "/api/v1/changes/9/",
+            "seq": 4
+        }
+    ]
+
+    def _makeOne(self):
+        from utils.sync.datacollector import ChangesList
+        return iter(ChangesList(self.changes))
+
+    def test_iter_is_implemented_and_returns_self(self):
+        chlist_iterator = self._makeOne()
+        chlist_iterator2 = iter(chlist_iterator)
+        self.assertIs(chlist_iterator, chlist_iterator2)
+
+    def test_current_seq_raises_exception_for_non_started_iterators(self):
+        chlist_iterator = self._makeOne()
+
+        self.assertRaises(AttributeError, lambda: chlist_iterator.current_seq)
+
+
+class ListIssuesUriTests(mocker.MockerTestCase):
+
+    def test_list_issues_given_a_journalmeta(self):
+        from utils.sync.datacollector import _list_issues_uri
+
+        journal_meta = modelfactories.JournalMetaFactory.create()
+        journal_doc = modelfactories.JournalFactory.build()
+
+        mock_journal = self.mocker.mock()
+
+        mock_journal.get_journal({'id': '1'})
+        self.mocker.result(journal_doc)
+
+        self.mocker.replay()
+
+        issues = _list_issues_uri(journal_meta, journal_dep=mock_journal)
+        issues_list = list(issues)
+        self.assertEqual(len(issues_list), 1)
+        self.assertEqual(issues_list[0], u'/api/v1/issues/1/')
