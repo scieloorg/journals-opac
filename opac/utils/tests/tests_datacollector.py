@@ -1,6 +1,5 @@
 # coding: utf-8
 import mocker
-from django.test.utils import override_settings
 
 from catalog.test import modelfactories
 
@@ -475,7 +474,6 @@ class ChangesListTests(mocker.MockerTestCase):
 
     def test_type_is_checked_at_instantiation(self):
         from utils.sync.datacollector import ChangesList
-
         self.assertRaises(TypeError, lambda: ChangesList('must fail'))
 
     def test_raw_data_from_scielo_api_is_accepted_on_instantiation(self):
@@ -781,6 +779,38 @@ class ChangesListTests(mocker.MockerTestCase):
         self.assertTrue(len(changes), 2)
         self.assertEqual(changes[0].seq, 2)
         self.assertEqual(changes[1].seq, 3)
+
+    def test_last_seq(self):
+        from utils.sync.datacollector import ChangesList
+        changes = [
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "added",
+                "object_uri": "/api/v1/journals/1/",
+                "resource_uri": "/api/v1/changes/1/",
+                "seq": 1
+            },
+            {
+                "changed_at": "2013-01-23T15:12:33.409478",
+                "collection_uri": "/api/v1/collections/2/",
+                "event_type": "added",
+                "object_uri": "/api/v1/journals/2/",
+                "resource_uri": "/api/v1/changes/2/",
+                "seq": 2
+            },
+            {
+                "changed_at": "2013-01-23T15:11:33.409478",
+                "collection_uri": "/api/v1/collections/1/",
+                "event_type": "updated",
+                "object_uri": "/api/v1/journals/1/",
+                "resource_uri": "/api/v1/changes/8/",
+                "seq": 3
+            }
+        ]
+
+        ch_list = ChangesList(changes)
+        self.assertEqual(ch_list.last_seq, 3)
 
 
 class ChangesListIteratorTests(mocker.MockerTestCase):
