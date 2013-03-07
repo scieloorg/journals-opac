@@ -1,4 +1,3 @@
-import unittest
 import mocker
 
 
@@ -32,7 +31,48 @@ class MarretaDataLoaderTests(mocker.MockerTestCase):
 
         self.mocker.replay()
 
-        m = self._makeOne(pymongo_lib=mock_pymongo)
+        m = self._makeOne(pymongo_dep=mock_pymongo)
 
         data = [{'title': "the hitchhiker's guide to the galaxy"}]
         self.assertIsNone(m.rebuild_collection('journals', data))
+
+    def test_update_journals(self):
+        mock_mongo_conn = self.mocker.mock()
+        mock_mongo_db = self.mocker.mock()
+        mock_mongo_col = self.mocker.mock()
+
+        mock_mongo_conn(mongodb_driver=mocker.ANY, mongo_uri=mocker.ANY)
+        self.mocker.result(mock_mongo_conn)
+
+        mock_mongo_conn.db
+        self.mocker.result(mock_mongo_db)
+
+        mock_mongo_db['journals']
+        self.mocker.result(mock_mongo_col)
+
+        mock_mongo_col.update({'id': 1},
+                              {
+                                'title': "the hitchhiker's guide to the galaxy",
+                                'id': 1,
+                              },
+                              w=1,
+                              upsert=True)
+        self.mocker.result('spam_objectId')
+
+        self.mocker.replay()
+
+        m = self._makeOne(mongoconn_dep=mock_mongo_conn)
+
+        data = [{'title': "the hitchhiker's guide to the galaxy", 'id': 1}]
+        self.assertIsNone(m.update_journals(data))
+
+    def test_missing_settings_MONGO_URI_raises_exception(self):
+        mock_settings = self.mocker.mock()
+
+        mock_settings.MONGO_URI
+        self.mocker.result(None)
+
+        self.mocker.replay()
+
+        self.assertRaises(ValueError,
+            lambda: self._makeOne(settings=mock_settings))

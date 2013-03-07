@@ -54,7 +54,7 @@ def update_catalog(managerapi_dep=datacollector.SciELOManagerAPI):
         transformed_journals_data = journal_ppl.run(journals_data)
 
         marreta = dataloader.Marreta(settings=settings)
-        marreta.update_collection('journals', transformed_journals_data)
+        marreta.update_journals('journals', transformed_journals_data)
 
         sync.last_seq = changes.last_seq
         sync.status = 'finished'
