@@ -473,6 +473,11 @@ class SciELOManagerAPITests(mocker.MockerTestCase):
 
 class ChangesListTests(mocker.MockerTestCase):
 
+    def test_type_is_checked_at_instantiation(self):
+        from utils.sync.datacollector import ChangesList
+
+        self.assertRaises(TypeError, lambda: ChangesList('must fail'))
+
     def test_raw_data_from_scielo_api_is_accepted_on_instantiation(self):
         from utils.sync.datacollector import ChangesList, Change
 
