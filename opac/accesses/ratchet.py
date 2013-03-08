@@ -41,6 +41,7 @@ class Accesses(object):
             return []
 
         del data['code']
+        del data['total']
 
         tab = {}
         tab['columns'] = []

@@ -1,0 +1,23 @@
+{% load i18n %}
+
+<script type="text/javascript">
+    google.load('visualization', '1', {packages: ['table', 'corechart']});
+    google.setOnLoadCallback(drawCharts);
+
+    function drawCharts() {
+      var data = new google.visualization.arrayToDataTable({{ tab|safe }});
+
+      var table = new google.visualization.Table(document.getElementById('table_div'));
+      table.draw(data);
+
+      options = {
+            'title': '{% trans 'Catalog Accesses by page type' %}',
+            'vAxis': {'title': '{% trans 'acceses' %}'},
+            'hAxis': {'title': '{% trans 'months' %}' }
+      }
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data, options);
+
+    }
+</script>
