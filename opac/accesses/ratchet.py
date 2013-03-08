@@ -1,10 +1,14 @@
 import urllib2
 import json
+from collections import OrderedDict
 
 from django.conf import settings
 
 
 class Accesses(object):
+
+    def __init__(self, ratchet_uri=settings.RATCHET_URI, resource='general'):
+        self._ratchet = '{0}{1}?code='.format(ratchet_uri, resource)
 
     def catalog_year(self):
         """
@@ -20,14 +24,21 @@ class Accesses(object):
 
         return data
 
-    def catalog_pages(self, data=None):
+    def catalog_pages(self,
+                      json_data=None,
+                      code=settings.RATCHET_CATALOG_CODE):
         """
         Recover general access log from the catalog.
         """
-        req = '{0}general?code=www.scielo.br'.format(settings.RATCHET_URI)
+        req = '{0}{1}'.format(self._ratchet, code)
 
-        if not data:
-            data = json.loads(urllib2.urlopen(req).read())
+        try:
+            if json_data:
+                data = json.loads(json_data.read())
+            else:
+                data = json.loads(urllib2.urlopen(req).read())
+        except ValueError:
+            return []
 
         del data['code']
 
@@ -42,16 +53,13 @@ class Accesses(object):
                 for year, months in value.items():
                     del months['total']
                     for month, days in months.items():
-                        dat = year[1:] + month[1:]
+                        dat = u'{0}-{1}'.format(year[1:], month[1:])
                         l = tab['rows'].setdefault(dat, [])
                         l.append(days['total'])
 
         rows = []
-        columns = [u'year']
-        for column in tab['columns']:
-            columns.append(column)
-        rows.append(columns)
-        for key, values in tab['rows'].items():
+        rows.append([u'year'] + tab['columns'])
+        for key, values in OrderedDict(sorted(tab['rows'].items())).items():
             row = []
             row.append(key)
             for value in values:
