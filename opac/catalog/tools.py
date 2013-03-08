@@ -8,17 +8,16 @@ class Navigation(object):
                  journal,
                  issue=None,
                  issue_lib=mongomodels.Issue):
-
-        issues = dict(((iss['data']['publication_year'], iss['data']['volume'],
-                        iss['data']['order']), iss['data']['id'])
-                        for iss in journal.issues)
-
-        self._issues = collections.OrderedDict(sorted(issues.items()))
-
-        self._current_key = max(self._issues)
-        self._current_value = self._issues[self._current_key]
         self._issue_lib = issue_lib
 
+        _tmp_issues = ([(iss['data']['publication_year'], iss['data']['volume'],
+                    iss['data']['order']), iss['data']['id']]
+                    for iss in journal.issues)
+
+        self._issues = sorted(_tmp_issues)
+        self._issues_indexes = {_tmp_issue[1]: i for i, _tmp_issue in enumerate(self._issues)}
+
+        self._current_id = self._issues[-1][1]
         if issue:
             self._issue = issue
 
@@ -27,7 +26,7 @@ class Navigation(object):
     def _load_issue(self):
         self._issue = self._issue_lib.get_issue(
                                         self._journal.acronym,
-                                        self._current_value
+                                        self._current_id
                                         )
 
     @property
@@ -49,7 +48,7 @@ class Navigation(object):
 
         return '/issue/{0}/{1}/'.format(
                                         self._journal.acronym,
-                                        self._current_value
+                                        self._current_id
                                         )
 
     @property
@@ -57,24 +56,19 @@ class Navigation(object):
         """
         This method retrives a link to the next issue or None
         """
-
         if not hasattr(self, '_issue'):
             self._load_issue()
 
-        index = self._issues.keys().index((self._issue.publication_year,
-                                          self._issue.volume,
-                                          self._issue.order))
+        actual_index = self._issues_indexes[self._issue.id]
 
         try:
-            next_index = self._issues.keys()[index + 1]
+            next_issue = self._issues[actual_index + 1]
         except IndexError:
             return None
 
-        next = self._issues.get(next_index)
-
         return '/issue/{0}/{1}/'.format(
                                     self._journal.acronym,
-                                    next)
+                                    next_issue[1])
 
     @property
     def previous_issue(self):
@@ -85,17 +79,16 @@ class Navigation(object):
         if not hasattr(self, '_issue'):
             self._load_issue()
 
-        index = self._issues.keys().index((self._issue.publication_year,
-                                           self._issue.volume,
-                                           self._issue.order))
+        actual_index = self._issues_indexes[self._issue.id]
 
-        if index != 0:
-            previous_index = self._issues.keys()[index - 1]
-        else:
+        if actual_index <= 0:
             return None
 
-        previous = self._issues.get(previous_index)
+        try:
+            previous_issue = self._issues[actual_index - 1]
+        except IndexError:
+            return None
 
         return '/issue/{0}/{1}/'.format(
                                     self._journal.acronym,
-                                    previous)
+                                    previous_issue[1])

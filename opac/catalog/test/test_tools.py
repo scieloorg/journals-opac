@@ -55,9 +55,6 @@ class NavigationTest(MockerTestCase):
         issue = IssueFactory.build()
 
         nav = Navigation(journal, issue=issue)
-
-        self.assertEqual(nav._issues, OrderedDict([((2005, '47', 1), 4), ((2005, '47', 2), 5), ((2005, '47', 3), 6)]))
-        self.assertEqual(nav._current_key, (2005, '47', 3))
         self.assertEqual(nav._issue, issue)
 
     def test_instatiation_without_issue(self):
@@ -112,8 +109,6 @@ class NavigationTest(MockerTestCase):
         nav = Navigation(journal, issue_lib=mock_issue)
         nav._load_issue()
 
-        self.assertEqual(nav._issues, OrderedDict([((2005, '47', 1), 4), ((2005, '47', 2), 5), ((2005, '47', 3), 6)]))
-        self.assertEqual(nav._current_key, (2005, '47', 3))
         self.assertEqual(nav._issue, issue)
 
     def test_journal_with_ahead(self):
@@ -358,7 +353,7 @@ class NavigationTest(MockerTestCase):
                 u'data':
                 {
                     u'order': 4,
-                    u'id': 5,
+                    u'id': 7,
                     u'publication_year': 2005,
                     u'volume': '47'
                 }
