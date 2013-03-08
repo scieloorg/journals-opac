@@ -9,3 +9,5 @@ django-htmlmin
 django-assets
 webassets
 yuicompressor
+django-modeltranslation
+django-flatpages-i18n
