@@ -2,6 +2,7 @@ APP_PATH = opac
 MANAGE = $(APP_PATH)/manage.py
 SETTINGS_TEST = opac.settings_tests
 SETTINGS = opac.settings
+FIXTURES_DIR = $(APP_PATH)/fixtures
 
 deps:
 	@pip install -r requirements.txt
@@ -15,6 +16,9 @@ test: clean
 
 dbsetup:
 	@python $(MANAGE) syncdb --settings=$(SETTINGS)
+
+loaddata:
+	@python $(MANAGE) loaddata $(FIXTURES_DIR)/text_home_flatpage.json --settings=$(SETTINGS)
 
 dbmigrate:
 	@python $(MANAGE) migrate --settings=$(SETTINGS)
