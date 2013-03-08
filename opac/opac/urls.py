@@ -7,10 +7,12 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
 
-    url(r'^admin/', include(admin.site.urls)),
     url(r'', include('catalog.urls')),
+    url(r'^admin/', include(admin.site.urls)),
 
 )
+
+urlpatterns += patterns('flatpages_i18n.views', (r'^(?P<url>.*)$', 'flatpage'),)
 
 if settings.DEBUG:
 

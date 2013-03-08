@@ -39,7 +39,7 @@ SCIELOMANAGER_API_KEY = 'invalid_token'
 LANGUAGES = (
     (u'en', u'English'),
     (u'es', u'Español'),
-    (u'pt-br', u'Português'),
+    (u'pt', u'Português'),
 )
 
 LOCALE_PATHS = (
