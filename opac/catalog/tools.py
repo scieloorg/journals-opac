@@ -1,3 +1,4 @@
+import collections
 from catalog import mongomodels
 
 
@@ -7,14 +8,16 @@ class Navigation(object):
                  journal,
                  issue=None,
                  issue_lib=mongomodels.Issue):
-
-        self._issues = dict((iss['data']['order'],
-                             iss['data']['id']) for iss in journal.issues)
-
-        current = max(self._issues, key=lambda x: x)
-        self._current = self._issues[current]
         self._issue_lib = issue_lib
 
+        _tmp_issues = ([(iss['data']['publication_year'], iss['data']['volume'],
+                    iss['data']['order']), iss['data']['id']]
+                    for iss in journal.issues)
+
+        self._issues = sorted(_tmp_issues)
+        self._issues_indexes = {_tmp_issue[1]: i for i, _tmp_issue in enumerate(self._issues)}
+
+        self._current_id = self._issues[-1][1]
         if issue:
             self._issue = issue
 
@@ -23,7 +26,7 @@ class Navigation(object):
     def _load_issue(self):
         self._issue = self._issue_lib.get_issue(
                                         self._journal.acronym,
-                                        self._current
+                                        self._current_id
                                         )
 
     @property
@@ -45,53 +48,47 @@ class Navigation(object):
 
         return '/issue/{0}/{1}/'.format(
                                         self._journal.acronym,
-                                        self._current
+                                        self._current_id
                                         )
 
     @property
     def next_issue(self):
         """
-        This method retrieves the next issue url according to the
-        order sequence. If there is a gap in the issues sequence,
-        for legacy compliance, the script will attempt a 100 different
-        order numbers before delivery "None".
+        This method retrives a link to the next issue or None
         """
         if not hasattr(self, '_issue'):
             self._load_issue()
 
-        for i in range(1, 100):
-            match = self._issue.order + i
+        actual_index = self._issues_indexes[self._issue.id]
 
-            next = self._issues.get(match)
-            if next:
-                return '/issue/{0}/{1}/'.format(
-                                        self._journal.acronym,
-                                        next
-                                        )
+        try:
+            next_issue = self._issues[actual_index + 1]
+        except IndexError:
+            return None
 
-        return None
+        return '/issue/{0}/{1}/'.format(
+                                    self._journal.acronym,
+                                    next_issue[1])
 
     @property
     def previous_issue(self):
         """
-        This method retrieves the previous issue url according to the
-        order sequence. If there is a gap in the issues sequence,
-        for legacy compliance, the script will attempt a 100 different
-        order numbers before delivery "None".
+        This method retrives a link to the previous issue or None
         """
+
         if not hasattr(self, '_issue'):
             self._load_issue()
 
-        for i in range(1, 100):
-            match = self._issue.order - i
+        actual_index = self._issues_indexes[self._issue.id]
 
-            if match == 0:
-                break
+        if actual_index <= 0:
+            return None
 
-            previous = self._issues.get(match)
-            if previous:
-                return '/issue/{0}/{1}/'.format(
-                                        self._journal.acronym,
-                                        previous)
+        try:
+            previous_issue = self._issues[actual_index - 1]
+        except IndexError:
+            return None
 
-        return None
+        return '/issue/{0}/{1}/'.format(
+                                    self._journal.acronym,
+                                    previous_issue[1])
