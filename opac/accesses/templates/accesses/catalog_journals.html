@@ -76,15 +76,48 @@
 {% endblock %}
 
 {% block body %}
-<h3 style="text-align: center;">{% trans 'Library Collection' %}</h3>
-<h4>{% trans 'Library site usage report' %}</h4>
-
-<h5>Pages</h5>
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+ 
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+ 
+      <!-- Be sure to leave the brand out there if you want it shown -->
+      <a class="brand" href="#">Site Usage</a>
+ 
+      <!-- Everything you want hidden at 940px or less, place within here -->
+      <div class="nav-collapse collapse">
+        <!-- .nav, .navbar-search, .navbar-form, etc -->
+        <ul class="nav">
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Catalog
+              <b class="caret"></b>
+            </a>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'accesses.catalog_pages' %}">pages requests</a></li>
+                <li class="active"><a href="#">journals requests</a></li>
+                <li><a href="catalog/issues/">issues requests</a></li>
+                <li><a href="catalog/articles/">articles requests</a></li>
+              </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<h3>Journals Requests</h3>
 <div id="dashboard">
-  <div id="table_div"></div>
-  <div id="chart_div"></div>
+  <center>
+    <div id="table_div"></div>
+  </center>
 </div>
 {% endblock %}
 {% block extra_js %}
-  {% catalog_chart %}
+  {% catalog_journals %}
 {% endblock %}

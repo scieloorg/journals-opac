@@ -14,11 +14,17 @@ def journals(request):
                               context_instance=RequestContext(request))
 
 
-def catalog(request):
+def catalog_pages(request):
 
-    tab = ratchet.Accesses().catalog_pages()
+    return render_to_response('accesses/catalog_pages.html', {
+                              'catalog': 'pages',
+                              },
+                              context_instance=RequestContext(request))
 
-    return render_to_response('accesses/catalog.html', {
-                              'pages': tab,
+
+def catalog_journals(request):
+
+    return render_to_response('accesses/catalog_journals.html', {
+                              'catalog': 'journals',
                               },
                               context_instance=RequestContext(request))

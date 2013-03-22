@@ -5,15 +5,20 @@
     google.setOnLoadCallback(drawCharts);
 
     function drawCharts() {
-      var data = new google.visualization.arrayToDataTable({{ tab|safe }});
+
+      data = {{ tab|safe }}
+
+      var data = new google.visualization.arrayToDataTable(data);
 
       var table = new google.visualization.Table(document.getElementById('table_div'));
       table.draw(data);
 
       options = {
             'title': '{% trans 'Catalog Accesses by page type' %}',
-            'vAxis': {'title': '{% trans 'acceses' %}'},
-            'hAxis': {'title': '{% trans 'months' %}' }
+            'vAxis': {'title': '{% trans 'acceses' %}', 'logScale': true},
+            'hAxis': {'title': '{% trans 'months' %}'},
+            'height': 400,
+            'curveType': 'function'
       }
 
       var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
