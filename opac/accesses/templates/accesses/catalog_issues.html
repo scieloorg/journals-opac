@@ -1,4 +1,5 @@
 {% extends "base_lv0.html" %}
+{% load accessestags %}
 {% load i18n %}
 
 {% block header %}
@@ -53,7 +54,7 @@
       <dt>{% trans 'reports' %}</dt>
       <dd>
         <div class="btn-group">
-          <a href="/usage" 
+          <a href="/stats" 
              class="btn btn-small btn-primary disabled">
             <strong>{% trans 'usage' %}</strong>
           </a>
@@ -101,7 +102,7 @@
               <ul class="dropdown-menu">
                 <li><a href="{% url 'accesses.catalog_pages' %}">pages requests</a></li>
                 <li><a href="{% url 'accesses.catalog_journals' %}">journals requests</a></li>
-                <li><a href="{% url 'accesses.catalog_issues' %}">issues requests</a></li>
+                <li class="active"><a href="#">issues requests</a></li>
                 <li><a href="{% url 'accesses.catalog_articles' %}">articles requests</a></li>
                 <li><a href="{% url 'accesses.catalog_articles_month_year' %}">articles requests by month and year</a></li>
               </ul>
@@ -111,4 +112,13 @@
     </div>
   </div>
 </div>
+<h3>Issues Requests</h3>
+<div id="dashboard">
+  <center>
+    <div id="table_div"></div>
+  </center>
+</div>
+{% endblock %}
+{% block extra_js %}
+  {% catalog_issues %}
 {% endblock %}

@@ -102,8 +102,9 @@
               <ul class="dropdown-menu">
                 <li><a href="{% url 'accesses.catalog_pages' %}">pages requests</a></li>
                 <li class="active"><a href="#">journals requests</a></li>
-                <li><a href="catalog/issues/">issues requests</a></li>
-                <li><a href="catalog/articles/">articles requests</a></li>
+                <li><a href="{% url 'accesses.catalog_issues' %}">issues requests</a></li>
+                <li><a href="{% url 'accesses.catalog_articles' %}">articles requests</a></li>
+                <li><a href="{% url 'accesses.catalog_articles_month_year' %}">articles requests by month and year</a></li>
               </ul>
           </li>
         </ul>

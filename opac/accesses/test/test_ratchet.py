@@ -28,11 +28,11 @@ class RatchetTest(MockerTestCase):
         tab = ratchet.Accesses().catalog_pages(json_data=data)
 
         result = [
-            [u'date', u'sci_abstract', u'sci_pdf', u'sci_arttext', u'download', u'sci_issuetoc', u'sci_issues'],
-            [u'2011-01', 1743, 8684, 47328, 51095, 1710, 652],
-            [u'2011-02', 3820, 8927, 46605, 55009, 1349, 417],
-            [u'2012-01', 1741, 8682, 47326, 51093, 1708, 650],
-            [u'2012-02', 3818, 8925, 46603, 55007, 1347, 415]
+            [u'date', u'sci_abstract', u'sci_pdf', u'sci_arttext', u'download', u'sci_issuetoc', u'sci_issues', u'total'],
+            [u'2011-01', 1743, 8684, 47328, 51095, 1710, 652, 111212],
+            [u'2011-02', 3820, 8927, 46605, 55009, 1349, 417, 116127],
+            [u'2012-01', 1741, 8682, 47326, 51093, 1708, 650, 111200],
+            [u'2012-02', 3818, 8925, 46603, 55007, 1347, 415, 116115]
         ]
 
         self.assertEqual(tab[0], result[0])
@@ -56,8 +56,8 @@ class RatchetTest(MockerTestCase):
 
         result = [
             [u'journal', u'sci_abstract', u'sci_issuetoc', u'sci_issues', u'sci_pdf', u'sci_arttext', u'sci_serial', u'total'],
-            [u'0102-311X', 3, 3, 3, 3, 3, 3, 3, 18],
-            [u'0034-8910', 4, 4, 4, 4, 4, 4, 4, 24]
+            [u'0102-311X', 3, 3, 3, 3, 3, 3, 18],
+            [u'0034-8910', 4, 4, 4, 4, 4, 4, 24]
         ]
 
         self.assertEqual(tab[0], result[0])

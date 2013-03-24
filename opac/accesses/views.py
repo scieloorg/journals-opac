@@ -28,3 +28,27 @@ def catalog_journals(request):
                               'catalog': 'journals',
                               },
                               context_instance=RequestContext(request))
+
+
+def catalog_issues(request):
+
+    return render_to_response('accesses/catalog_issues.html', {
+                              'catalog': 'issues',
+                              },
+                              context_instance=RequestContext(request))
+
+
+def catalog_articles(request):
+
+    return render_to_response('accesses/catalog_articles.html', {
+                              'catalog': 'articles',
+                              },
+                              context_instance=RequestContext(request))
+
+
+def catalog_articles_month_year(request):
+
+    return render_to_response('accesses/catalog_articles_month_year.html', {
+                              'catalog': 'articles_month_year',
+                              },
+                              context_instance=RequestContext(request))
