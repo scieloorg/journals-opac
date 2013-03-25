@@ -303,7 +303,7 @@ class Journal(Document):
         journal = cls.objects.find_one(criteria)
 
         if not journal:
-            raise ValueError('no journal found for this citeria')
+            raise ValueError('no journal found for this criteria')
 
         return cls(**journal)
 

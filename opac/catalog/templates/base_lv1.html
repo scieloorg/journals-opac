@@ -11,56 +11,56 @@
       <dt>{% trans 'journal navigation' %}</dt>
       <dd>
         <div class="btn-group">
-          <a href="/journal/{{ journal.acronym }}" 
-             class="btn btn-small btn-primary tip-bottom" 
-             rel="tooltip" 
-             data-placement="bottom" 
+          <a href="{% url 'catalog.journal' journal.acronym %}"
+             class="btn btn-small btn-primary tip-bottom"
+             rel="tooltip"
+             data-placement="bottom"
              data-original-title="{% trans 'journal home' %}"><strong>{% trans 'home' %}</strong></a>
 
-          <a href="/issues/{{ journal.acronym }}" 
-             class="btn btn-small btn-primary tip-bottom" 
-             rel="tooltip" 
-             data-placement="bottom" 
+          <a href="{% url 'catalog.show_issues' journal.acronym %}"
+             class="btn btn-small btn-primary tip-bottom"
+             rel="tooltip"
+             data-placement="bottom"
              data-original-title="{% trans 'all issues from this journal' %}"><strong>{% trans 'all' %}</strong></a>
 
           {% if navigation.previous_issue %}
-            <a href="{{ navigation.previous_issue }}" 
-               class="btn btn-small btn-primary tip-bottom" 
-               rel="tooltip" 
-               data-placement="bottom" 
+            <a href="{{ navigation.previous_issue }}"
+               class="btn btn-small btn-primary tip-bottom"
+               rel="tooltip"
+               data-placement="bottom"
                data-original-title="{% trans 'previous issue' %}"><strong>{% trans 'previous' %}</strong></a>
           {% else %}
             <div
-               class="btn btn-small btn-primary tip-bottom disabled" 
-               rel="tooltip" 
-               data-placement="bottom" 
+               class="btn btn-small btn-primary tip-bottom disabled"
+               rel="tooltip"
+               data-placement="bottom"
                data-original-title="{% trans 'previous issue'%}"><strong>{% trans 'previous' %}</strong></div>
           {% endif %}
 
-          <a href="{{ navigation.current_issue }}" 
-             class="btn btn-small btn-primary tip-bottom" 
-             rel="tooltip" 
-             data-placement="bottom" 
+          <a href="{{ navigation.current_issue }}"
+             class="btn btn-small btn-primary tip-bottom"
+             rel="tooltip"
+             data-placement="bottom"
              data-original-title="{% trans 'current issue' %}"><strong>{% trans 'current' %}</strong></a>
 
           {% if navigation.next_issue %}
-            <a href="{{ navigation.next_issue }}" 
-               class="btn btn-small btn-primary tip-bottom" 
-               rel="tooltip" 
-               data-placement="bottom" 
+            <a href="{{ navigation.next_issue }}"
+               class="btn btn-small btn-primary tip-bottom"
+               rel="tooltip"
+               data-placement="bottom"
                data-original-title="{% trans 'next issue' %}"><strong>{% trans 'next' %}</strong></a>
           {% else %}
-            <div 
-               class="btn btn-small btn-primary tip-bottom disabled" 
-               data-placement="bottom" 
+            <div
+               class="btn btn-small btn-primary tip-bottom disabled"
+               data-placement="bottom"
                data-original-title="{% trans 'next issue' %}"><strong>{% trans 'next' %}</strong></div>
           {% endif %}
 
           {% if navigation.ahead %}
-            <a href="{{ navigation.ahead }}" 
-               class="btn btn-small btn-primary tip-bottom" 
-               rel="tooltip" 
-               data-placement="bottom" 
+            <a href="{{ navigation.ahead }}"
+               class="btn btn-small btn-primary tip-bottom"
+               rel="tooltip"
+               data-placement="bottom"
                data-original-title="{% trans 'ahead of print articles' %}"><strong>{% trans 'ahead' %}</strong></a>
 
           {% endif %}
@@ -93,14 +93,14 @@
       <dt>{% trans 'Collection' %}</dt>
       <dd>
         <div class="btn-group">
-          <a href="/alpha" 
-             class="btn btn-small btn-primary tip-bottom" 
-             rel="tooltip" 
-             data-placement="bottom" 
+          <a href="/alpha"
+             class="btn btn-small btn-primary tip-bottom"
+             rel="tooltip"
+             data-placement="bottom"
              data-original-title="{% trans 'alphabetic collection journals list' %}">
              <strong>{% trans 'alpha' %}</strong>
           </a>
-          <a href="/subject" 
+          <a href="/subject"
              class="btn btn-small btn-primary tip-bottom"
              ref="tooltip"
              data-placement="bottom"
