@@ -80,6 +80,19 @@ def issue(request, journal_id, issue_id):
                               context_instance=RequestContext(request))
 
 
+def article(request, article_id):
+
+    article = mongomodels.Article.get_article(article_id)
+
+    journal = mongomodels.Journal.get_journal({'acronym': article.journal_id})
+
+    return render_to_response('catalog/article.html', {
+                              'article': article,
+                              'journal': journal,
+                              },
+                              context_instance=RequestContext(request))
+
+
 def ajx_list_journal_tweets(request, journal_id):
     """
     Lists the tweets of a given journal.

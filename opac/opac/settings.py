@@ -169,6 +169,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     'django.core.context_processors.i18n',
     'django.core.context_processors.csrf',
     'catalog.context_processors.access_to_settings',
+    "django.core.context_processors.request",
     )
 
 execfile(os.path.join(os.path.abspath(os.path.dirname(__file__)),

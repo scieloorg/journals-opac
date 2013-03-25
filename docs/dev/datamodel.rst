@@ -170,6 +170,7 @@ Article
       "lpage": "302",
       "journal-title": "Annali dell'Istituto Superiore di Sanit\u00e0",
       "fpage": "299",
+      "doi": "http://dx.doi.org/10.1590/S0102-67202012000400002",
       "contrib-group": {
         "author": [
           {

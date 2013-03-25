@@ -29,6 +29,7 @@ def list_articles_by_section(sections, language):
 
     for section in sections:
         snippet += u'<dt><i class="icon-chevron-right"></i> %s</dt>' % section.titles[language]
+
         for article in section.articles:
             snippet += u'<dd><ul class="unstyled toc_article"><li>%s' % article.title_group[language]
             snippet += u'<ul class="inline toc_article_authors">'
@@ -39,7 +40,7 @@ def list_articles_by_section(sections, language):
 
             #Abstract list
             snippet += u'<ul class="inline toc_article_links"><li>%s: ' % _('abstract')
-            snippet += u' | '.join(['<a href="#">%s</a>' % key for key in article.abstract.iterkeys()])
+            snippet += u' | '.join(['<a href="%s?tlang=%s">%s</a>' % (reverse('catalog.article', args=[article.id]), key, key) for key in article.abstract.iterkeys()])
             snippet += '</li>'
 
             #Full text list
@@ -52,5 +53,40 @@ def list_articles_by_section(sections, language):
 
             snippet += '</ul></li></dd>'
     snippet += u'</dl>'
+
+    return snippet
+
+
+@register.simple_tag
+def get_article_title_by_lang(title_group, language):
+
+    try:
+        return title_group[language]
+    except KeyError:
+        raise ValueError('No title found for language %s' % language)
+
+
+@register.simple_tag
+def get_article_abstract_by_lang(abstract, language):
+
+    try:
+        return abstract[language]
+    except KeyError:
+        raise ValueError('No abstract found for language %s' % language)
+
+
+@register.simple_tag
+def get_article_keywords_by_lang(keywords, language):
+
+    try:
+        return u'; '.join(keyword for keyword in keywords[language])
+    except:
+        raise ValueError('No keyword found for language %s' % language)
+
+
+@register.simple_tag
+def list_authors(authors):
+
+    snippet = u'; '.join(['%s, %s' % (author['surname'], author['given_names']) for author in authors])
 
     return snippet

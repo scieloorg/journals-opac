@@ -2,6 +2,15 @@ h4 {
     color: #800000;
 }
 
+.journal_title{
+    color: #000080;
+    margin-bottom: 1px;
+}
+
+.text_issn{
+    color: #000080;
+}
+
 .toc_article li {
     margin-top: 10px;
     font-weight: bold;

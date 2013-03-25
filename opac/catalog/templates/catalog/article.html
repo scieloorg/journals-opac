@@ -1,0 +1,137 @@
+{% extends "base_lv0.html" %}
+{% load catalogtags %}
+{% load i18n %}
+
+{% block header %}
+<div class="span3" style="text-align: center;">
+  <a href="/"><img src="/static/images/en/logop.png" /></a>
+</div>
+<div class="span8">
+  <div class="row">
+    <dl class="span5">
+      <dt>{% trans 'articles' %}</dt>
+      <dd>
+        <div class="btn-group">
+
+          <a href="/issues/{{ journal.acronym }}"
+             class="btn btn-small btn-primary tip-bottom"
+             rel="tooltip"
+             data-placement="bottom"
+             data-original-title="{% trans 'all issues from this journal' %}"><strong>{% trans 'all' %}</strong></a>
+
+          {% if navigation.previous_issue %}
+            <a href="{{ navigation.previous_issue }}"
+               class="btn btn-small btn-primary tip-bottom"
+               rel="tooltip"
+               data-placement="bottom"
+               data-original-title="{% trans 'previous issue' %}"><strong>{% trans 'previous' %}</strong></a>
+          {% else %}
+            <div
+               class="btn btn-small btn-primary tip-bottom disabled"
+               rel="tooltip"
+               data-placement="bottom"
+               data-original-title="{% trans 'previous issue'%}"><strong>{% trans 'previous' %}</strong></div>
+          {% endif %}
+
+          <a href="{{ navigation.current_issue }}"
+             class="btn btn-small btn-primary tip-bottom"
+             rel="tooltip"
+             data-placement="bottom"
+             data-original-title="{% trans 'current issue' %}"><strong>{% trans 'current' %}</strong></a>
+
+          {% if navigation.next_issue %}
+            <a href="{{ navigation.next_issue }}"
+               class="btn btn-small btn-primary tip-bottom"
+               rel="tooltip"
+               data-placement="bottom"
+               data-original-title="{% trans 'next issue' %}"><strong>{% trans 'next' %}</strong></a>
+          {% else %}
+            <div
+               class="btn btn-small btn-primary tip-bottom disabled"
+               data-placement="bottom"
+               data-original-title="{% trans 'next issue' %}"><strong>{% trans 'next' %}</strong></div>
+          {% endif %}
+
+          {% if navigation.ahead %}
+            <a href="{{ navigation.ahead }}"
+               class="btn btn-small btn-primary tip-bottom"
+               rel="tooltip"
+               data-placement="bottom"
+               data-original-title="{% trans 'ahead of print articles' %}"><strong>{% trans 'ahead' %}</strong></a>
+
+          {% endif %}
+        </div>
+      </dd>
+    </dl>
+    <dl class="span3">
+      <dt>{% trans 'journal articles search' %}</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="http://search.scielo.org/index.php?site=scielo&amp;col=org&amp;lang=pt&amp;q=&amp;where=ORG&amp;index=au&amp;filter_chain[]=ta_cluster:%22{{ journal.short_title }}%22&amp;sort=score+desc"
+             target="_blank"
+             class="btn btn-small btn-primary">
+             <strong>{% trans 'author' %}</strong>
+          </a>
+          <a href="http://search.scielo.org/"
+             target="_blank"
+             class="btn btn-small btn-primary">
+             <strong>{% trans 'subject' %}</strong>
+          </a>
+          <a href="http://search.scielo.org"
+             target="_blank"
+             class="btn btn-small btn-primary">
+             <strong>{% trans 'form' %}</strong>
+          </a>
+        </div>
+      </dd>
+    </dl>
+    <dl class="span2">
+      <dt>{% trans 'Collection' %}</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="/alpha"
+             class="btn btn-small btn-primary tip-bottom"
+             rel="tooltip"
+             data-placement="bottom"
+             data-original-title="{% trans 'alphabetic collection journals list' %}">
+             <strong>{% trans 'alpha' %}</strong>
+          </a>
+          <a href="/subject"
+             class="btn btn-small btn-primary tip-bottom"
+             ref="tooltip"
+             data-placement="bottom"
+             data-original-title="{% trans 'collection journals list by subject' %}">
+             <strong>{% trans 'subject' %}</strong>
+          </a>
+        </div>
+      </dd>
+    </dl>
+  </div>
+</div>
+{% endblock %}
+
+{% block body %}
+<div class="span2"></div>
+
+<div class="span8">
+
+  <h3 class="journal_title">{{ journal.title }}</h3>
+
+  <h5 class="text_issn">{{ journal.scielo_issn|capfirst }} version ISSN {{ journal.issn }}</h5>
+
+  <h4>{% trans 'Abstract' %}</h4>
+
+  {% list_authors article.contrib_group.author %}.
+
+  <b>{% get_article_title_by_lang article.title_group request.GET.tlang %}.</b>
+
+  <em>{{ article.abbrev_journal_title }}.</em> vol.{{ article.volume }} n.{{ article.number }} {{ journal.publication_city }} {{ article.pub_date.year }}. ISSN {{ journal.issn }}. {{ article.doi }}.
+
+  <p>{% get_article_abstract_by_lang article.abstract request.GET.tlang %}</p>
+
+  <b>{% trans 'Keywords' %}:</b> {% get_article_keywords_by_lang article.keyword_group request.GET.tlang %}
+
+</div>
+
+<div class="span2"></div>
+{% endblock %}

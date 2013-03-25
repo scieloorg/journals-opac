@@ -56,8 +56,109 @@ class RatchetTemplateTagTest(MockerTestCase, TestCase):
         self.assertEqual(caller, 'ratchet_obj = {"code": 1, "resource": "journal", "ratchet_uri": "http://localhost:8860/api/v1/"}; send_access(ratchet_obj);')
 
 
-class IssueTemplateTagTest(MockerTestCase, TestCase):
+class ArticleTemplateTagTest(MockerTestCase, TestCase):
 
+    def test_list_authors(self):
+        from catalog.templatetags import catalogtags
+
+        article_authors_microdata = {
+            "contrib_group": {
+                "author": [
+                    {
+                    "role": "ND",
+                    "given_names": "Ahmet",
+                    "surname": "Soysal",
+                    "affiliations": [
+                      "A01",
+                    ]
+                    },
+                    {
+                    "role": "ND",
+                    "given_names": "Hatice",
+                    "surname": "Simsek",
+                    "affiliations": [
+                      "A01",
+                    ]
+                    },
+                    {
+                    "role": "ND",
+                    "given_names": "Dilek",
+                    "surname": "Soysal",
+                    "affiliations": [
+                      "A02",
+                    ]
+                    },
+                    {
+                    "role": "ND",
+                    "given_names": "Funda",
+                    "surname": "Alyu",
+                    "affiliations": [
+                      "A03",
+                    ]
+                    }
+                ]
+            }
+        }
+
+        self.assertEqual(catalogtags.list_authors(article_authors_microdata['contrib_group']['author']),
+                        u'Soysal, Ahmet; Simsek, Hatice; Soysal, Dilek; Alyu, Funda')
+
+    def test_get_article_keywords_by_lang(self):
+        from catalog.templatetags import catalogtags
+
+        article_keyword_microdata = {
+            "keyword_group": {
+                "en": [
+                  "health_care waste",
+                  "waste management"
+                ],
+                "pt": [
+                  "rifiuti sanitari",
+                  "Uso de Medicamentos",
+                  "Inqu\u00e9ritos de Morbidade"
+                ],
+                "it": [
+                  "Personas con Discapacidad",
+                  "gestione dei rifiuti"
+                ]
+            },
+        }
+
+        self.assertEqual(catalogtags.get_article_keywords_by_lang(article_keyword_microdata['keyword_group'], 'en'),
+                        u'health_care waste; waste management')
+
+    def test_get_article_abstract_by_lang(self):
+        from catalog.templatetags import catalogtags
+
+        article_abstract_microdata = {
+
+            "abstract": {
+                "en": "<p>Trout farming, that represents the most important sector for aquaculture inland production in Italy, can cause d...",
+                "it": "<p>La troticoltura rappresenta il settore più importante per la produzione ittica in Italia ed è in grado di causare effetti negativi sugli ...",
+            }
+
+        }
+
+        self.assertEqual(catalogtags.get_article_abstract_by_lang(article_abstract_microdata['abstract'], 'en'),
+                        u'<p>Trout farming, that represents the most important sector for aquaculture inland production in Italy, can cause d...')
+
+    def test_get_article_title_by_lang(self):
+        from catalog.templatetags import catalogtags
+
+        article_title_microdata = {
+
+            "title_group": {
+                "en": "Management of health-care waste in Izmir, Turkey",
+                "it": "Gestione dei rifiuti sanitari in Izmir, Turchia"
+            }
+
+        }
+
+        self.assertEqual(catalogtags.get_article_title_by_lang(article_title_microdata['title_group'], 'en'),
+            u'Management of health-care waste in Izmir, Turkey')
+
+
+class IssueTemplateTagTest(MockerTestCase, TestCase):
 
     def test_list_articles_by_section(self):
         from catalog.templatetags import catalogtags
