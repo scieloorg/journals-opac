@@ -12,7 +12,8 @@ TEST_RUNNER = 'utils.runner.DiscoveryRunner'
 #
 # Ratchet configuration
 #
-RATCHET_URI = 'http://localhost:8860/api/v1/'
+RATCHET_URI = 'http://localhost:8888/api/v1/'
+RATCHET_CATALOG_CODE = 'localhost'
 
 #
 # MongoDB configuration

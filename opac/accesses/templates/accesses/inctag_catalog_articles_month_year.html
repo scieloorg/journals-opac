@@ -1,0 +1,34 @@
+{% load i18n %}
+
+<script type="text/javascript">
+    google.load('visualization', '1', {packages: ['table', 'corechart']});
+    google.setOnLoadCallback(drawCharts);
+
+    function drawCharts() {
+
+      raw_data1 = {{ tab1|safe }}
+
+      var data1 = new google.visualization.arrayToDataTable(raw_data1);
+
+      var table = new google.visualization.Table(document.getElementById('table_div'));
+
+      var options = {"sortColumn" : 13, "sortAscending": false, "page": "enable", "pageSize": 10};
+      table.draw(data1, options);
+
+      var chart_options = {
+            'title': '{% trans 'Catalog Accesses by month and year' %}',
+            'vAxis': {'title': '{% trans 'year' %}', 'logScale': true},
+            'hAxis': {'title': '{% trans 'months' %}'},
+            'height': 400,
+            'curveType': 'function'
+      };
+
+      raw_data2 = {{ tab2|safe }}
+
+      var data2 = new google.visualization.arrayToDataTable(raw_data2);
+
+      var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+      chart.draw(data2, chart_options);
+
+    }
+</script>

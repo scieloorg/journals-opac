@@ -1,0 +1,124 @@
+{% extends "base_lv0.html" %}
+{% load accessestags %}
+{% load i18n %}
+
+{% block header %}
+<div class="span3" style="text-align: center;">
+  <a href="/"><img src="/static/images/en/logop.png" /></a>
+</div>
+<div class="span6">
+  <div class="row">
+    <dl class="span4">
+      <dt>{% trans 'serial brownsing' %}</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="/alpha" 
+             class="btn btn-small btn-primary">
+            <strong>{% trans 'alpha' %}</strong>
+          </a>
+          <a href="/subject" 
+             class="btn btn-small btn-primary">
+            <strong>{% trans 'subject' %}</strong>
+          </a>
+          <a href="http://search.scielo.org" 
+             target="_blank" 
+             class="btn btn-small btn-primary">
+             <strong>{% trans 'form' %}</strong>
+          </a>
+        </div>
+      </dd>
+    </dl>
+    <dl class="span4">
+      <dt>{% trans 'article brownsing' %}</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="http://search.scielo.org" 
+             target="_blank" 
+             class="btn btn-small btn-primary">
+             <strong>{% trans 'author' %}</strong>
+          </a>
+          <a href="http://search.scielo.org" 
+             target="_blank"
+             class="btn btn-small btn-primary">
+             <strong>{% trans 'subject' %}</strong>
+          </a>
+          <a href="http://search.scielo.org" 
+             target="_blank" 
+             class="btn btn-small btn-primary">
+             <strong>{% trans 'form' %}</strong>
+          </a>
+        </div>
+      </dd>
+    </dl>
+    <dl class="span4">
+      <dt>{% trans 'reports' %}</dt>
+      <dd>
+        <div class="btn-group">
+          <a href="/stats" 
+             class="btn btn-small btn-primary disabled">
+            <strong>{% trans 'usage' %}</strong>
+          </a>
+          <a href="http://statbiblio.scielo.org/stat_biblio/index.php?lang=en" 
+             class="btn btn-small btn-primary" 
+             target="_blank">
+             <strong>{% trans 'citations' %}</strong>
+          </a>
+          <a href="http://statbiblio.scielo.org/stat_biblio/index.php?xml=http://statbiblio.scielo.org/stat_biblio/xml/16.xml&amp;lang=en&amp;state=16" 
+             target="_blank" 
+             class="btn btn-small btn-primary">
+             <strong>{% trans 'co-authors' %}</strong>
+          </a>
+        </div>
+      </dd>
+    </dl>
+  </div>
+</div>
+{% endblock %}
+
+{% block body %}
+<div class="navbar">
+  <div class="navbar-inner">
+    <div class="container">
+ 
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </a>
+ 
+      <!-- Be sure to leave the brand out there if you want it shown -->
+      <a class="brand" href="#">Site Usage</a>
+ 
+      <!-- Everything you want hidden at 940px or less, place within here -->
+      <div class="nav-collapse collapse">
+        <!-- .nav, .navbar-search, .navbar-form, etc -->
+        <ul class="nav">
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Catalog
+              <b class="caret"></b>
+            </a>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'accesses.catalog_pages' %}">pages requests</a></li>
+                <li><a href="{% url 'accesses.catalog_journals' %}">journals requests</a></li>
+                <li class="active"><a href="#">issues requests</a></li>
+                <li><a href="{% url 'accesses.catalog_articles' %}">articles requests</a></li>
+                <li><a href="{% url 'accesses.catalog_articles_month_year' %}">articles requests by month and year</a></li>
+              </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<h3>Issues Requests</h3>
+<div id="dashboard">
+  <center>
+    <div id="table_div"></div>
+  </center>
+</div>
+{% endblock %}
+{% block extra_js %}
+  {% catalog_issues %}
+{% endblock %}
