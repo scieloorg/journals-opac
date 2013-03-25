@@ -1,5 +1,7 @@
 import urllib2
 import json
+import copy
+
 from collections import OrderedDict
 
 from django.conf import settings
@@ -18,6 +20,10 @@ class Accesses(object):
                       limit=async_mongo_limit):
         """
         Recover general access log from the catalog.
+        Pages as Label
+        Year-Month as X-axis
+        accesses as Y-axis
+
         """
         req = '{0}?code={1}&limit{2}'.format(self._ratchet, code, limit)
 
@@ -198,13 +204,16 @@ class Accesses(object):
 
         return [columns]+rows
 
-    def catalog_articles_month_year(self,
-                                    json_data=None,
-                                    code=settings.RATCHET_CATALOG_CODE,
-                                    doc_type=None,
-                                    limit=async_mongo_limit):
+    def catalog_articles_year_as_x_axis(self,
+                                        json_data=None,
+                                        code=settings.RATCHET_CATALOG_CODE,
+                                        doc_type=None,
+                                        limit=async_mongo_limit):
         """
         Recover general articles access by month and year log from the catalog.
+        Months as Label
+        Year as X-axis
+        accesses as Y-axis
         """
 
         req = '{0}?code={1}&limit{2}'.format(self._ratchet, code, limit)
@@ -220,24 +229,24 @@ class Accesses(object):
         del data['total']
         del data['code']
 
-        tab = {}
-        tab['columns'] = []
-        tab['rows'] = {}
         empty_months_range = {'%02d' % x: 0 for x in range(1, 13)}
+
+        years = {}
+
         for key, value in data.items():
+            #reading data from sci_arttext and download pages
             if key in ['sci_arttext', 'download']:
                 del value['total']
                 for year, months in value.items():
                     del months['total']
-                    ye = tab['rows'].setdefault(year[1:], empty_months_range)
+                    ye = years.setdefault(year[1:], copy.copy(empty_months_range))
                     for month, days in months.items():
-                        if month[1:] in ye:
-                            ye[month[1:]] += int(days['total'])
+                            ye[month[1:]] += days['total']
 
         rows = []
         rows.append([u'year'] + range(1, 13) + [u'total'])
 
-        for year, months in OrderedDict(sorted(tab['rows'].items())).items():
+        for year, months in OrderedDict(sorted(years.items())).items():
             row = []
             row.append(year)
             total = 0
@@ -248,3 +257,57 @@ class Accesses(object):
             rows.append(row)
 
         return rows
+
+    def catalog_articles_month_as_x_axis(self,
+                                         json_data=None,
+                                         code=settings.RATCHET_CATALOG_CODE,
+                                         doc_type=None,
+                                         limit=async_mongo_limit):
+        """
+        Recover general articles access by month and year log from the catalog.
+        Months as Label
+        Year as X-axis
+        accesses as Y-axis
+        """
+
+        req = '{0}?code={1}&limit{2}'.format(self._ratchet, code, limit)
+
+        try:
+            if json_data:
+                data = json.loads(json_data.read())[0]
+            else:
+                data = json.loads(urllib2.urlopen(req).read())[0]
+        except ValueError:
+            return []
+
+        del data['total']
+        del data['code']
+
+        empty_months_range = {'%02d' % x: 0 for x in range(1, 13)}
+        # Creating dict year that represents the sum of accesses of all available years
+        # separated by months for the pages sci_arttext and download
+        years = {}
+        for key, value in data.items():
+            #reading data from sci_arttext and download pages
+            if key in ['sci_arttext', 'download']:
+                del value['total']
+                for year, months in value.items():
+                    del months['total']
+                    ye = years.setdefault(year[1:], copy.copy(empty_months_range))
+                    for month, days in months.items():
+                            ye[month[1:]] += days['total']
+
+        rows = []
+        for month in range(1, 13):
+            row = []
+            for year, months in OrderedDict(sorted(years.items())).items():
+                if not len(row):
+                    row.append(month)
+                row.append(months['%02d' % month])
+            rows.append(row)
+
+        columns = [u'months']
+        for year, months in OrderedDict(sorted(years.items())).items():
+            columns.append(year)
+
+        return [columns]+rows

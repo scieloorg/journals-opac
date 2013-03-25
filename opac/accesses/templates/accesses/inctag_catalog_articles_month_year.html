@@ -6,14 +6,14 @@
 
     function drawCharts() {
 
-      data = {{ tab|safe }}
+      raw_data1 = {{ tab1|safe }}
 
-      var data = new google.visualization.arrayToDataTable(data);
+      var data1 = new google.visualization.arrayToDataTable(raw_data1);
 
       var table = new google.visualization.Table(document.getElementById('table_div'));
 
       var options = {"sortColumn" : 13, "sortAscending": false, "page": "enable", "pageSize": 10};
-      table.draw(data, options);
+      table.draw(data1, options);
 
       var chart_options = {
             'title': '{% trans 'Catalog Accesses by month and year' %}',
@@ -23,10 +23,12 @@
             'curveType': 'function'
       };
 
-      data.removeColumn(13)
+      raw_data2 = {{ tab2|safe }}
+
+      var data2 = new google.visualization.arrayToDataTable(raw_data2);
 
       var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-      chart.draw(data, chart_options);
+      chart.draw(data2, chart_options);
 
     }
 </script>

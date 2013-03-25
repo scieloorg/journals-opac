@@ -33,6 +33,6 @@ def catalog_articles(**attributes):
 
 @register.inclusion_tag('accesses/inctag_catalog_articles_month_year.html')
 def catalog_articles_month_year(**attributes):
-    tab = ratchet.Accesses().catalog_articles_month_year()
-    print tab
-    return {'tab': json.dumps(tab)}
+    tab1 = ratchet.Accesses().catalog_articles_year_as_x_axis()
+    tab2 = ratchet.Accesses().catalog_articles_month_as_x_axis()
+    return {'tab1': json.dumps(tab1), 'tab2': json.dumps(tab2)}
