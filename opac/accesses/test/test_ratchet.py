@@ -19,6 +19,9 @@ class RatchetTest(MockerTestCase):
         self._catalog_journals_fixture = open(
             os.path.abspath(os.path.dirname(__file__)) + '/fixtures/catalog_journals.json',
             'r')
+        self._catalog_issues_fixture = open(
+            os.path.abspath(os.path.dirname(__file__)) + '/fixtures/catalog_issues.json',
+            'r')
 
     def test_catalog_pages(self):
         from accesses import ratchet
@@ -44,8 +47,7 @@ class RatchetTest(MockerTestCase):
     def test_catalog_pages_invalid_code(self):
         from accesses import ratchet
 
-        tab = ratchet.Accesses().catalog_pages(code="localhost")
-        self.assertEqual(tab, [])
+        self.assertRaises(ValueError, lambda: ratchet.Accesses().catalog_pages(code='invalid'))
 
     def test_catalog_journals(self):
         from accesses import ratchet
@@ -58,6 +60,40 @@ class RatchetTest(MockerTestCase):
             [u'journal', u'sci_abstract', u'sci_issuetoc', u'sci_issues', u'sci_pdf', u'sci_arttext', u'sci_serial', u'total'],
             [u'0102-311X', 3, 3, 3, 3, 3, 3, 18],
             [u'0034-8910', 4, 4, 4, 4, 4, 4, 24]
+        ]
+
+        self.assertEqual(tab[0], result[0])
+        self.assertEqual(tab[1], result[1])
+        self.assertEqual(tab[2], result[2])
+
+    def test_catalog_issues(self):
+        from accesses import ratchet
+
+        data = self._catalog_issues_fixture
+
+        tab = ratchet.Accesses().catalog_issues(json_data=data)
+
+        result = [
+            [u'journal', 'issue', 'accesses'],
+            [u'0034-8910', u'0034-891019860005', 11],
+            [u'0034-8910', u'0034-891019910001', 14]
+        ]
+
+        self.assertEqual(tab[0], result[0])
+        self.assertEqual(tab[1], result[1])
+        self.assertEqual(tab[2], result[2])
+
+    def test_catalog_articles(self):
+        from accesses import ratchet
+
+        data = self._catalog_issues_fixture
+
+        tab = ratchet.Accesses().catalog_articles(json_data=data)
+
+        result = [
+            [u'journal', 'issue', 'article', 'accesses'],
+            [u'0034-8910', u'0034-891019860005', u'0034-891019860005', 11],
+            [u'0034-8910', u'0034-891019910001', u'0034-891019910001', 14]
         ]
 
         self.assertEqual(tab[0], result[0])

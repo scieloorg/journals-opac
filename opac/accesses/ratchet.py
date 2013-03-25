@@ -27,13 +27,12 @@ class Accesses(object):
         """
         req = '{0}?code={1}&limit{2}'.format(self._ratchet, code, limit)
 
-        try:
-            if json_data:
-                data = json.loads(json_data.read())[0]
-            else:
-                data = json.loads(urllib2.urlopen(req).read())[0]
-        except ValueError:
-            return []
+        if json_data:
+            raw_data = json_data.read()
+        else:
+            raw_data = urllib2.urlopen(req).read()
+
+        data = json.loads(raw_data)[0]
 
         del data['total']
         del data['code']
@@ -78,20 +77,19 @@ class Accesses(object):
         Recover general journals access log from the catalog.
         """
 
-        try:
-            if json_data:
-                data = json.loads(json_data.read())
-            else:
-                query = u"code={0}".format(code)
-                if doc_type:
-                    query = u"type={0}".format(doc_type)
-                data = json.loads(urllib2.urlopen('{0}?{1}&limit={2}'.format(
-                    self._ratchet,
-                    query,
-                    limit)).read())
+        if json_data:
+            raw_data = json_data.read()
+        else:
+            query = u"code={0}".format(code)
+            if doc_type:
+                query = u"type={0}".format(doc_type)
 
-        except ValueError:
-            return []
+            raw_data = urllib2.urlopen('{0}?{1}&limit={2}'.format(
+                self._ratchet,
+                query,
+                limit))
+
+        data = json.loads(raw_data)
 
         rows = []
         columns = [u'journal']
@@ -131,20 +129,19 @@ class Accesses(object):
         Recover general issues access log from the catalog.
         """
 
-        try:
-            if json_data:
-                data = json.loads(json_data.read())
-            else:
-                query = u"code={0}".format(code)
-                if doc_type:
-                    query = u"type={0}".format(doc_type)
-                data = json.loads(urllib2.urlopen('{0}?{1}&limit={2}'.format(
-                    self._ratchet,
-                    query,
-                    limit)).read())
+        if json_data:
+            raw_data = json_data.read()
+        else:
+            query = u"code={0}".format(code)
+            if doc_type:
+                query = u"type={0}".format(doc_type)
 
-        except ValueError:
-            return []
+            raw_data = urllib2.urlopen('{0}?{1}&limit={2}'.format(
+                self._ratchet,
+                query,
+                limit)).read()
+
+        data = json.loads(raw_data)
 
         rows = []
         columns = [u'journal', 'issue', 'accesses']
@@ -171,20 +168,19 @@ class Accesses(object):
         Recover general articles access log from the catalog.
         """
 
-        try:
-            if json_data:
-                data = json.loads(json_data.read())
-            else:
-                query = u"code={0}".format(code)
-                if doc_type:
-                    query = u"type={0}".format(doc_type)
-                data = json.loads(urllib2.urlopen('{0}?{1}&limit={2}'.format(
-                    self._ratchet,
-                    query,
-                    limit)).read())
+        if json_data:
+            raw_data = json_data.read()
+        else:
+            query = u"code={0}".format(code)
+            if doc_type:
+                query = u"type={0}".format(doc_type)
 
-        except ValueError:
-            return []
+            raw_data = urllib2.urlopen('{0}?{1}&limit={2}'.format(
+                self._ratchet,
+                query,
+                limit)).read()
+
+        data = json.loads(raw_data)
 
         rows = []
         columns = [u'journal', 'issue', 'article', 'accesses']
@@ -218,13 +214,12 @@ class Accesses(object):
 
         req = '{0}?code={1}&limit{2}'.format(self._ratchet, code, limit)
 
-        try:
-            if json_data:
-                data = json.loads(json_data.read())[0]
-            else:
-                data = json.loads(urllib2.urlopen(req).read())[0]
-        except ValueError:
-            return []
+        if json_data:
+            raw_data = json_data.read()
+        else:
+            raw_data = urllib2.urlopen(req).read()
+
+        data = json.loads(raw_data)[0]
 
         del data['total']
         del data['code']
@@ -272,13 +267,12 @@ class Accesses(object):
 
         req = '{0}?code={1}&limit{2}'.format(self._ratchet, code, limit)
 
-        try:
-            if json_data:
-                data = json.loads(json_data.read())[0]
-            else:
-                data = json.loads(urllib2.urlopen(req).read())[0]
-        except ValueError:
-            return []
+        if json_data:
+            raw_data = json_data.read()
+        else:
+            raw_data = urllib2.urlopen(req).read()
+
+        data = json.loads(raw_data)[0]
 
         del data['total']
         del data['code']
