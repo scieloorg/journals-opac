@@ -64,6 +64,9 @@ ASSETS_DEBUG = DEBUG
 #
 HTML_MINIFY = not DEBUG
 
+#
+# Fixture discovery
+#
 FIXTURE_DIRS = (
     os.path.join(PROJECT_PATH, 'fixtures', ''),
 )

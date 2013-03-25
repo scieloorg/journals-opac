@@ -1,12 +1,11 @@
-import datetime
-
+from django.utils import timezone
 from django.conf import settings
 from django.db import transaction
 from celery import task
 
 from .sync import datacollector
 from .sync import dataloader
-from . import functions
+import functions
 from catalog import models
 
 
@@ -25,7 +24,7 @@ def build_catalog():
     marreta = dataloader.Marreta(settings=settings)
     marreta.rebuild_collection('journals', transformed_data)
 
-    models.Sync.objects.create(ended_at=datetime.datetime.now(),
+    models.Sync.objects.create(ended_at=timezone.now(),
         last_seq=functions.get_remote_last_seq(), status='finished')
 
 
@@ -58,7 +57,7 @@ def update_catalog(managerapi_dep=datacollector.SciELOManagerAPI):
 
         sync.last_seq = changes.last_seq
         sync.status = 'finished'
-        sync.ended_at = datetime.datetime.now()
+        sync.ended_at = timezone.now()
         sync.save()
 
 
