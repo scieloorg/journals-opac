@@ -64,6 +64,10 @@ ASSETS_DEBUG = DEBUG
 #
 HTML_MINIFY = not DEBUG
 
+FIXTURE_DIRS = (
+    os.path.join(PROJECT_PATH, 'fixtures', ''),
+)
+
 
 ####################################################
 # This must be the last piece of code of this module
