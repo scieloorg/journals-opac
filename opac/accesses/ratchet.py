@@ -87,7 +87,7 @@ class Accesses(object):
             raw_data = urllib2.urlopen('{0}?{1}&limit={2}'.format(
                 self._ratchet,
                 query,
-                limit))
+                limit)).read()
 
         data = json.loads(raw_data)
 
