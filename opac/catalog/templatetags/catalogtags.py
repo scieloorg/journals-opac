@@ -1,6 +1,7 @@
 import json
 
 from django import template
+from django.http import Http404
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
 
@@ -63,7 +64,7 @@ def get_article_title_by_lang(title_group, language):
     try:
         return title_group[language]
     except KeyError:
-        raise ValueError('No title found for language %s' % language)
+        raise Http404
 
 
 @register.simple_tag
@@ -72,7 +73,7 @@ def get_article_abstract_by_lang(abstract, language):
     try:
         return abstract[language]
     except KeyError:
-        raise ValueError('No abstract found for language %s' % language)
+        raise Http404
 
 
 @register.simple_tag
@@ -80,8 +81,8 @@ def get_article_keywords_by_lang(keywords, language):
 
     try:
         return u'; '.join(keyword for keyword in keywords[language])
-    except:
-        raise ValueError('No keyword found for language %s' % language)
+    except KeyError:
+        raise Http404
 
 
 @register.simple_tag

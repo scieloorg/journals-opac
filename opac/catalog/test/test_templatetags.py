@@ -127,6 +127,30 @@ class ArticleTemplateTagTest(MockerTestCase, TestCase):
         self.assertEqual(catalogtags.get_article_keywords_by_lang(article_keyword_microdata['keyword_group'], 'en'),
                         u'health_care waste; waste management')
 
+    def test_get_article_keywords_by_lang_must_raise_404_when_no_exist_language(self):
+        from catalog.templatetags import catalogtags
+        from django.http import Http404
+
+        article_keyword_microdata = {
+            "keyword_group": {
+                "en": [
+                  "health_care waste",
+                  "waste management"
+                ],
+                "pt": [
+                  "rifiuti sanitari",
+                  "Uso de Medicamentos",
+                  "Inqu\u00e9ritos de Morbidade"
+                ],
+                "it": [
+                  "Personas con Discapacidad",
+                  "gestione dei rifiuti"
+                ]
+            },
+        }
+
+        self.assertRaises(Http404, lambda: catalogtags.get_article_keywords_by_lang(article_keyword_microdata['keyword_group'], 'uk'))
+
     def test_get_article_abstract_by_lang(self):
         from catalog.templatetags import catalogtags
 
@@ -142,6 +166,21 @@ class ArticleTemplateTagTest(MockerTestCase, TestCase):
         self.assertEqual(catalogtags.get_article_abstract_by_lang(article_abstract_microdata['abstract'], 'en'),
                         u'<p>Trout farming, that represents the most important sector for aquaculture inland production in Italy, can cause d...')
 
+    def test_get_article_abstract_by_lang_must_raise_404_when_no_exist_language(self):
+        from catalog.templatetags import catalogtags
+        from django.http import Http404
+
+        article_abstract_microdata = {
+
+            "abstract": {
+                "en": "<p>Trout farming, that represents the most important sector for aquaculture inland production in Italy, can cause d...",
+                "it": "<p>La troticoltura rappresenta il settore più importante per la produzione ittica in Italia ed è in grado di causare effetti negativi sugli ...",
+            }
+
+        }
+
+        self.assertRaises(Http404, lambda: catalogtags.get_article_abstract_by_lang(article_abstract_microdata['abstract'], 'pt'))
+
     def test_get_article_title_by_lang(self):
         from catalog.templatetags import catalogtags
 
@@ -156,6 +195,21 @@ class ArticleTemplateTagTest(MockerTestCase, TestCase):
 
         self.assertEqual(catalogtags.get_article_title_by_lang(article_title_microdata['title_group'], 'en'),
             u'Management of health-care waste in Izmir, Turkey')
+
+    def test_get_article_title_by_lang_must_raise_404_when_no_exist_language(self):
+        from catalog.templatetags import catalogtags
+        from django.http import Http404
+
+        article_title_microdata = {
+
+            "title_group": {
+                "en": "Management of health-care waste in Izmir, Turkey",
+                "it": "Gestione dei rifiuti sanitari in Izmir, Turchia"
+            }
+
+        }
+
+        self.assertRaises(Http404, lambda: catalogtags.get_article_title_by_lang(article_title_microdata['title_group'], 'fr'))
 
 
 class IssueTemplateTagTest(MockerTestCase, TestCase):
@@ -279,4 +333,4 @@ class IssueTemplateTagTest(MockerTestCase, TestCase):
 
         sections = issue.list_sections()
 
-        self.assertEqual(catalogtags.list_articles_by_section(sections, 'en'), u'<dl class="issue_toc"><dt><i class="icon-chevron-right"></i> WHO Publications</dt><dd><ul class="unstyled toc_article"><li>Management of health-care waste in Izmir, Turkey<ul class="inline toc_article_authors"><li><a href="#">Soysal, Ahmet</a>;</li></ul><ul class="inline toc_article_links"><li>abstract: <a href="#">en</a> | <a href="#">it</a></li><li>full text: <a href="/article/AISS-JHjashA/">en</a></li><li>pdf: <a href="#">en</a></li></ul></li></dd></dl>')
+        self.assertEqual(catalogtags.list_articles_by_section(sections, 'en'), u'<dl class="issue_toc"><dt><i class="icon-chevron-right"></i> WHO Publications</dt><dd><ul class="unstyled toc_article"><li>Management of health-care waste in Izmir, Turkey<ul class="inline toc_article_authors"><li><a href="#">Soysal, Ahmet</a>;</li></ul><ul class="inline toc_article_links"><li>abstract: <a href="/article/AISS-JHjashA/?tlang=en">en</a> | <a href="/article/AISS-JHjashA/?tlang=it">it</a></li><li>full text: <a href="/article/AISS-JHjashA/">en</a></li><li>pdf: <a href="#">en</a></li></ul></li></dd></dl>')
