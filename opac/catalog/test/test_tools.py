@@ -1,5 +1,6 @@
 # encoding: utf-8
 from collections import OrderedDict
+from django.test import TestCase
 
 from mocker import (
     MockerTestCase,
@@ -366,3 +367,58 @@ class NavigationTest(MockerTestCase):
         nav = Navigation(journal, issue=issue).previous_issue
 
         self.assertEqual(nav, None)
+
+
+class TryGetContentByLangTest(TestCase):
+
+    def test_try_get_content_by_lang(self):
+        from catalog.tools import try_get_content_by_lang
+
+        test_micro_data = {
+            "en": "Management of health-care waste in Izmir, Turkey",
+            "it": "Gestione dei rifiuti sanitari in Izmir, Turchia"
+        }
+
+        content = try_get_content_by_lang(test_micro_data, 'en')
+
+        self.assertEqual(content, 'Management of health-care waste in Izmir, Turkey')
+
+    def test_try_get_content_by_lang_must_raise_error_when_param_not_dict(self):
+        from catalog.tools import try_get_content_by_lang
+
+        test_micro_data = ''
+
+        self.assertRaises(ValueError, lambda: try_get_content_by_lang(test_micro_data, 'en'))
+
+    def test_try_get_content_by_lang_must_return_nothing_when_dict_empty(self):
+        from catalog.tools import try_get_content_by_lang
+
+        test_micro_data = {}
+
+        self.assertEqual('', try_get_content_by_lang(test_micro_data, 'en'))
+
+    def test_try_get_content_by_lang_with_default_language(self):
+        from catalog.tools import try_get_content_by_lang
+
+        test_micro_data = {
+            "pt": "Gerenciamento ... ",
+            "it": "Gestione dei rifiuti sanitari in Izmir, Turchia"
+        }
+
+        content = try_get_content_by_lang(test_micro_data, 'en', 'it')
+
+        self.assertEqual(content, 'Gestione dei rifiuti sanitari in Izmir, Turchia')
+
+    def test_try_get_content_by_lang_without_languange_and_default_must_return_first_lang(self):
+        from catalog.tools import try_get_content_by_lang
+
+        test_micro_data = {
+            "uk": "The United Kingdom of Great Britain and Northern Ireland",
+            "pt-br": "Gestione dei rifiuti sanitari in Izmir, Turchia",
+            "es": "Entonces yo estou aqui",
+            "pt": "bla bla bla",
+        }
+
+        content = try_get_content_by_lang(test_micro_data, 'en', 'it')
+
+        self.assertEqual(content, test_micro_data.get(test_micro_data.keys()[0]))

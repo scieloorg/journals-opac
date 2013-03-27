@@ -1,3 +1,5 @@
+#encoding: utf-8
+
 import json
 
 from django.shortcuts import render_to_response

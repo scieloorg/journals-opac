@@ -1,9 +1,12 @@
+#encoding: utf-8
+
 import json
 
 from django import template
 from django.http import Http404
 from django.core.urlresolvers import reverse
 from django.utils.translation import ugettext as _
+from catalog.tools import try_get_content_by_lang
 
 from django.conf import settings
 
@@ -29,10 +32,10 @@ def list_articles_by_section(sections, language):
     snippet = u'<dl class="issue_toc">'
 
     for section in sections:
-        snippet += u'<dt><i class="icon-chevron-right"></i> %s</dt>' % section.titles[language]
+        snippet += u'<dt><i class="icon-chevron-right"></i> %s</dt>' % try_get_content_by_lang(section.titles, language)
 
         for article in section.articles:
-            snippet += u'<dd><ul class="unstyled toc_article"><li>%s' % article.title_group[language]
+            snippet += u'<dd><ul class="unstyled toc_article"><li>%s' % try_get_content_by_lang(article.title_group, language)
             snippet += u'<ul class="inline toc_article_authors">'
 
             for author in article.list_authors():
@@ -59,28 +62,22 @@ def list_articles_by_section(sections, language):
 
 
 @register.simple_tag
-def get_article_title_by_lang(title_group, language):
+def get_article_title_by_lang(title_group, language, default):
 
-    try:
-        return title_group[language]
-    except KeyError:
-        raise Http404
+    return try_get_content_by_lang(title_group, language, default)
 
 
 @register.simple_tag
-def get_article_abstract_by_lang(abstract, language):
+def get_article_abstract_by_lang(abstract, language, default):
 
-    try:
-        return abstract[language]
-    except KeyError:
-        raise Http404
+    return try_get_content_by_lang(abstract, language, default)
 
 
 @register.simple_tag
-def get_article_keywords_by_lang(keywords, language):
+def get_article_keywords_by_lang(keywords, language, default):
 
     try:
-        return u'; '.join(keyword for keyword in keywords[language])
+        return u'; '.join(keyword for keyword in try_get_content_by_lang(keywords, language, default))
     except KeyError:
         raise Http404
 

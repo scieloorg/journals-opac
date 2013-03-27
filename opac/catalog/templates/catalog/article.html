@@ -123,13 +123,13 @@
 
   {% list_authors article.contrib_group.author %}.
 
-  <b>{% get_article_title_by_lang article.title_group request.GET.tlang %}.</b>
+  <b>{% get_article_title_by_lang article.title_group request.GET.tlang article.default_language %}.</b>
 
   <em>{{ article.abbrev_journal_title }}.</em> vol.{{ article.volume }} n.{{ article.number }} {{ journal.publication_city }} {{ article.pub_date.year }}. ISSN {{ journal.issn }}. {{ article.doi }}.
 
-  <p>{% get_article_abstract_by_lang article.abstract request.GET.tlang %}</p>
+  <p>{% get_article_abstract_by_lang article.abstract request.GET.tlang default_language %}</p>
 
-  <b>{% trans 'Keywords' %}:</b> {% get_article_keywords_by_lang article.keyword_group request.GET.tlang %}
+  <b>{% trans 'Keywords' %}:</b> {% get_article_keywords_by_lang article.keyword_group request.GET.tlang default_language %}
 
 </div>
 

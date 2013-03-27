@@ -1,3 +1,5 @@
+#encoding: utf-8
+
 import collections
 from catalog import mongomodels
 
@@ -92,3 +94,30 @@ class Navigation(object):
         return '/issue/{0}/{1}/'.format(
                                     self._journal.acronym,
                                     previous_issue[1])
+
+
+def try_get_content_by_lang(dict_content, language, default="en"):
+    """
+    This method try to get the content by language of a dict using this criteria:
+        1. Try to get content for language passed by parameter ```language```;
+        2. Try to get content by english language;
+        3. Get the first language.
+
+        Dictionary format: {'en': 'english', 'pt': 'português'}
+
+    If the dict_content is empty return ''
+    """
+
+    if not isinstance(dict_content, dict):
+            raise ValueError('dict_content must be dict')
+
+    if not dict_content:
+        return ''
+
+    if language in dict_content:
+        return dict_content[language]
+    else:
+        try:
+            return dict_content[default]
+        except KeyError:
+            return dict_content.get(dict_content.keys()[0])
