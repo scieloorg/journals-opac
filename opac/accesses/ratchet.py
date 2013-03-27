@@ -1,6 +1,7 @@
 import urllib2
 import json
 import copy
+import calendar
 
 from collections import OrderedDict
 
@@ -57,7 +58,7 @@ class Accesses(object):
         rows.append([u'date'] + tab['columns'] + [u'total'])
         for key, values in OrderedDict(sorted(tab['rows'].items())).items():
             row = []
-            row.append(key)
+            row.append('{0}, {1}'.format(key[0:4], calendar.month_abbr[int(key[5:7])]))
             total = 0
             for value in values:
                 total += value
@@ -239,7 +240,7 @@ class Accesses(object):
                             ye[month[1:]] += days['total']
 
         rows = []
-        rows.append([u'year'] + range(1, 13) + [u'total'])
+        rows.append([u'year'] + [calendar.month_abbr[x] for x in range(1, 13)] + [u'total'])
 
         for year, months in OrderedDict(sorted(years.items())).items():
             row = []
@@ -296,7 +297,7 @@ class Accesses(object):
             row = []
             for year, months in OrderedDict(sorted(years.items())).items():
                 if not len(row):
-                    row.append(month)
+                    row.append(calendar.month_abbr[month])
                 row.append(months['%02d' % month])
             rows.append(row)
 

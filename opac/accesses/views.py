@@ -1,7 +1,9 @@
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
+from django.views.decorators.cache import cache_page
 
-
+cache_minutes = 60 * 24
+@cache_page(cache_minutes)
 def journals(request):
 
     return render_to_response('accesses/journals.html', {
@@ -9,7 +11,7 @@ def journals(request):
                               },
                               context_instance=RequestContext(request))
 
-
+@cache_page(cache_minutes)
 def catalog_pages(request):
 
     return render_to_response('accesses/catalog_pages.html', {
@@ -17,7 +19,7 @@ def catalog_pages(request):
                               },
                               context_instance=RequestContext(request))
 
-
+@cache_page(cache_minutes)
 def catalog_journals(request):
 
     return render_to_response('accesses/catalog_journals.html', {
@@ -25,7 +27,7 @@ def catalog_journals(request):
                               },
                               context_instance=RequestContext(request))
 
-
+@cache_page(cache_minutes)
 def catalog_issues(request):
 
     return render_to_response('accesses/catalog_issues.html', {
@@ -33,7 +35,7 @@ def catalog_issues(request):
                               },
                               context_instance=RequestContext(request))
 
-
+@cache_page(cache_minutes)
 def catalog_articles(request):
 
     return render_to_response('accesses/catalog_articles.html', {
@@ -41,7 +43,7 @@ def catalog_articles(request):
                               },
                               context_instance=RequestContext(request))
 
-
+@cache_page(cache_minutes)
 def catalog_articles_month_year(request):
 
     return render_to_response('accesses/catalog_articles_month_year.html', {

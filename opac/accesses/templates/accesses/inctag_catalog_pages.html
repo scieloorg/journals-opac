@@ -8,25 +8,26 @@
 
       data = {{ tab|safe }};
 
-      var data = new google.visualization.arrayToDataTable(data);
+      var raw_data_table = new google.visualization.arrayToDataTable(data);
 
       var table_options = {"sortColumn" : 8, "sortAscending": false};
 
       var table = new google.visualization.Table(document.getElementById('table_div'));
-      table.draw(data, table_options);
+      table.draw(raw_data_table, table_options);
 
       var chart_options = {
-            'title': '{% trans 'Catalog Accesses by page type' %}',
+            'title': '{% trans 'Catalog accesses by page type' %}',
             'vAxis': {'title': '{% trans 'acceses' %}', 'logScale': true},
             'hAxis': {'title': '{% trans 'months' %}'},
             'height': 400,
             'curveType': 'function'
       };
 
-      data.removeColumn(8)
+      var raw_data_chart = new google.visualization.arrayToDataTable(data);
+      raw_data_chart.removeColumn(8)
 
       var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
-      chart.draw(data, chart_options);
+      chart.draw(raw_data_chart, chart_options);
 
     }
 </script>
