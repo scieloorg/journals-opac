@@ -1,15 +1,11 @@
 from django.shortcuts import render_to_response
 from django.template.context import RequestContext
 
-from accesses import ratchet
-
 
 def journals(request):
 
-    tab = ratchet.Accesses()
-
     return render_to_response('accesses/journals.html', {
-                              'accesses': tab,
+                              'page_index': 'catalog_journals',
                               },
                               context_instance=RequestContext(request))
 
@@ -17,7 +13,7 @@ def journals(request):
 def catalog_pages(request):
 
     return render_to_response('accesses/catalog_pages.html', {
-                              'catalog': 'pages',
+                              'page_index': 'catalog_pages',
                               },
                               context_instance=RequestContext(request))
 
@@ -25,7 +21,7 @@ def catalog_pages(request):
 def catalog_journals(request):
 
     return render_to_response('accesses/catalog_journals.html', {
-                              'catalog': 'journals',
+                              'page_index': 'catalog_journals',
                               },
                               context_instance=RequestContext(request))
 
@@ -33,7 +29,7 @@ def catalog_journals(request):
 def catalog_issues(request):
 
     return render_to_response('accesses/catalog_issues.html', {
-                              'catalog': 'issues',
+                              'page_index': 'catalog_issues',
                               },
                               context_instance=RequestContext(request))
 
@@ -41,7 +37,7 @@ def catalog_issues(request):
 def catalog_articles(request):
 
     return render_to_response('accesses/catalog_articles.html', {
-                              'catalog': 'articles',
+                              'page_index': 'catalog_articles',
                               },
                               context_instance=RequestContext(request))
 
@@ -49,6 +45,6 @@ def catalog_articles(request):
 def catalog_articles_month_year(request):
 
     return render_to_response('accesses/catalog_articles_month_year.html', {
-                              'catalog': 'articles_month_year',
+                              'page_index': 'catalog_articles_month_year',
                               },
                               context_instance=RequestContext(request))
