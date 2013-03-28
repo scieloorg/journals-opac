@@ -8,7 +8,6 @@ urlpatterns = patterns('',
     # Collection Templates
     url(r'^alpha/$', views.list_journals, name="catalog.list_journals"),
     url(r'^subject/$', views.list_journals_by_subject, name="catalog.list_journals_by_subject"),
-    url(r'^stats/$', TemplateView.as_view(template_name='catalog/collection_stats.html')),
 
     # Issue Templates
     url(r'^issues/(?P<journal_id>\w+)/', views.issues, name='catalog.show_issues'),
