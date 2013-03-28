@@ -1,47 +1,12 @@
-import itertools
-
+from django.utils import timezone
 from django.conf import settings
+from django.db import transaction
 from celery import task
 
 from .sync import datacollector
 from .sync import dataloader
-from .sync import pipes
+import functions
 from catalog import models
-
-
-def _what_to_sync(managerapi_dep=datacollector.SciELOManagerAPI):
-    """
-    Returns an iterator containing all journals that must be synced
-    to build the catalog.
-
-    If the collection is marked as member, and has some
-    journals that are also marked as members, we assume
-    only these journals must be synchronized. Else,
-    sync all its journals.
-    """
-    scielo_api = managerapi_dep(settings=settings)
-    collections = models.CollectionMeta.objects.members()
-
-    full_collections = []
-    journals_a_la_carte = []
-
-    for collection in collections:
-        # decide if the entire collection must be synced or only some
-        # journals.
-        if collection.journals.members().exists():
-            for journal in collection.journals.members():
-                # getting the resource_id
-                cleaned = [seg for seg in journal.resource_uri.split('/') if seg]
-                resource_id = cleaned[-1]
-
-                journals_a_la_carte.append(resource_id)
-        else:
-            full_collections.append(collection.name_slug)
-
-    return itertools.chain(
-        scielo_api.get_all_journals(*full_collections),
-        scielo_api.get_journals(*journals_a_la_carte)
-    )
 
 
 @task(name='utils.tasks.build_catalog')
@@ -51,17 +16,49 @@ def build_catalog():
     Important! All catalog public data are erased and reconstructed
     when you perform this operation.
     """
-    ppl = pipes.Pipeline(pipes.PIssue,
-                         pipes.PMission,
-                         pipes.PSection,
-                         pipes.PNormalizeJournalTitle,
-                         pipes.PCleanup)
+    ppl = functions.make_journal_pipeline()
 
-    data = _what_to_sync()
+    data = functions.get_all_data_for_build()
     transformed_data = ppl.run(data)
 
     marreta = dataloader.Marreta(settings=settings)
     marreta.rebuild_collection('journals', transformed_data)
+
+    models.Sync.objects.create(ended_at=timezone.now(),
+        last_seq=functions.get_remote_last_seq(), status='finished')
+
+
+@task(name='utils.tasks.update_catalog')
+def update_catalog(managerapi_dep=datacollector.SciELOManagerAPI):
+    """
+    Scans the SciELO Manager's changes API looking for
+    changes on Journals that are part of this catalog.
+    """
+    scielo_api = managerapi_dep(settings=settings)
+    journal_ppl = functions.make_journal_pipeline()
+
+    with transaction.commit_on_success():
+        sync = models.Sync.objects.create()
+
+        changes = functions.get_all_changes(since=functions.get_last_seq())
+        changed_journals = changes.show('journals', unique=True)
+        # changed_issues = changes.show('issues', unique=True)
+
+        changed_journals_ids = [ch.resource_id for ch in changed_journals]
+        # changed_issues_ids = [ch.resource_id for ch in changed_issues]
+
+        journals_data = scielo_api.get_journals(*changed_journals_ids)
+        # issues_data = scielo_api.get_issues(*changed_issues_ids)
+
+        transformed_journals_data = journal_ppl.run(journals_data)
+
+        marreta = dataloader.Marreta(settings=settings)
+        marreta.update_journals('journals', transformed_journals_data)
+
+        sync.last_seq = changes.last_seq
+        sync.status = 'finished'
+        sync.ended_at = timezone.now()
+        sync.save()
 
 
 def sync_collections_meta(managerapi_dep=datacollector.SciELOManagerAPI):

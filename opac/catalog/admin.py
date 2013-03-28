@@ -119,5 +119,15 @@ class JournalMetaAdmin(admin.ModelAdmin):
         return False
 
 
+class SyncAdmin(admin.ModelAdmin):
+    list_display = ('started_at', 'ended_at', 'last_seq', 'status')
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
 admin.site.register(models.CollectionMeta, CollectionMetaAdmin)
 admin.site.register(models.JournalMeta, JournalMetaAdmin)
+admin.site.register(models.Sync, SyncAdmin)

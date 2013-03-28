@@ -4,3 +4,11 @@ HTML_MINIFY = not DEBUG
 
 ALLOWED_HOSTS = ['*']
 
+from datetime import timedelta
+CELERYBEAT_SCHEDULE = {
+    'update-catalog': {
+        'task': 'utils.tasks.update_catalog',
+        'schedule': timedelta(minutes=60),
+        'args': ()
+    },
+}
