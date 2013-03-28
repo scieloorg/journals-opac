@@ -76,10 +76,7 @@ def get_article_abstract_by_lang(abstract, language, default):
 @register.simple_tag
 def get_article_keywords_by_lang(keywords, language, default):
 
-    try:
-        return u'; '.join(keyword for keyword in try_get_content_by_lang(keywords, language, default))
-    except KeyError:
-        raise Http404
+    return u'; '.join(keyword for keyword in try_get_content_by_lang(keywords, language, default))
 
 
 @register.simple_tag
