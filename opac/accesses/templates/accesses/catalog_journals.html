@@ -1,0 +1,16 @@
+{% extends "base_stats.html" %}
+{% load accessestags %}
+{% load i18n %}
+
+{% block body %}
+<h3>{% trans 'Journals Requests' %}</h3>
+<div id="dashboard">
+  <center>
+    <div id="table_div"></div>
+  </center>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+  {% catalog_journals %}
+{% endblock %}

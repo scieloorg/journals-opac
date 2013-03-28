@@ -1,0 +1,20 @@
+{% load i18n %}
+
+<script type="text/javascript">
+    google.load('visualization', '1', {packages: ['table', 'corechart']});
+    google.setOnLoadCallback(drawCharts);
+
+    function drawCharts() {
+
+      data = {{ tab|safe }}
+
+      var data = new google.visualization.arrayToDataTable(data);
+
+      var table = new google.visualization.Table(document.getElementById('table_div'));
+
+      var options = {"sortColumn" : 8, "sortAscending": false};
+
+      table.draw(data, options);
+
+    }
+</script>
