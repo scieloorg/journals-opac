@@ -232,6 +232,10 @@ class Article(Document):
         for author in self.contrib_group['author']:
             yield author
 
+    @property
+    def from_to_page(self):
+        return self.lpage + " " + self.fpage
+
 
 def list_journals(criteria=None, mongomanager_lib=MongoManager):
     """

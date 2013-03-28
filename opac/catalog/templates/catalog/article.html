@@ -117,7 +117,7 @@
 
   <h3 class="journal_title">{{ journal.title }}</h3>
 
-  <h5 class="text_issn">{{ journal.scielo_issn|capfirst }} version ISSN {{ journal.issn }}</h5>
+  <h6 class="text_issn">{{ journal.scielo_issn|capfirst }} version ISSN {{ journal.issn }}</h6>
 
   <h4>{% trans 'Abstract' %}</h4>
 
@@ -125,7 +125,7 @@
 
   <b>{% get_article_title_by_lang article.title_group request.GET.tlang article.default_language %}.</b>
 
-  <em>{{ article.abbrev_journal_title }}.</em> vol.{{ article.volume }} n.{{ article.number }} {{ journal.publication_city }} {{ article.pub_date.year }}. ISSN {{ journal.issn }}. {{ article.doi }}.
+  <em>{{ article.abbrev_journal_title }}.</em>{{ article.pub_date.year }}, vol.{{ article.volume }} n.{{ article.number }}, pp.{{ article.from_to_page|slugify }} {{ journal.publication_city }}. ISSN {{ journal.issn }}. {{ article.doi }}.
 
   <p>{% get_article_abstract_by_lang article.abstract request.GET.tlang default_language %}</p>
 
