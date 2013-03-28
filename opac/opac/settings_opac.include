@@ -40,7 +40,7 @@ SCIELOMANAGER_API_KEY = 'invalid_token'
 LANGUAGES = (
     (u'en', u'English'),
     (u'es', u'Español'),
-    (u'pt-br', u'Português'),
+    (u'pt', u'Português'),
 )
 
 LOCALE_PATHS = (
@@ -64,6 +64,10 @@ ASSETS_DEBUG = DEBUG
 # Always minify the HTML when the DEBUG mode is False
 #
 HTML_MINIFY = not DEBUG
+
+FIXTURE_DIRS = (
+    os.path.join(PROJECT_PATH, 'fixtures', ''),
+)
 
 
 ####################################################

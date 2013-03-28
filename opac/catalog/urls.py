@@ -6,7 +6,6 @@ from catalog import views
 urlpatterns = patterns('',
 
     # Collection Templates
-    url(r'^$', TemplateView.as_view(template_name='catalog/index.html')),
     url(r'^alpha/$', views.list_journals, name="catalog.list_journals"),
     url(r'^subject/$', views.list_journals_by_subject, name="catalog.list_journals_by_subject"),
 
