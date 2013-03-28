@@ -234,7 +234,7 @@ class Article(Document):
 
     @property
     def from_to_page(self):
-        return self.lpage + " " + self.fpage
+        return self.fpage + " " + self.lpage
 
 
 def list_journals(criteria=None, mongomanager_lib=MongoManager):
