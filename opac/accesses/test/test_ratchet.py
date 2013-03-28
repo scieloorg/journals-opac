@@ -22,6 +22,9 @@ class RatchetTest(MockerTestCase):
         self._catalog_issues_fixture = open(
             os.path.abspath(os.path.dirname(__file__)) + '/fixtures/catalog_issues.json',
             'r')
+        self._invalid_json = open(
+            os.path.abspath(os.path.dirname(__file__)) + '/fixtures/invalid.json',
+            'r')
 
     def test_catalog_pages(self):
         from accesses import ratchet
@@ -47,7 +50,9 @@ class RatchetTest(MockerTestCase):
     def test_catalog_pages_invalid_code(self):
         from accesses import ratchet
 
-        self.assertRaises(ValueError, lambda: ratchet.Accesses().catalog_pages(code='invalid'))
+        data = self._invalid_json  # Invalid Json data or Empty results
+
+        self.assertRaises(ValueError, lambda: ratchet.Accesses().catalog_pages(json_data=data))
 
     def test_catalog_journals(self):
         from accesses import ratchet
